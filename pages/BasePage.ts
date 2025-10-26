@@ -1,12 +1,9 @@
 import { Page, Locator, expect } from '@playwright/test';
 
 /**
- * BasePage类 - 所有页面对象的基类
+ * BasePage class – shared foundation for all page objects.
  *
- * 提供通用的页面操作方法和工具函数
- * 遵循Page Object Model设计模式
- *
- * @class BasePage
+ * Provides reusable helpers that follow the Page Object Model pattern.
  */
 export class BasePage {
   protected readonly page: Page;
@@ -18,9 +15,10 @@ export class BasePage {
   }
 
   /**
-   * 导航到指定URL
-   * @param path - URL路径（相对或绝对）
-   * @param options - 导航选项
+   * Navigate to a specific URL.
+   * @param path Relative or absolute URL.
+   * @param options Navigation options.
+   * @returns Promise that resolves when navigation completes.
    */
   async navigate(path: string = '', options?: { waitUntil?: 'load' | 'domcontentloaded' | 'networkidle' }): Promise<void> {
     const url = path.startsWith('http') ? path : `${this.baseURL}${path}`;
@@ -31,8 +29,8 @@ export class BasePage {
   }
 
   /**
-   * 等待页面完全加载
-   * 等待网络空闲和DOM加载完成
+   * Wait until the page finishes loading (load + network idle).
+   * @returns Promise that resolves when the page is ready.
    */
   async waitForPageLoad(): Promise<void> {
     await this.page.waitForLoadState('load');
@@ -42,43 +40,46 @@ export class BasePage {
   }
 
   /**
-   * 获取页面标题
-   * @returns 页面标题
+   * Retrieve the current page title.
+   * @returns Page title string.
    */
   async getTitle(): Promise<string> {
     return await this.page.title();
   }
 
   /**
-   * 获取当前URL
-   * @returns 当前页面URL
+   * Retrieve the current page URL.
+   * @returns Current URL string.
    */
   getCurrentURL(): string {
     return this.page.url();
   }
 
   /**
-   * 等待元素可见
-   * @param locator - 元素定位器
-   * @param timeout - 超时时间（毫秒）
+   * Wait for an element to become visible.
+   * @param locator Target locator.
+   * @param timeout Timeout in milliseconds.
+   * @returns Promise that resolves when the element is visible.
    */
   async waitForVisible(locator: Locator, timeout: number = 10000): Promise<void> {
     await locator.waitFor({ state: 'visible', timeout });
   }
 
   /**
-   * 等待元素隐藏
-   * @param locator - 元素定位器
-   * @param timeout - 超时时间（毫秒）
+   * Wait for an element to become hidden.
+   * @param locator Target locator.
+   * @param timeout Timeout in milliseconds.
+   * @returns Promise that resolves when the element is hidden.
    */
   async waitForHidden(locator: Locator, timeout: number = 10000): Promise<void> {
     await locator.waitFor({ state: 'hidden', timeout });
   }
 
   /**
-   * 点击元素（带智能等待）
-   * @param locator - 元素定位器
-   * @param options - 点击选项
+   * Click an element with an optional forced click.
+   * @param locator Target locator.
+   * @param options Click options.
+   * @returns Promise that resolves after the click succeeds.
    */
   async click(locator: Locator, options?: { force?: boolean; delay?: number }): Promise<void> {
     await locator.waitFor({ state: 'visible', timeout: 10000 });
@@ -90,10 +91,11 @@ export class BasePage {
   }
 
   /**
-   * 填写输入框
-   * @param locator - 元素定位器
-   * @param text - 要填写的文本
-   * @param options - 填写选项
+   * Fill a text input.
+   * @param locator Target locator.
+   * @param text Text to enter.
+   * @param options Fill options (clear and delay).
+   * @returns Promise that resolves after the input is filled.
    */
   async fill(locator: Locator, text: string, options?: { clear?: boolean; delay?: number }): Promise<void> {
     await locator.waitFor({ state: 'visible', timeout: 10000 });
@@ -104,9 +106,9 @@ export class BasePage {
   }
 
   /**
-   * 获取元素文本
-   * @param locator - 元素定位器
-   * @returns 元素文本内容
+   * Get visible text from an element.
+   * @param locator Target locator.
+   * @returns Text content or an empty string.
    */
   async getText(locator: Locator): Promise<string> {
     await locator.waitFor({ state: 'visible', timeout: 10000 });
@@ -114,9 +116,9 @@ export class BasePage {
   }
 
   /**
-   * 检查元素是否可见
-   * @param locator - 元素定位器
-   * @returns 是否可见
+   * Determine whether an element is visible within the timeout.
+   * @param locator Target locator.
+   * @returns True if the element becomes visible.
    */
   async isVisible(locator: Locator): Promise<boolean> {
     try {
@@ -128,18 +130,19 @@ export class BasePage {
   }
 
   /**
-   * 检查元素是否启用
-   * @param locator - 元素定位器
-   * @returns 是否启用
+   * Determine whether an element is enabled.
+   * @param locator Target locator.
+   * @returns True if the element is enabled.
    */
   async isEnabled(locator: Locator): Promise<boolean> {
     return await locator.isEnabled();
   }
 
   /**
-   * 截图
-   * @param name - 截图文件名
-   * @param options - 截图选项
+   * Capture a screenshot.
+   * @param name File name without extension.
+   * @param options Screenshot options.
+   * @returns Promise that resolves after the screenshot is written.
    */
   async takeScreenshot(name: string, options?: { fullPage?: boolean }): Promise<void> {
     await this.page.screenshot({
@@ -149,84 +152,93 @@ export class BasePage {
   }
 
   /**
-   * 滚动到元素位置
-   * @param locator - 元素定位器
+   * Scroll to an element.
+   * @param locator Target locator.
+   * @returns Promise that resolves after scrolling.
    */
   async scrollToElement(locator: Locator): Promise<void> {
     await locator.scrollIntoViewIfNeeded();
   }
 
   /**
-   * 等待指定时间（尽量避免使用）
-   * @param milliseconds - 等待毫秒数
+   * Wait for a specific duration.
+   * Prefer explicit waits when possible.
+   * @param milliseconds Duration in milliseconds.
+   * @returns Promise that resolves after the timeout.
    */
   async wait(milliseconds: number): Promise<void> {
     await this.page.waitForTimeout(milliseconds);
   }
 
   /**
-   * 执行JavaScript代码
-   * @param script - JavaScript代码
-   * @param args - 参数
-   * @returns 执行结果
+   * Execute JavaScript in the page context.
+   * @param script Script function or string to execute.
+   * @param args Arguments passed to the script.
+   * @returns Result returned by the script.
    */
   async evaluate<T>(script: string | ((arg: unknown) => T), args?: unknown): Promise<T> {
     return await this.page.evaluate(script, args);
   }
 
   /**
-   * 获取元素属性值
-   * @param locator - 元素定位器
-   * @param attributeName - 属性名
-   * @returns 属性值
+   * Retrieve an attribute value from an element.
+   * @param locator Target locator.
+   * @param attributeName Attribute name.
+   * @returns Attribute value or null.
    */
   async getAttribute(locator: Locator, attributeName: string): Promise<string | null> {
     return await locator.getAttribute(attributeName);
   }
 
   /**
-   * 验证元素可见
-   * @param locator - 元素定位器
-   * @param message - 断言失败消息
+   * Assert that an element is visible.
+   * @param locator Target locator.
+   * @param message Optional error message.
+   * @returns Promise that resolves when the assertion passes.
    */
   async assertVisible(locator: Locator, message?: string): Promise<void> {
     await expect(locator, message).toBeVisible();
   }
 
   /**
-   * 验证元素包含文本
-   * @param locator - 元素定位器
-   * @param text - 期望的文本
-   * @param message - 断言失败消息
+   * Assert that an element contains specific text.
+   * @param locator Target locator.
+   * @param text Expected text.
+   * @param message Optional error message.
+   * @returns Promise that resolves when the assertion passes.
    */
   async assertContainsText(locator: Locator, text: string, message?: string): Promise<void> {
     await expect(locator, message).toContainText(text);
   }
 
   /**
-   * 验证页面URL包含指定文本
-   * @param urlPart - URL部分
+   * Assert that the current URL includes the provided substring.
+   * @param urlPart Substring expected in the URL.
+   * @returns void
    */
   async assertURLContains(urlPart: string): Promise<void> {
     expect(this.page.url()).toContain(urlPart);
   }
 
   /**
-   * 刷新页面
+   * Reload the current page.
+   * @returns Promise that resolves after the reload completes.
    */
   async reload(): Promise<void> {
     await this.page.reload();
   }
 
   /**
-   * 返回上一页
+   * Navigate back to the previous page.
+   * @returns Promise that resolves after navigation completes.
    */
   async goBack(): Promise<void> {
     await this.page.goBack();
   }
 
   /**
-   * 前进到下一页
+   * Navigate forward to the next page.
+   * @returns Promise that resolves after navigation completes.
    */
   async goForward(): Promise<void> {
     await this.page.goForward();
