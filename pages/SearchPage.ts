@@ -46,14 +46,14 @@ export class SearchPage extends BasePage {
   /** 日期选择按钮 */
   private readonly travelDatesButton: Locator;
 
-  /** 日期选择器容器 */
-  private readonly datePickerContainer: Locator;
+  /** 下个月按钮（初始状态） */
+  private readonly nextMonthButton1: Locator;
 
-  /** 下个月按钮 */
-  private readonly nextMonthButton: Locator;
+  /** 下个月按钮（点击过一次后） */
+  private readonly nextMonthButton2: Locator;
 
-  /** 具体日期按钮生成器 */
-  private readonly dayButton: (day: string, month: 'current' | 'next') => Locator;
+  /** 上个月按钮（点击过下个月按钮后出现） */
+  private readonly lastMonthButton: Locator;
 
   // ============ 乘客 ============
 
@@ -167,10 +167,9 @@ export class SearchPage extends BasePage {
     // ============ 日期 ============
 
     this.travelDatesButton = page.getByRole('button', { name: 'Select the pick-up and drop-' });
-    this.datePickerContainer = page.locator('.booking-widget-dates-container, [role="dialog"]').first();
-    this.nextMonthButton = page.getByRole('button').filter({ hasText: /^$/ });
-    this.dayButton = (day: string, month: 'current' | 'next' = 'current') => 
-      page.getByRole('button', { name: day }).nth(month === 'current' ? 0 : 1);
+    this.nextMonthButton1 = page.getByRole('button').filter({ hasText: /^$/ });
+    this.nextMonthButton2 = page.getByRole('button').nth(4);
+    this.lastMonthButton = page.getByRole('button').nth(3);
 
     // ============ 乘客 ============
 
@@ -531,20 +530,28 @@ export class SearchPage extends BasePage {
   /**
    * 选择旅行日期（取车和还车日期）
    *
-   * 注意：需要先选择取车和还车地点，日期选择器才会自动打开
-   * 
+   * 注意：需要先选择取车和还车地点，日期选择器才能正常使用
+   *
    * @param pickupDate - 取车日期（格式：YYYY-MM-DD）
    * @param dropoffDate - 还车日期（格式：YYYY-MM-DD）
    */
   async selectTravelDates(pickupDate: string, dropoffDate: string): Promise<void> {
-    // 点击日期按钮
-    await this.click(this.travelDatesButton);
+    // 检查日期选择器是否已打开
+    const isOpen = await this.isDatePickerOpen();
 
-    // 等待日期选择器出现
-    await this.waitForVisible(this.datePickerContainer, 5000);
+    if (!isOpen) {
+      // 如果未打开，点击日期按钮
+      await this.click(this.travelDatesButton);
 
-    // 等待一下让日期选择器完全加载
-    await this.page.waitForTimeout(500);
+      // 等待日期选择器出现
+      await this.page.waitForTimeout(1000);
+
+      // 再次检查是否打开
+      const isNowOpen = await this.isDatePickerOpen();
+      if (!isNowOpen) {
+        throw new Error('日期选择器未能成功打开');
+      }
+    }
 
     // 选择取车日期
     await this.selectDateFromPicker(pickupDate);
@@ -560,38 +567,208 @@ export class SearchPage extends BasePage {
    * @private
    */
   private async selectDateFromPicker(date: string): Promise<void> {
+    // 解析日期
     const parts = date.split('-');
-    const day = parts[2] || '1';
-    
-    // 移除前导零
-    const dayNumber = parseInt(day, 10).toString();
-
-    // 等待日期选择器可见
-    const isPickerVisible = await this.isVisible(this.datePickerContainer);
-    if (!isPickerVisible) {
-      throw new Error('Date picker not visible, cannot select date');
+    if (parts.length !== 3) {
+      throw new Error(`无效的日期格式: ${date}，期望格式: YYYY-MM-DD`);
     }
 
-    // 尝试点击日期按钮（可能在当前月或下个月）
-    // 先在当前月查找
+    const year = parts[0];
+    const month = parts[1];
+    const day = parts[2];
+
+    if (!year || !month || !day) {
+      throw new Error(`无效的日期格式: ${date}，期望格式: YYYY-MM-DD`);
+    }
+
+    const yearNum = parseInt(year, 10);
+    const monthNum = parseInt(month, 10);
+    const dayNum = parseInt(day, 10);
+
+    // 获取月份英文名称
+    const monthName = this.getMonthName(monthNum);
+
+    // 导航到目标月份（如果需要）
+    await this.navigateToMonth(monthName, yearNum);
+
+    // 在指定月份中选择日期
+    await this.selectDateInMonth(monthName, yearNum, dayNum.toString());
+
+    // 等待页面更新
+    await this.page.waitForTimeout(500);
+  }
+
+  /**
+   * 判断日期选择器是否已打开
+   *
+   * @returns 是否打开
+   * @private
+   */
+  private async isDatePickerOpen(): Promise<boolean> {
     try {
-      const dayElement = this.dayButton(dayNumber, 'current');
-      await this.waitForVisible(dayElement, 2000);
-      await this.click(dayElement);
-      // 点击后等待一下让页面更新
-      await this.page.waitForTimeout(500);
+      // 获取当前日期
+      const now = new Date();
+      const currentMonthName = this.getMonthName(now.getMonth() + 1);
+      const currentYear = now.getFullYear();
+
+      // 检查是否存在当前月份的文本（首字母大写）
+      const monthPattern = new RegExp(`${currentMonthName}\\s+${currentYear}`, 'i');
+      const monthText = this.page.getByText(monthPattern);
+
+      return await monthText.isVisible({ timeout: 1000 });
     } catch (e) {
-      // 如果在当前月找不到，尝试下个月
-      try {
-        const dayElementNextMonth = this.dayButton(dayNumber, 'next');
-        await this.waitForVisible(dayElementNextMonth, 2000);
-        await this.click(dayElementNextMonth);
-        // 点击后等待一下让页面更新
-        await this.page.waitForTimeout(500);
-      } catch (e2) {
-        throw new Error(`Could not find date ${date} in the current or next visible month`);
-      }
+      return false;
     }
+  }
+
+  /**
+   * 获取指定月份的容器
+   *
+   * @param monthName - 月份英文名称（如 "October"）
+   * @param year - 年份
+   * @returns 月份容器 Locator
+   * @private
+   */
+  private getMonthContainer(monthName: string, year: number): Locator {
+    const monthPattern = new RegExp(`${monthName}\\s+${year}`, 'i');
+
+    return this.page
+      .locator('[class*="BookingWidget_month"]')
+      .filter({
+        has: this.page.locator('[class*="BookingWidget_monthLabel"]', { hasText: monthPattern })
+      });
+  }
+
+  /**
+   * 导航到指定月份
+   *
+   * @param monthName - 月份英文名称（如 "October"）
+   * @param year - 年份
+   * @private
+   */
+  private async navigateToMonth(monthName: string, year: number): Promise<void> {
+    // 检查目标月份是否已经可见
+    const targetMonth = this.getMonthContainer(monthName, year);
+    const isVisible = await targetMonth.isVisible({ timeout: 1000 }).catch(() => false);
+
+    if (isVisible) {
+      // 目标月份已经可见，无需导航
+      return;
+    }
+
+    // 获取当前显示的月份信息
+    const now = new Date();
+    const currentMonth = now.getMonth() + 1; // 1-12
+    const currentYear = now.getFullYear();
+
+    // 计算目标月份与当前月份的差距
+    const targetMonthNum = this.getMonthNumber(monthName);
+    const monthDiff = (year - currentYear) * 12 + (targetMonthNum - currentMonth);
+
+    // 根据差距点击翻页按钮
+    if (monthDiff > 0) {
+      // 需要向后翻页
+      await this.navigateForward(monthDiff);
+    } else if (monthDiff < 0) {
+      // 需要向前翻页
+      await this.navigateBackward(Math.abs(monthDiff));
+    }
+  }
+
+  /**
+   * 向后导航（翻到未来的月份）
+   *
+   * @param clicks - 需要点击的次数
+   * @private
+   */
+  private async navigateForward(clicks: number): Promise<void> {
+    for (let i = 0; i < clicks; i++) {
+      if (i === 0) {
+        // 第一次点击使用 nextMonthButton1
+        await this.click(this.nextMonthButton1);
+      } else {
+        // 后续点击使用 nextMonthButton2
+        await this.click(this.nextMonthButton2);
+      }
+      await this.page.waitForTimeout(300);
+    }
+  }
+
+  /**
+   * 向前导航（翻到过去的月份）
+   *
+   * @param clicks - 需要点击的次数
+   * @private
+   */
+  private async navigateBackward(clicks: number): Promise<void> {
+    for (let i = 0; i < clicks; i++) {
+      await this.click(this.lastMonthButton);
+      await this.page.waitForTimeout(300);
+    }
+  }
+
+  /**
+   * 在指定月份中选择日期
+   *
+   * @param monthName - 月份英文名称（如 "October"）
+   * @param year - 年份
+   * @param day - 日期（如 "28"）
+   * @private
+   */
+  private async selectDateInMonth(monthName: string, year: number, day: string): Promise<void> {
+    // 获取月份容器
+    const monthContainer = this.getMonthContainer(monthName, year);
+
+    // 在该月份容器中查找日期按钮
+    const dayButton = monthContainer.getByRole('button', { name: day, exact: true });
+
+    // 等待按钮可见并点击
+    await this.waitForVisible(dayButton, 5000);
+    await this.click(dayButton);
+  }
+
+  /**
+   * 获取月份英文名称
+   *
+   * @param monthNumber - 月份数字（1-12）
+   * @returns 月份英文名称（首字母大写）
+   * @private
+   */
+  private getMonthName(monthNumber: number): string {
+    const months = [
+      'January', 'February', 'March', 'April', 'May', 'June',
+      'July', 'August', 'September', 'October', 'November', 'December'
+    ];
+
+    if (monthNumber < 1 || monthNumber > 12) {
+      throw new Error(`无效的月份数字: ${monthNumber}，期望范围: 1-12`);
+    }
+
+    const monthName = months[monthNumber - 1];
+    if (!monthName) {
+      throw new Error(`无法获取月份名称: ${monthNumber}`);
+    }
+
+    return monthName;
+  }
+
+  /**
+   * 获取月份数字
+   *
+   * @param monthName - 月份英文名称（如 "October"）
+   * @returns 月份数字（1-12）
+   * @private
+   */
+  private getMonthNumber(monthName: string): number {
+    const months = [
+      'January', 'February', 'March', 'April', 'May', 'June',
+      'July', 'August', 'September', 'October', 'November', 'December'
+    ];
+    const index = months.findIndex(m => m.toLowerCase() === monthName.toLowerCase());
+    if (index === -1) {
+      throw new Error(`无效的月份名称: ${monthName}`);
+    }
+    return index + 1;
   }
 
   // ============================================
