@@ -2,185 +2,185 @@ import { Page, Locator } from '@playwright/test';
 import { BasePage } from './BasePage';
 
 /**
- * SearchPage类 - Maui Rentals搜索页面对象
+ * SearchPage class - Maui Rentals search page object
  *
- * 封装搜索页面的所有元素定位器和操作方法
- * 提供清晰的业务操作接口
+ * Encapsulates all element locators and actions for the search page
+ * Provides clear business operation interfaces
  *
  * @class SearchPage
  * @extends BasePage
  */
 export class SearchPage extends BasePage {
-  // ============ 取车 ============
+  // ============ Pickup ============
 
-  /** 取车地点选择按钮 */
+  /** Pickup location button */
   private readonly pickupLocationButton: Locator;
 
-  /** 取车地点输入框 */
+  /** Pickup location input */
   private readonly pickupLocationInput: Locator;
 
-  // ============ 还车 ============
+  // ============ Dropoff ============
 
-  /** 还车地点选择按钮 */
+  /** Dropoff location button */
   private readonly dropoffLocationButton: Locator;
 
-  /** 还车地点输入框 */
+  /** Dropoff location input */
   private readonly dropoffLocationInput: Locator;
 
-  // ============ 地点下拉选项 ============
+  // ============ Location dropdown options ============
 
-  /** 选择不同地点按钮 */
+  /** Choose a different location button */
   private readonly chooseDifferentLocationButton: Locator;
 
-  /** Auckland选项 */
+  /** Auckland option */
   private readonly aucklandOption: Locator;
 
-  /** Christchurch选项 */
+  /** Christchurch option */
   private readonly christchurchOption: Locator;
 
-  /** Queenstown选项 */
+  /** Queenstown option */
   private readonly queenstownOption: Locator;
 
-  // ============ 日期 ============
+  // ============ Dates ============
 
-  /** 日期选择按钮 */
+  /** Travel dates button */
   private readonly travelDatesButton: Locator;
 
-  /** 下个月按钮（初始状态） */
+  /** Next month button (initial state) */
   private readonly nextMonthButton1: Locator;
 
-  /** 下个月按钮（点击过一次后） */
+  /** Next month button (after one click) */
   private readonly nextMonthButton2: Locator;
 
-  /** 上个月按钮（点击过下个月按钮后出现） */
+  /** Previous month button (appears after clicking next month) */
   private readonly lastMonthButton: Locator;
 
-  // ============ 乘客 ============
+  // ============ Passengers ============
 
-  /** 乘客数量选择按钮 */
+  /** Passenger selector button */
   private readonly passengersButton: Locator;
 
-  /** 成人乘客数量输入框 */
+  /** Adult passenger input */
   private readonly adultPassengersInput: Locator;
 
-  /** 儿童乘客数量输入框 */
+  /** Child passenger input */
   private readonly childPassengersInput: Locator;
 
-  /** 成人乘客数量增加按钮 */
+  /** Adult passenger increase button */
   private readonly adultPassengersIncreaseButton: Locator;
 
-  /** 成人乘客数量减少按钮 */
+  /** Adult passenger decrease button */
   private readonly adultPassengersDecreaseButton: Locator;
 
-  /** 儿童乘客数量增加按钮 */
+  /** Child passenger increase button */
   private readonly childPassengersIncreaseButton: Locator;
 
-  /** 儿童乘客数量减少按钮 */
+  /** Child passenger decrease button */
   private readonly childPassengersDecreaseButton: Locator;
 
-  // ============ 年龄 ============
+  // ============ Driver age ============
 
-  /** 年龄下拉菜单 */
+  /** Driver age dropdown */
   private readonly driverAgeDropdown: Locator;
 
-  /** 年龄选项18-20 */
+  /** Age option 18-20 */
   private readonly driverAgeOption18_20: Locator;
 
-  /** 年龄选项21+ */
+  /** Age option 21+ */
   private readonly driverAgeOption21: Locator;
 
-  // ============ 驾照 ============
+  // ============ Licence ============
 
-  /** 驾照国家选择按钮 */
+  /** Licence country button */
   private readonly licenceButton: Locator;
 
-  /** 驾照国家选项新西兰 */
+  /** Licence country option New Zealand */
   private readonly licenceOptionNewZealand: Locator;
 
-  /** 驾照国家选项澳大利亚 */
+  /** Licence country option Australia */
   private readonly licenceOptionAustralia: Locator;
 
-  /** 驾照国家选项法国 */
+  /** Licence country option France */
   private readonly licenceOptionFrance: Locator;
 
-  /** 驾照国家选项英国 */
+  /** Licence country option United Kingdom */
   private readonly licenceOptionUnitedKingdom: Locator;
 
-  // ============ 优惠码 ============
+  // ============ Promo code ============
 
-  /** 优惠码按钮 */
+  /** Promo code button */
   private readonly promoCodeButton: Locator;
 
-  /** 优惠码输入框 */
+  /** Promo code input */
   private readonly promoCodeInput: Locator;
 
-  // ============ 搜索 ============
+  // ============ Search ============
 
-  /** 搜索按钮 */
+  /** Search button */
   private readonly searchButton: Locator;
 
-  // ============ 结果和消息 ============
+  // ============ Results and messages ============
 
-  /** 结果容器 */
+  /** Results container */
   private readonly resultsContainer: Locator;
 
-  /** 错误消息 */
+  /** Error message */
   private readonly errorMessage: Locator;
 
-  /** 加载指示器 */
+  /** Loading indicator */
   private readonly loadingIndicator: Locator;
 
-  /** 取车地点未选择提示 */
+  /** Pickup location missing notice */
   private readonly pickupLocationNotice: Locator;
 
-  /** 还车地点未选择提示 */
+  /** Dropoff location missing notice */
   private readonly dropoffLocationNotice: Locator;
 
-  /** 日期未选择提示 */
+  /** Travel dates missing notice */
   private readonly travelDatesNotice: Locator;
 
-  /** 乘客未选择提示 */
+  /** Passenger selection missing notice */
   private readonly passengersNotice: Locator;
 
-  /** 乘客数量超过最大值提示 */
+  /** Passenger count exceeds maximum notice */
   private readonly passengersMaxNotice: Locator;
 
-  /** 年龄未选择提示 */
+  /** Driver age missing notice */
   private readonly driverAgeNotice: Locator;
 
-  /** 驾照未选择提示 */
+  /** Licence missing notice */
   private readonly licenceNotice: Locator;
 
   constructor(page: Page) {
     super(page);
 
-    // ============ 初始化交互元素 ============
+    // ============ Initialize interactive elements ============
 
-    // ============ 取车 ============
+    // ============ Pickup ============
 
     this.pickupLocationButton = page.getByRole('button', { name: 'Choose your pickup location' });
     this.pickupLocationInput = page.getByRole('textbox', { name: 'Pick up from' });
 
-    // ============ 还车 ============
+    // ============ Dropoff ============
 
     this.dropoffLocationButton = page.getByRole('button', { name: 'Choose your dropoff location' });
     this.dropoffLocationInput = page.getByRole('textbox', { name: 'Drop off to' });
 
-    // ============ 地点下拉选项 ============
+    // ============ Location dropdown options ============
 
     this.chooseDifferentLocationButton = page.getByRole('button', { name: 'Choose a different location' });
     this.aucklandOption = page.getByText('Auckland Airport470 Oruarangi');
     this.christchurchOption = page.getByText('Christchurch Airport159');
     this.queenstownOption = page.getByText('Queenstown50 Lucas Place,');
 
-    // ============ 日期 ============
+    // ============ Dates ============
 
     this.travelDatesButton = page.getByRole('button', { name: 'Select the pick-up and drop-' });
     this.nextMonthButton1 = page.getByRole('button').filter({ hasText: /^$/ });
     this.nextMonthButton2 = page.getByRole('button').nth(4);
     this.lastMonthButton = page.getByRole('button').nth(3);
 
-    // ============ 乘客 ============
+    // ============ Passengers ============
 
     this.passengersButton = page.getByRole('button', { name: 'Select your passenger count' });
     this.adultPassengersInput = page.getByRole('spinbutton', { name: 'Adult passenger count. Over' });
@@ -190,27 +190,27 @@ export class SearchPage extends BasePage {
     this.childPassengersIncreaseButton = page.getByRole('button', { name: 'Increase Child passenger' });
     this.childPassengersDecreaseButton = page.getByRole('button', { name: 'Decrease Child passenger' });
 
-    // ============ 年龄 ============
+    // ============ Driver age ============
 
     this.driverAgeDropdown = page.locator('[data-test-id="ageSelect"]');
     this.driverAgeOption18_20 = page.getByRole('button', { name: '-20' });
     this.driverAgeOption21 = page.getByRole('button', { name: '+' });
 
-    // ============ 驾照 ============
+    // ============ Licence ============
     this.licenceButton = page.getByRole('button', { name: 'Select your drivers licence' });
     this.licenceOptionNewZealand = page.locator('button').filter({ hasText: 'New Zealand' });
     this.licenceOptionAustralia = page.locator('button').filter({ hasText: 'Australia' });
     this.licenceOptionFrance = page.locator('button').filter({ hasText: 'France' });
     this.licenceOptionUnitedKingdom = page.locator('button').filter({ hasText: 'United Kingdom' });
 
-    // ============ 优惠码 ============
+    // ============ Promo code ============
     this.promoCodeButton = page.getByText('Promo codeSearch');
     this.promoCodeInput = page.getByRole('textbox', { name: 'promo code optional' });
 
-    // ============ 搜索 ============
+    // ============ Search ============
     this.searchButton = page.getByRole('button', { name: 'Start your search' });
 
-    // ============ 结果和消息 ============
+    // ============ Results and messages ============
     this.resultsContainer = page.locator('[data-testid="search-results"]');
     this.errorMessage = page.locator('[role="alert"]');
     this.loadingIndicator = page.locator('[data-testid="loading"]');
@@ -224,14 +224,14 @@ export class SearchPage extends BasePage {
   }
 
   // ============================================
-  // 页面导航方法
+  // Page navigation methods
   // ============================================
 
   /**
-   * 导航到搜索页面
-   * @param options - URL参数配置
-   * @param options.cc - 国家代码（如 'nz' 表示新西兰）
-   * @param options.mobile - 是否打开移动端视图
+   * Navigate to the search page
+   * @param options - URL parameter options
+   * @param options.cc - Country code (for example 'nz' for New Zealand)
+   * @param options.mobile - Whether to open the mobile view
    */
   async navigateToSearchPage(options?: { cc?: string; mobile?: boolean }): Promise<void> {
     let path = '/';
@@ -254,8 +254,8 @@ export class SearchPage extends BasePage {
   }
 
   /**
-   * 等待搜索组件可见
-   * 验证关键按钮是否已加载
+   * Wait for the search widget to be visible
+   * Verify that key buttons have loaded
    */
   async waitForSearchWidgetVisible(): Promise<void> {
     await this.waitForVisible(this.pickupLocationButton, 15000);
@@ -263,49 +263,49 @@ export class SearchPage extends BasePage {
   }
 
   // ============================================
-  // 地点选择方法
+  // Location selection methods
   // ============================================
 
   /**
-   * 点击选择取车地点（从下拉菜单直接选择）
+   * Click to choose the pickup location (select directly from the dropdown)
    *
-   * 交互流程：
-   * 1. 点击取车地点按钮
-   * 2. 检查是否出现"Choose a different location"按钮（已选择地点时会出现）
-   * 3. 如果出现该按钮，点击它以展开完整地点列表
-   * 4. 验证3个地点下拉选项是否都出现
-   * 5. 根据输入选择对应的地点选项
+   * Interaction steps:
+   * 1. Click the pickup location button
+   * 2. Check whether the "Choose a different location" button appears (shown when a location is already selected)
+   * 3. If the button appears, click it to expand the full location list
+   * 4. Ensure all three location options appear in the dropdown
+   * 5. Select the matching location option based on the input
    *
-   * @param location - 地点名称（如 "Auckland", "Christchurch", "Queenstown"）
-   * @throws 如果3个地点选项未全部出现，或输入的地点不在可选范围内
+   * @param location - Location name (for example "Auckland", "Christchurch", "Queenstown")
+   * @throws If the three options are not all visible or the location is not supported
    */
   async clickPickupLocation(location: string): Promise<void> {
-    // 点击按钮触发地点选择器
+    // Click the button to open the location selector
     await this.click(this.pickupLocationButton);
 
-    // 等待下拉选项或"Choose a different location"按钮出现
+    // Wait for the dropdown options or the "Choose a different location" button
     await this.page.waitForTimeout(1000);
 
-    // 检查是否出现"Choose a different location"按钮
+    // Check if the "Choose a different location" button appears
     const isDifferentLocationButtonVisible = await this.isVisible(this.chooseDifferentLocationButton);
     if (isDifferentLocationButtonVisible) {
-      // 点击"Choose a different location"按钮以展开完整地点列表
+      // Click "Choose a different location" to expand the full list
       await this.click(this.chooseDifferentLocationButton);
       await this.page.waitForTimeout(500);
     }
 
-    // 验证3个地点选项是否都出现
+    // Verify that all three location options appear
     const aucklandVisible = await this.isVisible(this.aucklandOption);
     const christchurchVisible = await this.isVisible(this.christchurchOption);
     const queenstownVisible = await this.isVisible(this.queenstownOption);
 
     if (!aucklandVisible || !christchurchVisible || !queenstownVisible) {
       throw new Error(
-        `并非所有地点选项都出现。Auckland: ${aucklandVisible}, Christchurch: ${christchurchVisible}, Queenstown: ${queenstownVisible}`
+        `Not all location options are visible. Auckland: ${aucklandVisible}, Christchurch: ${christchurchVisible}, Queenstown: ${queenstownVisible}`
       );
     }
 
-    // 根据输入选择对应的地点选项
+    // Select the matching option based on the input
     let selectedOption: Locator;
     switch (location.toLowerCase().trim()) {
       case 'auckland':
@@ -319,41 +319,41 @@ export class SearchPage extends BasePage {
         break;
       default:
         throw new Error(
-          `不支持的地点: "${location}"。可选地点: Auckland, Christchurch, Queenstown`
+          `Unsupported location: "${location}". Available options: Auckland, Christchurch, Queenstown`
         );
     }
 
-    // 点击选中的地点选项
+    // Click the selected location option
     await this.click(selectedOption);
   }
 
   /**
-   * 搜索选择取车地点（输入查询后选择）
+   * Search and choose a pickup location (type then select)
    *
-   * 交互流程：
-   * 1. 点击取车地点按钮
-   * 2. 点击输入框
-   * 3. 输入地点名称进行查询
-   * 4. 验证输入的地点选项是否出现
-   * 5. 点击匹配的地点选项
+   * Interaction steps:
+   * 1. Click the pickup location button
+   * 2. Click the input field
+   * 3. Enter the location name to search
+   * 4. Ensure the searched option appears
+   * 5. Click the matching location option
    *
-   * @param location - 地点名称（如 "Auckland", "Christchurch", "Queenstown"）
-   * @throws 如果输入的地点选项未出现，或输入的地点不在可选范围内
+   * @param location - Location name (for example "Auckland", "Christchurch", "Queenstown")
+   * @throws If the searched option does not appear or is not supported
    */
   async searchPickupLocation(location: string): Promise<void> {
-    // 点击按钮触发地点选择器
+    // Click the button to open the location selector
     await this.click(this.pickupLocationButton);
 
-    // 点击输入框
+    // Click the input field
     await this.click(this.pickupLocationInput);
 
-    // 输入地点名称进行查询
+    // Enter the location name to search
     await this.fill(this.pickupLocationInput, location);
 
-    // 等待下拉选项出现
+    // Wait for options to appear
     await this.page.waitForTimeout(1000);
 
-    // 根据输入获取对应的地点选项
+    // Resolve the matching location option based on the input
     let selectedOption: Locator;
     switch (location.toLowerCase()) {
       case 'auckland':
@@ -367,78 +367,78 @@ export class SearchPage extends BasePage {
         break;
       default:
         throw new Error(
-          `不支持的地点: "${location}"。可选地点: Auckland, Christchurch, Queenstown`
+          `Unsupported location: "${location}". Available options: Auckland, Christchurch, Queenstown`
         );
     }
 
-    // 验证输入的地点选项是否出现
+    // Ensure the selected option becomes visible
     const isLocationVisible = await this.isVisible(selectedOption);
     if (!isLocationVisible) {
       throw new Error(
-        `地点选项 "${location}" 未出现在下拉菜单中`
+        `Location option "${location}" did not appear in the dropdown`
       );
     }
 
-    // 点击选中的地点选项
+    // Click the selected location option
     await this.click(selectedOption);
   }
 
   /**
-   * 点击选择还车地点（从下拉菜单直接选择）
+   * Click to choose the dropoff location (select directly from the dropdown)
    *
-   * 交互流程：
-   * 1. 检查下拉菜单是否已自动展开（选择取车地点后会自动展开）
-   * 2. 如果未展开，点击还车地点按钮
-   * 3. 检查是否有"请选择取车地点"的错误提示
-   * 4. 检查是否出现"Choose a different location"按钮（已选择地点时会出现）
-   * 5. 如果出现该按钮，点击它以展开完整地点列表
-   * 6. 验证3个地点下拉选项是否都出现
-   * 7. 根据输入选择对应的地点选项
+   * Interaction steps:
+   * 1. Check whether the dropdown is already open (it may auto-expand after selecting pickup)
+   * 2. If it is not open, click the dropoff location button
+   * 3. Check for a "Please select your pickup location" notice
+   * 4. Check whether the "Choose a different location" button appears (when a location is already selected)
+   * 5. If the button appears, click it to show the full list
+   * 6. Ensure all three dropdown options are visible
+   * 7. Select the matching option based on the input
    *
-   * @param location - 地点名称（如 "Auckland", "Christchurch", "Queenstown"）
-   * @throws 如果未选择取车地点、3个地点选项未全部出现，或输入的地点不在可选范围内
+   * @param location - Location name (for example "Auckland", "Christchurch", "Queenstown")
+   * @throws If no pickup location is selected, the options are missing, or the location is unsupported
    */
   async clickDropoffLocation(location: string): Promise<void> {
-    // 检查下拉菜单是否已经可见（选择取车地点后可能自动展开）
+    // Check whether the dropdown is already visible (it may auto-expand after selecting pickup)
     let aucklandVisible = await this.isVisible(this.aucklandOption);
     let christchurchVisible = await this.isVisible(this.christchurchOption);
     let queenstownVisible = await this.isVisible(this.queenstownOption);
 
-    // 如果下拉菜单未展开，点击按钮触发
+    // If not, click the button to open it
     if (!aucklandVisible && !christchurchVisible && !queenstownVisible) {
       await this.click(this.dropoffLocationButton);
       await this.page.waitForTimeout(1000);
 
-      // 检查是否有"请选择取车地点"的错误提示
+      // Check for the "Please select your pickup location" notice
       const isNoticeVisible = await this.isVisible(this.pickupLocationNotice);
       if (isNoticeVisible) {
         throw new Error(
-          '必须先选择取车地点才能选择还车地点。请先调用 clickPickupLocation() 或 searchPickupLocation()'
+          'Pickup location must be selected before choosing a dropoff location. Invoke clickPickupLocation() or searchPickupLocation() first'
         );
       }
     }
 
-    // 检查是否出现"Choose a different location"按钮
+    // Check if the "Choose a different location" button appears
     const isDifferentLocationButtonVisible = await this.isVisible(this.chooseDifferentLocationButton);
     if (isDifferentLocationButtonVisible) {
-      // 点击"Choose a different location"按钮以展开完整地点列表
+      // Click "Choose a different location" to expand the full list
       await this.click(this.chooseDifferentLocationButton);
       await this.page.waitForTimeout(500);
     }
 
-    // 重新检查选项可见性
+    // Check option visibility again
     aucklandVisible = await this.isVisible(this.aucklandOption);
     christchurchVisible = await this.isVisible(this.christchurchOption);
     queenstownVisible = await this.isVisible(this.queenstownOption);
 
-    // 验证3个地点选项是否都出现
+    // Verify that all three location options appear
     if (!aucklandVisible || !christchurchVisible || !queenstownVisible) {
       throw new Error(
-        `并非所有地点选项都出现。Auckland: ${aucklandVisible}, Christchurch: ${christchurchVisible}, Queenstown: ${queenstownVisible}`
+        `Not all location options are visible. Auckland: ${aucklandVisible}, Christchurch: ${christchurchVisible}, Queenstown: ${queenstownVisible}`
       );
     }
 
-    // 根据输入选择对应的地点选项
+    // Select the matching option based on the input
     let selectedOption: Locator;
     switch (location.toLowerCase().trim()) {
       case 'auckland':
@@ -452,60 +452,60 @@ export class SearchPage extends BasePage {
         break;
       default:
         throw new Error(
-          `不支持的地点: "${location}"。可选地点: Auckland, Christchurch, Queenstown`
+          `Unsupported location: "${location}". Available options: Auckland, Christchurch, Queenstown`
         );
     }
 
-    // 点击选中的地点选项
+    // Click the selected location option
     await this.click(selectedOption);
   }
 
   /**
-   * 搜索选择还车地点（输入查询后选择）
+   * Search and choose the dropoff location (type then select)
    *
-   * 交互流程：
-   * 1. 检查输入框是否已自动显示（选择取车地点后会自动显示）
-   * 2. 如果未显示，点击还车地点按钮
-   * 3. 检查是否有"请选择取车地点"的错误提示
-   * 4. 点击输入框
-   * 5. 输入地点名称进行查询
-   * 6. 验证输入的地点选项是否出现
-   * 7. 点击匹配的地点选项
+   * Interaction steps:
+   * 1. Check whether the input box is already visible (it may appear after selecting pickup)
+   * 2. If it is not visible, click the dropoff location button
+   * 3. Check for a "Please select your pickup location" notice
+   * 4. Click the input field
+   * 5. Enter the location name to search
+   * 6. Ensure the searched option appears
+   * 7. Click the matching option
    *
-   * @param location - 地点名称（如 "Auckland", "Christchurch", "Queenstown"）
-   * @throws 如果未选择取车地点、输入的地点选项未出现，或输入的地点不在可选范围内
+   * @param location - Location name (for example "Auckland", "Christchurch", "Queenstown")
+   * @throws If no pickup is selected, the option does not appear, or the location is unsupported
    */
   async searchDropoffLocation(location: string): Promise<void> {
-    // 检查输入框是否已经可见（选择取车地点后可能自动显示）
+    // Check whether the input box is already visible (may appear after selecting pickup)
     let isInputVisible = await this.isVisible(this.dropoffLocationInput);
 
-    // 如果输入框未显示，点击按钮触发
+    // If the input is hidden, click the button to reveal it
     if (!isInputVisible) {
       await this.click(this.dropoffLocationButton);
       await this.page.waitForTimeout(1000);
 
-      // 检查是否有"请选择取车地点"的错误提示
+      // Check for the "Please select your pickup location" notice
       const isNoticeVisible = await this.isVisible(this.pickupLocationNotice);
       if (isNoticeVisible) {
         throw new Error(
-          '必须先选择取车地点才能选择还车地点。请先调用 clickPickupLocation() 或 searchPickupLocation()'
+          'Pickup location must be selected before choosing a dropoff location. Invoke clickPickupLocation() or searchPickupLocation() first'
         );
       }
 
-      // 重新检查输入框可见性
+      // Check the input field visibility again
       isInputVisible = await this.isVisible(this.dropoffLocationInput);
     }
 
-    // 点击输入框
+    // Click the input field
     await this.click(this.dropoffLocationInput);
 
-    // 输入地点名称进行查询
+    // Enter the location name to search
     await this.fill(this.dropoffLocationInput, location);
 
-    // 等待下拉选项出现
+    // Wait for options to appear
     await this.page.waitForTimeout(1000);
 
-    // 根据输入获取对应的地点选项
+    // Resolve the matching location option based on the input
     let selectedOption: Locator;
     switch (location.toLowerCase().trim()) {
       case 'auckland':
@@ -519,70 +519,70 @@ export class SearchPage extends BasePage {
         break;
       default:
         throw new Error(
-          `不支持的地点: "${location}"。可选地点: Auckland, Christchurch, Queenstown`
+          `Unsupported location: "${location}". Available options: Auckland, Christchurch, Queenstown`
         );
     }
 
-    // 验证输入的地点选项是否出现
+    // Ensure the selected option becomes visible
     const isLocationVisible = await this.isVisible(selectedOption);
     if (!isLocationVisible) {
       throw new Error(
-        `地点选项 "${location}" 未出现在下拉菜单中`
+        `Location option "${location}" did not appear in the dropdown`
       );
     }
 
-    // 点击选中的地点选项
+    // Click the selected location option
     await this.click(selectedOption);
   }
 
   // ============================================
-  // 日期选择方法
+  // Date selection methods
   // ============================================
 
   /**
-   * 选择旅行日期（取车和还车日期）
+   * Select travel dates (pickup and dropoff)
    *
-   * 注意：需要先选择取车和还车地点，日期选择器才能正常使用
+   * Note: pickup and dropoff locations must be selected before the date picker works
    *
-   * @param pickupDate - 取车日期（格式：YYYY-MM-DD）
-   * @param dropoffDate - 还车日期（格式：YYYY-MM-DD）
+   * @param pickupDate - Pickup date (format: YYYY-MM-DD)
+   * @param dropoffDate - Dropoff date (format: YYYY-MM-DD)
    */
   async selectTravelDates(pickupDate: string, dropoffDate: string): Promise<void> {
-    // 检查日期选择器是否已打开
+    // Check whether the date picker is open
     const isOpen = await this.isDatePickerOpen();
 
     if (!isOpen) {
-      // 如果未打开，点击日期按钮
+      // If not, click the date button
       await this.click(this.travelDatesButton);
 
-      // 等待日期选择器出现
+      // Wait for the date picker to appear
       await this.page.waitForTimeout(1000);
 
-      // 再次检查是否打开
+      // Check again if it is open
       const isNowOpen = await this.isDatePickerOpen();
       if (!isNowOpen) {
-        throw new Error('日期选择器未能成功打开');
+        throw new Error('Date picker failed to open');
       }
     }
 
-    // 选择取车日期
+    // Select the pickup date
     await this.selectDateFromPicker(pickupDate);
 
-    // 选择还车日期
+    // Select the dropoff date
     await this.selectDateFromPicker(dropoffDate);
   }
 
   /**
-   * 从日期选择器中选择日期
+   * Select a date from the picker
    *
-   * @param date - 日期字符串（格式：YYYY-MM-DD）
+   * @param date - Date string (format: YYYY-MM-DD)
    * @private
    */
   private async selectDateFromPicker(date: string): Promise<void> {
-    // 解析日期
+    // Parse the date
     const parts = date.split('-');
     if (parts.length !== 3) {
-      throw new Error(`无效的日期格式: ${date}，期望格式: YYYY-MM-DD`);
+      throw new Error(`Invalid date format: ${date}, expected format: YYYY-MM-DD`);
     }
 
     const year = parts[0];
@@ -590,40 +590,40 @@ export class SearchPage extends BasePage {
     const day = parts[2];
 
     if (!year || !month || !day) {
-      throw new Error(`无效的日期格式: ${date}，期望格式: YYYY-MM-DD`);
+      throw new Error(`Invalid date format: ${date}, expected format: YYYY-MM-DD`);
     }
 
     const yearNum = parseInt(year, 10);
     const monthNum = parseInt(month, 10);
     const dayNum = parseInt(day, 10);
 
-    // 获取月份英文名称
+    // Get the month name
     const monthName = this.getMonthName(monthNum);
 
-    // 导航到目标月份（如果需要）
+    // Navigate to the target month if needed
     await this.navigateToMonth(monthName, yearNum);
 
-    // 在指定月份中选择日期
+    // Select the date within the target month
     await this.selectDateInMonth(monthName, yearNum, dayNum.toString());
 
-    // 等待页面更新
+    // Wait for the page to update
     await this.page.waitForTimeout(500);
   }
 
   /**
-   * 判断日期选择器是否已打开
+   * Determine if the date picker is open
    *
-   * @returns 是否打开
+   * @returns Whether it is open
    * @private
    */
   private async isDatePickerOpen(): Promise<boolean> {
     try {
-      // 获取当前日期
+      // Grab the current date
       const now = new Date();
       const currentMonthName = this.getMonthName(now.getMonth() + 1);
       const currentYear = now.getFullYear();
 
-      // 检查是否存在当前月份的文本（首字母大写）
+      // Check that the current month text exists (capitalized)
       const monthPattern = new RegExp(`${currentMonthName}\\s+${currentYear}`, 'i');
       const monthText = this.page.getByText(monthPattern);
 
@@ -634,11 +634,11 @@ export class SearchPage extends BasePage {
   }
 
   /**
-   * 获取指定月份的容器
+   * Get the container for a specific month
    *
-   * @param monthName - 月份英文名称（如 "October"）
-   * @param year - 年份
-   * @returns 月份容器 Locator
+   * @param monthName - Month name (for example "October")
+   * @param year - Year
+   * @returns Locator for the month container
    * @private
    */
   private getMonthContainer(monthName: string, year: number): Locator {
@@ -652,54 +652,54 @@ export class SearchPage extends BasePage {
   }
 
   /**
-   * 导航到指定月份
+   * Navigate to the specified month
    *
-   * @param monthName - 月份英文名称（如 "October"）
-   * @param year - 年份
+   * @param monthName - Month name (for example "October")
+   * @param year - Year
    * @private
    */
   private async navigateToMonth(monthName: string, year: number): Promise<void> {
-    // 检查目标月份是否已经可见
+    // Check whether the target month is already visible
     const targetMonth = this.getMonthContainer(monthName, year);
     const isVisible = await targetMonth.isVisible({ timeout: 1000 }).catch(() => false);
 
     if (isVisible) {
-      // 目标月份已经可见，无需导航
+      // Target month is already visible, no navigation required
       return;
     }
 
-    // 获取当前显示的月份信息
+    // Read the currently displayed months
     const now = new Date();
     const currentMonth = now.getMonth() + 1; // 1-12
     const currentYear = now.getFullYear();
 
-    // 计算目标月份与当前月份的差距
+    // Calculate the offset between target and current month
     const targetMonthNum = this.getMonthNumber(monthName);
     const monthDiff = (year - currentYear) * 12 + (targetMonthNum - currentMonth);
 
-    // 根据差距点击翻页按钮
+    // Click navigation buttons according to the difference
     if (monthDiff > 0) {
-      // 需要向后翻页
+      // Need to move forward
       await this.navigateForward(monthDiff);
     } else if (monthDiff < 0) {
-      // 需要向前翻页
+      // Need to move backward
       await this.navigateBackward(Math.abs(monthDiff));
     }
   }
 
   /**
-   * 向后导航（翻到未来的月份）
+   * Navigate forward (to future months)
    *
-   * @param clicks - 需要点击的次数
+   * @param clicks - Number of clicks required
    * @private
    */
   private async navigateForward(clicks: number): Promise<void> {
     for (let i = 0; i < clicks; i++) {
       if (i === 0) {
-        // 第一次点击使用 nextMonthButton1
+        // Use nextMonthButton1 for the first click
         await this.click(this.nextMonthButton1);
       } else {
-        // 后续点击使用 nextMonthButton2
+        // Use nextMonthButton2 for later clicks
         await this.click(this.nextMonthButton2);
       }
       await this.page.waitForTimeout(300);
@@ -707,9 +707,9 @@ export class SearchPage extends BasePage {
   }
 
   /**
-   * 向前导航（翻到过去的月份）
+   * Navigate backward (to past months)
    *
-   * @param clicks - 需要点击的次数
+   * @param clicks - Number of clicks required
    * @private
    */
   private async navigateBackward(clicks: number): Promise<void> {
@@ -720,30 +720,30 @@ export class SearchPage extends BasePage {
   }
 
   /**
-   * 在指定月份中选择日期
+   * Select a date within the specified month
    *
-   * @param monthName - 月份英文名称（如 "October"）
-   * @param year - 年份
-   * @param day - 日期（如 "28"）
+   * @param monthName - Month name (for example "October")
+   * @param year - Year
+   * @param day - Day value (for example "28")
    * @private
    */
   private async selectDateInMonth(monthName: string, year: number, day: string): Promise<void> {
-    // 获取月份容器
+    // Fetch the month container
     const monthContainer = this.getMonthContainer(monthName, year);
 
-    // 在该月份容器中查找日期按钮
+    // Locate the day button inside that container
     const dayButton = monthContainer.getByRole('button', { name: day, exact: true });
 
-    // 等待按钮可见并点击
+    // Wait for the button to appear and click it
     await this.waitForVisible(dayButton, 5000);
     await this.click(dayButton);
   }
 
   /**
-   * 获取月份英文名称
+   * Get the month name
    *
-   * @param monthNumber - 月份数字（1-12）
-   * @returns 月份英文名称（首字母大写）
+   * @param monthNumber - Month number (1-12)
+   * @returns Month name with capitalization
    * @private
    */
   private getMonthName(monthNumber: number): string {
@@ -753,22 +753,22 @@ export class SearchPage extends BasePage {
     ];
 
     if (monthNumber < 1 || monthNumber > 12) {
-      throw new Error(`无效的月份数字: ${monthNumber}，期望范围: 1-12`);
+      throw new Error(`Invalid month number: ${monthNumber}, expected range: 1-12`);
     }
 
     const monthName = months[monthNumber - 1];
     if (!monthName) {
-      throw new Error(`无法获取月份名称: ${monthNumber}`);
+      throw new Error(`Unable to resolve month name: ${monthNumber}`);
     }
 
     return monthName;
   }
 
   /**
-   * 获取月份数字
+   * Get the month number
    *
-   * @param monthName - 月份英文名称（如 "October"）
-   * @returns 月份数字（1-12）
+   * @param monthName - Month name (for example "October")
+   * @returns Month number (1-12)
    * @private
    */
   private getMonthNumber(monthName: string): number {
@@ -778,150 +778,150 @@ export class SearchPage extends BasePage {
     ];
     const index = months.findIndex(m => m.toLowerCase() === monthName.toLowerCase());
     if (index === -1) {
-      throw new Error(`无效的月份名称: ${monthName}`);
+      throw new Error(`Invalid month name: ${monthName}`);
     }
     return index + 1;
   }
 
   // ============================================
-  // 其他选择方法
+  // Additional selection methods
   // ============================================
 
   /**
-   * 通过输入框设置成人乘客数量
+   * Set adult passenger count via input
    *
-   * 直接在 spinbutton 输入框中填充数量
+   * Fill the spinbutton input directly
    *
-   * @param count - 目标成人乘客数量（必须 >= 0）
-   * @throws 如果目标数量小于0
+   * @param count - Target adult passenger count (must be >= 0)
+   * @throws If the target count is negative
    * @private
    */
   private async setAdultPassengersByInput(count: number): Promise<void> {
     if (count < 0) {
-      throw new Error(`成人乘客数量不能为负数: ${count}`);
+      throw new Error(`Adult passenger count cannot be negative: ${count}`);
     }
 
-    // 点击成人乘客输入框
+    // Click the adult passenger input
     await this.click(this.adultPassengersInput);
 
-    // 直接填充数量
+    // Fill the value directly
     await this.fill(this.adultPassengersInput, count.toString());
 
-    // 等待输入生效
+    // Wait for the value to apply
     await this.page.waitForTimeout(300);
   }
 
   /**
-   * 通过增减按钮设置成人乘客数量
+   * Set adult passenger count via buttons
    *
-   * 通过点击增加或减少按钮来调整成人乘客数量
+   * Adjust adult passengers by clicking increase or decrease
    *
-   * @param count - 目标成人乘客数量（必须 >= 0）
-   * @throws 如果目标数量小于0
+   * @param count - Target adult passenger count (must be >= 0)
+   * @throws If the target count is negative
    * @private
    */
   private async setAdultPassengersByButtons(count: number): Promise<void> {
     if (count < 0) {
-      throw new Error(`成人乘客数量不能为负数: ${count}`);
+      throw new Error(`Adult passenger count cannot be negative: ${count}`);
     }
 
-    // 获取当前成人乘客数量
+    // Read the current adult passenger count
     const currentCountText = await this.adultPassengersInput.inputValue().catch(() => '0');
     const currentCount = parseInt(currentCountText, 10) || 0;
 
     const diff = count - currentCount;
 
     if (diff > 0) {
-      // 需要增加
+      // Need to increase
       for (let i = 0; i < diff; i++) {
         await this.click(this.adultPassengersIncreaseButton);
         await this.page.waitForTimeout(300);
       }
     } else if (diff < 0) {
-      // 需要减少
+      // Need to decrease
       for (let i = 0; i < Math.abs(diff); i++) {
         await this.click(this.adultPassengersDecreaseButton);
         await this.page.waitForTimeout(300);
       }
     }
-    // diff === 0 时无需操作
+    // No action required if diff === 0
   }
 
   /**
-   * 通过输入框设置儿童乘客数量
+   * Set child passenger count via input
    *
-   * 直接在 spinbutton 输入框中填充数量
+   * Fill the spinbutton input directly
    *
-   * @param count - 目标儿童乘客数量（必须 >= 0）
-   * @throws 如果目标数量小于0
+   * @param count - Target child passenger count (must be >= 0)
+   * @throws If the target count is negative
    * @private
    */
   private async setChildPassengersByInput(count: number): Promise<void> {
     if (count < 0) {
-      throw new Error(`儿童乘客数量不能为负数: ${count}`);
+      throw new Error(`Child passenger count cannot be negative: ${count}`);
     }
 
-    // 点击儿童乘客输入框
+    // Click the child passenger input
     await this.click(this.childPassengersInput);
 
-    // 直接填充数量
+    // Fill the value directly
     await this.fill(this.childPassengersInput, count.toString());
 
-    // 等待输入生效
+    // Wait for the value to apply
     await this.page.waitForTimeout(300);
   }
 
   /**
-   * 通过增减按钮设置儿童乘客数量
+   * Set child passenger count via buttons
    *
-   * 通过点击增加或减少按钮来调整儿童乘客数量
+   * Adjust child passengers by clicking increase or decrease
    *
-   * @param count - 目标儿童乘客数量（必须 >= 0）
-   * @throws 如果目标数量小于0
+   * @param count - Target child passenger count (must be >= 0)
+   * @throws If the target count is negative
    * @private
    */
   private async setChildPassengersByButtons(count: number): Promise<void> {
     if (count < 0) {
-      throw new Error(`儿童乘客数量不能为负数: ${count}`);
+      throw new Error(`Child passenger count cannot be negative: ${count}`);
     }
 
-    // 获取当前儿童乘客数量
+    // Read the current child passenger count
     const currentCountText = await this.childPassengersInput.inputValue().catch(() => '0');
     const currentCount = parseInt(currentCountText, 10) || 0;
 
     const diff = count - currentCount;
 
     if (diff > 0) {
-      // 需要增加
+      // Need to increase
       for (let i = 0; i < diff; i++) {
         await this.click(this.childPassengersIncreaseButton);
         await this.page.waitForTimeout(300);
       }
     } else if (diff < 0) {
-      // 需要减少
+      // Need to decrease
       for (let i = 0; i < Math.abs(diff); i++) {
         await this.click(this.childPassengersDecreaseButton);
         await this.page.waitForTimeout(300);
       }
     }
-    // diff === 0 时无需操作
+    // No action required if diff === 0
   }
 
   /**
-   * 选择主驾驶员年龄
+   * Select the primary driver age
    *
-   * @param age - 年龄范围（'18-20' 或 '21+'）
-   * @throws 如果年龄范围不在可选范围内
+   * @param age - Age range ('18-20' or '21+')
+   * @throws If the age range is unsupported
    * @private
    */
   private async selectDriverAge(age: '18-20' | '21+'): Promise<void> {
-    // 点击年龄下拉菜单
+    // Click the age dropdown
     await this.click(this.driverAgeDropdown);
 
-    // 等待下拉选项出现
+    // Wait for options to appear
     await this.page.waitForTimeout(500);
 
-    // 根据年龄范围选择对应选项
+    // Choose the option matching the age range
     let selectedOption: Locator;
     switch (age) {
       case '18-20':
@@ -932,34 +932,34 @@ export class SearchPage extends BasePage {
         break;
       default:
         throw new Error(
-          `不支持的年龄范围: "${age}"。可选范围: 18-20, 21+`
+          `Unsupported age range: "${age}". Available: 18-20, 21+`
         );
     }
 
-    // 验证选项是否可见
+    // Ensure the option is visible
     const isOptionVisible = await this.isVisible(selectedOption);
     if (!isOptionVisible) {
-      throw new Error(`年龄选项 "${age}" 未出现在下拉菜单中`);
+      throw new Error(`Age option "${age}" did not appear in the dropdown`);
     }
 
-    // 点击选中的年龄选项
+    // Click the selected age option
     await this.click(selectedOption);
   }
 
   /**
-   * 选择乘客数量和主驾驶员年龄
+   * Select passenger counts and primary driver age
    *
-   * 交互流程：
-   * 1. 点击乘客数量选择按钮
-   * 2. 调整成人乘客数量（可通过输入框或增减按钮）
-   * 3. 调整儿童乘客数量（可通过输入框或增减按钮）
-   * 4. 选择主驾驶员年龄（从下拉菜单）
+   * Interaction steps:
+   * 1. Click the passenger count button
+   * 2. Adjust adult passengers (via input or buttons)
+   * 3. Adjust child passengers (via input or buttons)
+   * 4. Choose the primary driver age (from the dropdown)
    *
-   * @param options - 乘客配置选项
-   * @param options.adults - 成人乘客数量（默认: 1）
-   * @param options.children - 儿童乘客数量（默认: 0）
-   * @param options.driverAge - 主驾驶员年龄范围（'18-20' 或 '21+'，默认: '21+'）
-   * @param options.method - 设置方式（'input': 直接输入框填充, 'buttons': 增减按钮，默认: 'input'）
+   * @param options - Passenger configuration options
+   * @param options.adults - Adult passengers (default: 1)
+   * @param options.children - Child passengers (default: 0)
+   * @param options.driverAge - Primary driver age ('18-20' or '21+', default: '21+')
+   * @param options.method - Entry method ('input': fill the field, 'buttons': use increment/decrement, default: 'input')
    */
   async selectPassengers(options: {
     adults?: number;
@@ -974,60 +974,60 @@ export class SearchPage extends BasePage {
       method = 'input'
     } = options;
 
-    // 点击乘客按钮打开乘客选择面板
+    // Click the passenger button to open the panel
     await this.click(this.passengersButton);
 
-    // 等待乘客选择面板出现
+    // Wait for the passenger panel to appear
     await this.page.waitForTimeout(1000);
 
-    // 验证成人乘客输入框是否可见（确认面板已打开）
+    // Ensure the adult input is visible (panel open)
     const isAdultInputVisible = await this.isVisible(this.adultPassengersInput);
     if (!isAdultInputVisible) {
-      throw new Error('乘客选择面板未能成功打开');
+      throw new Error('Passenger selection panel failed to open');
     }
 
-    // 根据选择的方式设置成人乘客数量
+    // Set adult count according to the chosen method
     if (method === 'input') {
       await this.setAdultPassengersByInput(adults);
     } else {
       await this.setAdultPassengersByButtons(adults);
     }
 
-    // 根据选择的方式设置儿童乘客数量
+    // Set child count according to the chosen method
     if (method === 'input') {
       await this.setChildPassengersByInput(children);
     } else {
       await this.setChildPassengersByButtons(children);
     }
 
-    // 选择主驾驶员年龄
+    // Select the primary driver age
     await this.selectDriverAge(driverAge);
 
-    // 等待设置生效
+    // Wait for the values to settle
     await this.page.waitForTimeout(500);
   }
 
   /**
-   * 选择驾照签发国家
+   * Select the licence issuing country
    *
-   * 交互流程：
-   * 1. 点击驾照国家选择按钮
-   * 2. 等待下拉菜单出现
-   * 3. 根据输入的国家名称选择对应的选项
-   * 4. 验证选项是否可见
-   * 5. 点击选中的国家选项
+   * Interaction steps:
+   * 1. Click the licence country button
+   * 2. Wait for the dropdown to appear
+   * 3. Choose the matching country option
+   * 4. Ensure the option is visible
+   * 5. Click the selected country option
    *
-   * @param country - 国家名称（如 "New Zealand", "Australia", "France", "United Kingdom"）
-   * @throws 如果下拉菜单未能成功打开或选项不可见
+   * @param country - Country name (for example "New Zealand", "Australia", "France", "United Kingdom")
+   * @throws If the dropdown fails to open or the option is hidden
    */
   async selectLicenceCountry(country: string): Promise<void> {
-    // 点击按钮打开驾照国家选择下拉菜单
+    // Click the button to open the licence country dropdown
     await this.click(this.licenceButton);
 
-    // 等待下拉菜单出现
+    // Wait for the dropdown to appear
     await this.page.waitForTimeout(1000);
 
-    // 根据国家名称获取对应的选项
+    // Resolve the option based on the country name
     let selectedOption: Locator;
     const normalizedCountry = country.toLowerCase().trim();
 
@@ -1051,77 +1051,77 @@ export class SearchPage extends BasePage {
         selectedOption = this.licenceOptionUnitedKingdom;
         break;
       default:
-        // 对于其他国家，使用通用 locator
+        // Use the generic locator for other countries
         selectedOption = this.page.locator('button').filter({ hasText: country });
         break;
     }
 
-    // 验证选项是否可见
+    // Ensure the option is visible
     const isOptionVisible = await this.isVisible(selectedOption);
     if (!isOptionVisible) {
       throw new Error(
-        `驾照国家选项 "${country}" 未出现在下拉菜单中。可选国家: New Zealand, Australia, France, United Kingdom`
+        `Licence country option "${country}" did not appear. Available: New Zealand, Australia, France, United Kingdom`
       );
     }
 
-    // 点击选中的国家选项
+    // Click the selected country option
     await this.click(selectedOption);
 
-    // 等待选择生效
+    // Wait for the selection to apply
     await this.page.waitForTimeout(500);
   }
 
   /**
-   * 输入优惠码
+   * Enter a promo code
    *
-   * 交互流程：
-   * 1. 点击优惠码按钮
-   * 2. 等待优惠码输入框出现
-   * 3. 验证输入框是否可见
-   * 4. 在输入框中填充优惠码
-   * 5. 等待输入生效
+   * Interaction steps:
+   * 1. Click the promo code button
+   * 2. Wait for the promo code field to appear
+   * 3. Ensure the field is visible
+   * 4. Fill the promo code input
+   * 5. Wait for the input to take effect
    *
-   * @param promoCode - 优惠码字符串
-   * @throws 如果优惠码输入框未能成功显示
+   * @param promoCode - Promo code string
+   * @throws If the promo code field fails to appear
    */
   async enterPromoCode(promoCode: string): Promise<void> {
-    // 点击按钮打开优惠码输入区域
+    // Click the button to reveal the promo input
     await this.click(this.promoCodeButton);
 
-    // 等待输入框出现
+    // Wait for the input to appear
     await this.page.waitForTimeout(1000);
 
-    // 验证优惠码输入框是否可见
+    // Confirm the promo input is visible
     const isInputVisible = await this.isVisible(this.promoCodeInput);
     if (!isInputVisible) {
-      throw new Error('优惠码输入框未能成功显示');
+      throw new Error('Promo code input failed to display');
     }
 
-    // 点击输入框
+    // Click the input field
     await this.click(this.promoCodeInput);
 
-    // 填充优惠码
+    // Fill the promo code
     await this.fill(this.promoCodeInput, promoCode);
 
-    // 等待输入生效
+    // Wait for the value to apply
     await this.page.waitForTimeout(500);
   }
 
   // ============================================
-  // 搜索操作方法
+  // Search operations
   // ============================================
 
   /**
-   * 点击搜索按钮
+   * Click the search button
    */
   async clickSearch(): Promise<void> {
     await this.click(this.searchButton);
   }
 
   /**
-   * 执行完整搜索流程
+   * Perform the complete search flow
    *
-   * @param searchData - 完整搜索数据
+   * @param searchData - Complete search data
    */
   async performFullSearch(searchData: {
     pickupLocation: string;
@@ -1135,12 +1135,12 @@ export class SearchPage extends BasePage {
     licenceCountry?: string;
     promoCode?: string;
   }): Promise<void> {
-    // 必填字段
+    // Required fields
     await this.clickPickupLocation(searchData.pickupLocation);
     await this.clickDropoffLocation(searchData.dropoffLocation);
     await this.selectTravelDates(searchData.pickupDate, searchData.dropoffDate);
 
-    // 可选字段 - 乘客信息
+    // Optional fields - passenger information
     if (searchData.adults !== undefined || searchData.children !== undefined || searchData.driverAge !== undefined) {
       await this.selectPassengers({
         adults: searchData.adults,
@@ -1156,51 +1156,51 @@ export class SearchPage extends BasePage {
       await this.enterPromoCode(searchData.promoCode);
     }
 
-    // 执行搜索
+    // Execute the search
     await this.clickSearch();
   }
 
   // ============================================
-  // 结果验证方法
+  // Result verification methods
   // ============================================
 
   /**
-   * 等待搜索结果加载
-   * @param timeout - 超时时间（毫秒）
+   * Wait for search results to load
+   * @param timeout - Timeout in milliseconds
    */
   async waitForSearchResults(timeout: number = 15000): Promise<void> {
-    // 先等待加载指示器消失（如果存在）
+    // Wait for the loading indicator to disappear if present
     const isLoadingVisible = await this.isVisible(this.loadingIndicator);
     if (isLoadingVisible) {
       await this.waitForHidden(this.loadingIndicator, timeout);
     }
 
-    // 等待结果容器出现
+    // Wait for the results container to appear
     await this.waitForVisible(this.resultsContainer, timeout);
   }
 
   /**
-   * 检查是否显示错误消息
-   * @returns 是否显示错误
+   * Check whether an error message is shown
+   * @returns Whether an error is displayed
    */
   async hasErrorMessage(): Promise<boolean> {
     return await this.isVisible(this.errorMessage);
   }
 
   /**
-   * 获取错误消息文本
-   * @returns 错误消息内容
+   * Get the error message text
+   * @returns The error message content
    */
   async getErrorMessage(): Promise<string> {
     return await this.getText(this.errorMessage);
   }
 
   // ============================================
-  // 表单验证方法
+  // Form validation methods
   // ============================================
 
   /**
-   * 验证搜索表单所有关键元素是否存在
+   * Verify that all key search form elements exist
    */
   async validateSearchFormElements(): Promise<void> {
     await this.assertVisible(this.pickupLocationButton, 'Pickup location button should be visible');
@@ -1210,54 +1210,54 @@ export class SearchPage extends BasePage {
   }
 
   /**
-   * 检查搜索按钮是否启用
-   * @returns 是否启用
+   * Check whether the search button is enabled
+   * @returns Whether it is enabled
    */
   async isSearchButtonEnabled(): Promise<boolean> {
     return await this.isEnabled(this.searchButton);
   }
 
   // ============================================
-  // 辅助方法
+  // Helper methods
   // ============================================
 
   /**
-   * 获取取车地点按钮的文本
-   * @returns 按钮文本内容
+   * Get the pickup location button text
+   * @returns Button text
    */
   async getPickupLocationButtonText(): Promise<string> {
     return await this.getText(this.pickupLocationButton);
   }
 
   /**
-   * 验证取车地点按钮是否包含指定文本
-   * @param text - 期望的文本
-   * @param message - 断言失败消息
+   * Ensure the pickup button contains the given text
+   * @param text - Expected text
+   * @param message - Assertion failure message
    */
   async assertPickupLocationContains(text: string, message?: string): Promise<void> {
     await this.assertContainsText(this.pickupLocationButton, text, message);
   }
 
   /**
-   * 获取还车地点按钮的文本
-   * @returns 按钮文本内容
+   * Get the dropoff location button text
+   * @returns Button text
    */
   async getDropoffLocationButtonText(): Promise<string> {
     return await this.getText(this.dropoffLocationButton);
   }
 
   /**
-   * 验证还车地点按钮是否包含指定文本
-   * @param text - 期望的文本
-   * @param message - 断言失败消息
+   * Ensure the dropoff button contains the given text
+   * @param text - Expected text
+   * @param message - Assertion failure message
    */
   async assertDropoffLocationContains(text: string, message?: string): Promise<void> {
     await this.assertContainsText(this.dropoffLocationButton, text, message);
   }
 
   /**
-   * 截取搜索表单的截图
-   * @param filename - 文件名（不含扩展名）
+   * Capture a screenshot of the search form
+   * @param filename - File name (without extension)
    */
   async takeSearchFormScreenshot(filename: string): Promise<void> {
     await this.takeScreenshot(`${filename}-search-form`);
