@@ -289,46 +289,46 @@ test.describe('searchDropoffLocation unit tests', () => {
   test('handle the full search flow', async ({ page }) => {
     console.log('🧪 Test: complete search flow');
 
-    await test.step('Step 1: select pickup location first', async () => {
+    await test.step('1: select pickup location first', async () => {
       await searchPage.searchPickupLocation('Auckland');
       await page.waitForTimeout(500);
       console.log('  ✅ Step 1 complete: pickup Auckland selected');
     });
 
-    await test.step('Step 2: click the drop-off button', async () => {
+    await test.step('2: click the drop-off button', async () => {
       const dropoffButton = page.getByRole('button', { name: 'Choose your drop-off location' });
       await dropoffButton.click();
       console.log('  ✅ Step 2 complete: button clicked');
       await page.waitForTimeout(500);
     });
 
-    await test.step('Step 3: focus the input field', async () => {
+    await test.step('3: focus the input field', async () => {
       const dropoffInput = page.getByRole('textbox', { name: 'Drop off at' });
       await dropoffInput.click();
       console.log('  ✅ Step 3 complete: input focused');
     });
 
-    await test.step('Step 4: enter the location name', async () => {
+    await test.step('4: enter the location name', async () => {
       const dropoffInput = page.getByRole('textbox', { name: 'Drop off at' });
       await dropoffInput.fill('Christchurch');
       console.log('  ✅ Step 4 complete: entered "Christchurch"');
       await page.waitForTimeout(1000);
     });
 
-    await test.step('Step 5: verify the option appears', async () => {
+    await test.step('5: verify the option appears', async () => {
       const christchurchOption = page.getByText('Christchurch Airport159');
       await expect(christchurchOption).toBeVisible();
       console.log('  ✅ Step 5 complete: Christchurch option visible');
     });
 
-    await test.step('Step 6: click the Christchurch option', async () => {
+    await test.step('6: click the Christchurch option', async () => {
       const christchurchOption = page.getByText('Christchurch Airport159');
       await christchurchOption.click();
       console.log('  ✅ Step 6 complete: option selected');
       await page.waitForTimeout(500);
     });
 
-    await test.step('Step 7: verify the selected result', async () => {
+    await test.step('7: verify the selected result', async () => {
       // Ensure the button displays Christchurch Airport
       await searchPage.assertDropoffLocationContains('Christchurch Airport', 'Button should display Christchurch Airport');
       const buttonText = await searchPage.getDropoffLocationButtonText();

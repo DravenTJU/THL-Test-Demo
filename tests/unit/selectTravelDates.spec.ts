@@ -278,18 +278,18 @@ test.describe('selectTravelDates unit tests', () => {
     console.log(`  📅 Pickup date: ${pickupDate}`);
     console.log(`  📅 Drop-off date: ${dropoffDate}`);
 
-    await test.step('Step 1: open the date picker', async () => {
+    await test.step('1: open the date picker', async () => {
       const travelDatesButton = page.getByRole('button', { name: 'Select the pick-up and drop-' });
       await travelDatesButton.click();
       console.log('  ✅ Step 1 complete: date button clicked');
     });
 
-    await test.step('Step 2: wait for the picker to appear', async () => {
+    await test.step('2: wait for the picker to appear', async () => {
       await page.waitForTimeout(1000);
       console.log('  ✅ Step 2 complete: picker visible');
     });
 
-    await test.step('Step 3: select the pickup date', async () => {
+    await test.step('3: select the pickup date', async () => {
       const monthNames = [
         'January', 'February', 'March', 'April', 'May', 'June',
         'July', 'August', 'September', 'October', 'November', 'December'
@@ -310,7 +310,7 @@ test.describe('selectTravelDates unit tests', () => {
       console.log(`  ✅ Step 3 complete: selected pickup ${monthName} ${pickupDay}`);
     });
 
-    await test.step('Step 4: select the drop-off date', async () => {
+    await test.step('4: select the drop-off date', async () => {
       const monthNames = [
         'January', 'February', 'March', 'April', 'May', 'June',
         'July', 'August', 'September', 'October', 'November', 'December'
@@ -331,7 +331,7 @@ test.describe('selectTravelDates unit tests', () => {
       console.log(`  ✅ Step 4 complete: selected drop-off ${monthName} ${dropoffDay}`);
     });
 
-    await test.step('Step 5: verify the final button text', async () => {
+    await test.step('5: verify the final button text', async () => {
       const travelDatesButton = page.getByRole('button', { name: 'Select the pick-up and drop-' });
       const buttonText = await travelDatesButton.innerText();
 

@@ -228,40 +228,40 @@ test.describe('searchPickupLocation unit tests', () => {
   test('handle the complete search flow', async ({ page }) => {
     console.log('🧪 Test: complete search flow');
 
-    await test.step('Step 1: click the pickup button', async () => {
+    await test.step('1: click the pickup button', async () => {
       const pickupButton = page.getByRole('button', { name: 'Choose your pickup location' });
       await pickupButton.click();
       console.log('  ✅ Step 1 complete: button clicked');
       await page.waitForTimeout(500);
     });
 
-    await test.step('Step 2: focus the input field', async () => {
+    await test.step('2: focus the input field', async () => {
       const pickupInput = page.getByRole('textbox', { name: 'Pick up from' });
       await pickupInput.click();
       console.log('  ✅ Step 2 complete: input focused');
     });
 
-    await test.step('Step 3: enter the location name', async () => {
+    await test.step('3: enter the location name', async () => {
       const pickupInput = page.getByRole('textbox', { name: 'Pick up from' });
       await pickupInput.fill('Auckland');
       console.log('  ✅ Step 3 complete: entered "Auckland"');
       await page.waitForTimeout(1000);
     });
 
-    await test.step('Step 4: verify the option appears', async () => {
+    await test.step('4: verify the option appears', async () => {
       const aucklandOption = page.getByText('Auckland Airport470 Oruarangi');
       await expect(aucklandOption).toBeVisible();
       console.log('  ✅ Step 4 complete: Auckland option visible');
     });
 
-    await test.step('Step 5: click the Auckland option', async () => {
+    await test.step('5: click the Auckland option', async () => {
       const aucklandOption = page.getByText('Auckland Airport470 Oruarangi');
       await aucklandOption.click();
       console.log('  ✅ Step 5 complete: option selected');
       await page.waitForTimeout(500);
     });
 
-    await test.step('Step 6: verify the result', async () => {
+    await test.step('6: verify the result', async () => {
       // Ensure the button displays Auckland Airport
       await searchPage.assertPickupLocationContains('Auckland Airport', 'Button should display Auckland Airport');
       const buttonText = await searchPage.getPickupLocationButtonText();

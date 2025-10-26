@@ -40,8 +40,8 @@ test.describe('enterPromoCode unit tests', () => {
 
       await test.step('Verify promo code is entered', async () => {
         const promoInput = page.getByRole('textbox', { name: 'promo code optional' });
-        const inputValue = await promoInput.inputValue();
-        expect(inputValue).toBe(promoCode);
+        const inputValue = promoInput;
+        await expect(inputValue).toHaveValue(promoCode);
       });
     });
 
@@ -54,8 +54,8 @@ test.describe('enterPromoCode unit tests', () => {
 
       await test.step('Verify promo code is entered', async () => {
         const promoInput = page.getByRole('textbox', { name: 'promo code optional' });
-        const inputValue = await promoInput.inputValue();
-        expect(inputValue).toBe(promoCode);
+        const inputValue = promoInput;
+        await expect(inputValue).toHaveValue(promoCode);
       });
     });
 
@@ -68,8 +68,8 @@ test.describe('enterPromoCode unit tests', () => {
 
       await test.step('Verify promo code is entered', async () => {
         const promoInput = page.getByRole('textbox', { name: 'promo code optional' });
-        const inputValue = await promoInput.inputValue();
-        expect(inputValue).toBe(promoCode);
+        const inputValue = promoInput;
+        await expect(inputValue).toHaveValue(promoCode);
       });
     });
 
@@ -82,8 +82,8 @@ test.describe('enterPromoCode unit tests', () => {
 
       await test.step('Verify promo code is entered', async () => {
         const promoInput = page.getByRole('textbox', { name: 'promo code optional' });
-        const inputValue = await promoInput.inputValue();
-        expect(inputValue).toBe(promoCode);
+        const inputValue = promoInput;
+        await expect(inputValue).toHaveValue(promoCode);
       });
     });
 
@@ -96,8 +96,8 @@ test.describe('enterPromoCode unit tests', () => {
 
       await test.step('Verify promo code is entered', async () => {
         const promoInput = page.getByRole('textbox', { name: 'promo code optional' });
-        const inputValue = await promoInput.inputValue();
-        expect(inputValue).toBe(promoCode);
+        const inputValue = promoInput;
+        await expect(inputValue).toHaveValue(promoCode);
       });
     });
 
@@ -110,8 +110,8 @@ test.describe('enterPromoCode unit tests', () => {
 
       await test.step('Verify promo code is entered', async () => {
         const promoInput = page.getByRole('textbox', { name: 'promo code optional' });
-        const inputValue = await promoInput.inputValue();
-        expect(inputValue).toBe(promoCode);
+        const inputValue = promoInput;
+        await expect(inputValue).toHaveValue(promoCode);
       });
     });
   });
@@ -126,8 +126,8 @@ test.describe('enterPromoCode unit tests', () => {
 
       await test.step('Verify input is empty', async () => {
         const promoInput = page.getByRole('textbox', { name: 'promo code optional' });
-        const inputValue = await promoInput.inputValue();
-        expect(inputValue).toBe('');
+        const inputValue = promoInput;
+        await expect(inputValue).toHaveValue('');
       });
     });
 
@@ -140,8 +140,8 @@ test.describe('enterPromoCode unit tests', () => {
 
       await test.step('Verify promo code is entered', async () => {
         const promoInput = page.getByRole('textbox', { name: 'promo code optional' });
-        const inputValue = await promoInput.inputValue();
-        expect(inputValue).toBe(promoCode);
+        const inputValue = promoInput;
+        await expect(inputValue).toHaveValue(promoCode);
       });
     });
 
@@ -154,8 +154,8 @@ test.describe('enterPromoCode unit tests', () => {
 
       await test.step('Verify promo code is entered', async () => {
         const promoInput = page.getByRole('textbox', { name: 'promo code optional' });
-        const inputValue = await promoInput.inputValue();
-        expect(inputValue).toBe(promoCode);
+        const inputValue = promoInput;
+        await expect(inputValue).toHaveValue(promoCode);
       });
     });
 
@@ -168,8 +168,8 @@ test.describe('enterPromoCode unit tests', () => {
 
       await test.step('Verify promo code is entered', async () => {
         const promoInput = page.getByRole('textbox', { name: 'promo code optional' });
-        const inputValue = await promoInput.inputValue();
-        expect(inputValue).toBe(promoCode);
+        const inputValue = promoInput;
+        await expect(inputValue).toHaveValue(promoCode);
       });
     });
 
@@ -182,8 +182,8 @@ test.describe('enterPromoCode unit tests', () => {
 
       await test.step('Verify promo code is entered', async () => {
         const promoInput = page.getByRole('textbox', { name: 'promo code optional' });
-        const inputValue = await promoInput.inputValue();
-        expect(inputValue).toBe(promoCode);
+        const inputValue = promoInput;
+        await expect(inputValue).toHaveValue(promoCode);
       });
     });
 
@@ -196,8 +196,8 @@ test.describe('enterPromoCode unit tests', () => {
 
       await test.step('Verify promo code is entered', async () => {
         const promoInput = page.getByRole('textbox', { name: 'promo code optional' });
-        const inputValue = await promoInput.inputValue();
-        expect(inputValue).toBe(promoCode);
+        const inputValue = promoInput;
+        await expect(inputValue).toHaveValue(promoCode);
       });
     });
   });
@@ -223,8 +223,8 @@ test.describe('enterPromoCode unit tests', () => {
 
       await test.step('Verify input has value', async () => {
         const promoInput = page.getByRole('textbox', { name: 'promo code optional' });
-        const inputValue = await promoInput.inputValue();
-        expect(inputValue).toBe('TEST123');
+        const inputValue = promoInput;
+        await expect(inputValue).toHaveValue('TEST123');
       });
     });
   });
@@ -237,8 +237,8 @@ test.describe('enterPromoCode unit tests', () => {
 
       await test.step('Verify first promo code', async () => {
         const promoInput = page.getByRole('textbox', { name: 'promo code optional' });
-        const inputValue = await promoInput.inputValue();
-        expect(inputValue).toBe('FIRST123');
+        const inputValue = promoInput;
+        await expect(inputValue).toHaveValue('FIRST123');
       });
 
       await test.step('Clear and enter second promo code', async () => {
@@ -249,8 +249,8 @@ test.describe('enterPromoCode unit tests', () => {
 
       await test.step('Verify second promo code', async () => {
         const promoInput = page.getByRole('textbox', { name: 'promo code optional' });
-        const inputValue = await promoInput.inputValue();
-        expect(inputValue).toBe('SECOND456');
+        const inputValue = promoInput;
+        await expect(inputValue).toHaveValue('SECOND456');
       });
     });
 
@@ -265,9 +265,9 @@ test.describe('enterPromoCode unit tests', () => {
 
       await test.step('Verify final value', async () => {
         const promoInput = page.getByRole('textbox', { name: 'promo code optional' });
-        const inputValue = await promoInput.inputValue();
+        const inputValue = promoInput;
         // The fill method should replace the previous value
-        expect(inputValue).toBe('PROMO2');
+        await expect(inputValue).toHaveValue('PROMO2');
       });
     });
   });
@@ -286,8 +286,8 @@ test.describe('enterPromoCode unit tests', () => {
 
       await test.step('Verify promo code is retained', async () => {
         const promoInput = page.getByRole('textbox', { name: 'promo code optional' });
-        const inputValue = await promoInput.inputValue();
-        expect(inputValue).toBe('DISCOUNT20');
+        const inputValue = promoInput;
+        await expect(inputValue).toHaveValue('DISCOUNT20');
       });
     });
 
@@ -303,8 +303,8 @@ test.describe('enterPromoCode unit tests', () => {
 
       await test.step('Verify promo code is still present', async () => {
         const promoInput = page.getByRole('textbox', { name: 'promo code optional' });
-        const inputValue = await promoInput.inputValue();
-        expect(inputValue).toBe('EARLY2024');
+        const inputValue = promoInput;
+        await expect(inputValue).toHaveValue('EARLY2024');
       });
     });
   });
@@ -319,8 +319,8 @@ test.describe('enterPromoCode unit tests', () => {
 
       await test.step('Verify promo code is entered', async () => {
         const promoInput = page.getByRole('textbox', { name: 'promo code optional' });
-        const inputValue = await promoInput.inputValue();
-        expect(inputValue).toBe(promoCode);
+        const inputValue = promoInput;
+        await expect(inputValue).toHaveValue(promoCode);
       });
     });
 
@@ -333,8 +333,8 @@ test.describe('enterPromoCode unit tests', () => {
 
       await test.step('Verify promo code is entered', async () => {
         const promoInput = page.getByRole('textbox', { name: 'promo code optional' });
-        const inputValue = await promoInput.inputValue();
-        expect(inputValue).toBe(promoCode);
+        const inputValue = promoInput;
+        await expect(inputValue).toHaveValue(promoCode);
       });
     });
 
@@ -347,8 +347,8 @@ test.describe('enterPromoCode unit tests', () => {
 
       await test.step('Verify promo code is entered', async () => {
         const promoInput = page.getByRole('textbox', { name: 'promo code optional' });
-        const inputValue = await promoInput.inputValue();
-        expect(inputValue).toBe(promoCode);
+        const inputValue = promoInput;
+        await expect(inputValue).toHaveValue(promoCode);
       });
     });
   });
@@ -379,8 +379,8 @@ test.describe('enterPromoCode unit tests', () => {
           await promoInput.clear();
           await searchPage.enterPromoCode(code);
 
-          const inputValue = await promoInput.inputValue();
-          expect(inputValue).toBe(code);
+          const inputValue = promoInput;
+          await expect(inputValue).toHaveValue(code);
         });
       }
     });

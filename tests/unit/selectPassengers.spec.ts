@@ -47,22 +47,22 @@ test.describe('selectPassengers unit tests', () => {
     await test.step('Verify adult count was set', async () => {
       await page.waitForTimeout(500);
 
-      const adultValue = await page.getByRole('spinbutton', {
+      const adultValue = page.getByRole('spinbutton', {
         name: 'Adult passenger count. Over'
-      }).inputValue();
+      });
 
       console.log(`  📊 Adult passengers: ${adultValue}`);
-      expect(adultValue).toBe('2');
+      await expect(adultValue).toHaveValue('2');
       console.log('  ✅ Adult count correct');
     });
 
     await test.step('Verify child count was set', async () => {
-      const childValue = await page.getByRole('spinbutton', {
+      const childValue = page.getByRole('spinbutton', {
         name: 'Child passenger count. Up to'
-      }).inputValue();
+      });
 
       console.log(`  📊 Child passengers: ${childValue}`);
-      expect(childValue).toBe('1');
+      await expect(childValue).toHaveValue('1');
       console.log('  ✅ Child count correct');
     });
 
@@ -90,22 +90,22 @@ test.describe('selectPassengers unit tests', () => {
     await test.step('Verify adult count was set', async () => {
       await page.waitForTimeout(500);
 
-      const adultValue = await page.getByRole('spinbutton', {
+      const adultValue = page.getByRole('spinbutton', {
         name: 'Adult passenger count. Over'
-      }).inputValue();
+      });
 
       console.log(`  📊 Adult passengers: ${adultValue}`);
-      expect(adultValue).toBe('3');
+      await expect(adultValue).toHaveValue('3');
       console.log('  ✅ Adult count correct');
     });
 
     await test.step('Verify child count was set', async () => {
-      const childValue = await page.getByRole('spinbutton', {
+      const childValue = page.getByRole('spinbutton', {
         name: 'Child passenger count. Up to'
-      }).inputValue();
+      });
 
       console.log(`  📊 Child passengers: ${childValue}`);
-      expect(childValue).toBe('2');
+      await expect(childValue).toHaveValue('2');
       console.log('  ✅ Child count correct');
     });
 
@@ -182,19 +182,19 @@ test.describe('selectPassengers unit tests', () => {
     await test.step('Verify defaults applied', async () => {
       await page.waitForTimeout(500);
 
-      const adultValue = await page.getByRole('spinbutton', {
+      const adultValue = page.getByRole('spinbutton', {
         name: 'Adult passenger count. Over'
-      }).inputValue();
+      });
 
-      const childValue = await page.getByRole('spinbutton', {
+      const childValue = page.getByRole('spinbutton', {
         name: 'Child passenger count. Up to'
-      }).inputValue();
+      });
 
       console.log(`  📊 Adult default: ${adultValue}`);
       console.log(`  📊 Child default: ${childValue}`);
 
-      expect(adultValue).toBe('1');
-      expect(childValue).toBe('0');
+      await expect(adultValue).toHaveValue('1');
+      await expect(childValue).toHaveValue('0');
       console.log('  ✅ Defaults applied correctly');
     });
   });
@@ -240,18 +240,18 @@ test.describe('selectPassengers unit tests', () => {
       });
       await page.waitForTimeout(500);
 
-      const buttonAdultValue = await page.getByRole('spinbutton', {
+      const buttonAdultValue = page.getByRole('spinbutton', {
         name: 'Adult passenger count. Over'
-      }).inputValue();
+      });
 
-      const buttonChildValue = await page.getByRole('spinbutton', {
+      const buttonChildValue = page.getByRole('spinbutton', {
         name: 'Child passenger count. Up to'
-      }).inputValue();
+      });
 
       console.log(`  📊 Button method - adults: ${buttonAdultValue}, children: ${buttonChildValue}`);
 
-      expect(buttonAdultValue).toBe(inputAdultValue);
-      expect(buttonChildValue).toBe(inputChildValue);
+      await expect(buttonAdultValue).toHaveValue(inputAdultValue);
+      await expect(buttonChildValue).toHaveValue(inputChildValue);
       console.log('  ✅ Results are identical');
     });
 
@@ -310,12 +310,12 @@ test.describe('selectPassengers unit tests', () => {
       });
       await page.waitForTimeout(500);
 
-      const adultValue = await page.getByRole('spinbutton', {
+      const adultValue = page.getByRole('spinbutton', {
         name: 'Adult passenger count. Over'
-      }).inputValue();
+      });
 
       console.log(`  📊 First set - adults: ${adultValue}`);
-      expect(adultValue).toBe('2');
+      await expect(adultValue).toHaveValue('2');
       console.log('  ✅ First update successful');
     });
 
@@ -328,17 +328,17 @@ test.describe('selectPassengers unit tests', () => {
       });
       await page.waitForTimeout(500);
 
-      const adultValue = await page.getByRole('spinbutton', {
+      const adultValue = page.getByRole('spinbutton', {
         name: 'Adult passenger count. Over'
-      }).inputValue();
+      });
 
-      const childValue = await page.getByRole('spinbutton', {
+      const childValue = page.getByRole('spinbutton', {
         name: 'Child passenger count. Up to'
-      }).inputValue();
+      });
 
       console.log(`  📊 Second set - adults: ${adultValue}, children: ${childValue}`);
-      expect(adultValue).toBe('4');
-      expect(childValue).toBe('2');
+      await expect(adultValue).toHaveValue('4');
+      await expect(childValue).toHaveValue('2');
       console.log('  ✅ Second update overwrote the first');
     });
   });
@@ -410,12 +410,12 @@ test.describe('selectPassengers boundary tests', () => {
       });
       await page.waitForTimeout(500);
 
-      const childValue = await page.getByRole('spinbutton', {
+      const childValue = page.getByRole('spinbutton', {
         name: 'Child passenger count. Up to'
-      }).inputValue();
+      });
 
       console.log(`  📊 Children: ${childValue}`);
-      expect(childValue).toBe('0');
+      await expect(childValue).toHaveValue('0');
       console.log('  ✅ Zero children handled correctly');
     });
   });
@@ -432,17 +432,17 @@ test.describe('selectPassengers boundary tests', () => {
       });
       await page.waitForTimeout(500);
 
-      const adultValue = await page.getByRole('spinbutton', {
+      const adultValue = page.getByRole('spinbutton', {
         name: 'Adult passenger count. Over'
-      }).inputValue();
+      });
 
-      const childValue = await page.getByRole('spinbutton', {
+      const childValue = page.getByRole('spinbutton', {
         name: 'Child passenger count. Up to'
-      }).inputValue();
+      });
 
       console.log(`  📊 Adults: ${adultValue}, Children: ${childValue}`);
-      expect(adultValue).toBe('5');
-      expect(childValue).toBe('3');
+      await expect(adultValue).toHaveValue('5');
+      await expect(childValue).toHaveValue('3');
       console.log('  ✅ Larger counts handled correctly');
     });
   });
@@ -470,17 +470,17 @@ test.describe('selectPassengers boundary tests', () => {
       });
       await page.waitForTimeout(500);
 
-      const adultValue = await page.getByRole('spinbutton', {
+      const adultValue = page.getByRole('spinbutton', {
         name: 'Adult passenger count. Over'
-      }).inputValue();
+      });
 
-      const childValue = await page.getByRole('spinbutton', {
+      const childValue = page.getByRole('spinbutton', {
         name: 'Child passenger count. Up to'
-      }).inputValue();
+      });
 
       console.log(`  📊 After decrease - adults: ${adultValue}, children: ${childValue}`);
-      expect(adultValue).toBe('2');
-      expect(childValue).toBe('1');
+      await expect(adultValue).toHaveValue('2');
+      await expect(childValue).toHaveValue('1');
       console.log('  ✅ Button decrements handled correctly');
     });
   });
@@ -508,17 +508,17 @@ test.describe('selectPassengers boundary tests', () => {
       });
       await page.waitForTimeout(500);
 
-      const adultValue = await page.getByRole('spinbutton', {
+      const adultValue = page.getByRole('spinbutton', {
         name: 'Adult passenger count. Over'
-      }).inputValue();
+      });
 
-      const childValue = await page.getByRole('spinbutton', {
+      const childValue = page.getByRole('spinbutton', {
         name: 'Child passenger count. Up to'
-      }).inputValue();
+      });
 
       console.log(`  📊 After increase - adults: ${adultValue}, children: ${childValue}`);
-      expect(adultValue).toBe('4');
-      expect(childValue).toBe('2');
+      await expect(adultValue).toHaveValue('4');
+      await expect(childValue).toHaveValue('2');
       console.log('  ✅ Button increments handled correctly');
     });
   });
@@ -535,18 +535,18 @@ test.describe('selectPassengers boundary tests', () => {
       });
       await page.waitForTimeout(500);
 
-      const adultValue = await page.getByRole('spinbutton', {
+      const adultValue = page.getByRole('spinbutton', {
         name: 'Adult passenger count. Over'
-      }).inputValue();
+      });
 
       console.log(`  📊 Adults: ${adultValue}`);
-      expect(adultValue).toBe('6');
+      await expect(adultValue).toHaveValue('6');
       console.log('  ✅ Adult max set to 6');
     });
 
     await test.step('Verify adult increase button hidden', async () => {
       const increaseButton = page.getByRole('button', { name: 'Increase Adult passenger' });
-      await expect(increaseButton).not.toBeVisible();
+      await expect(increaseButton).toBeHidden();
       console.log('  ✅ Adult increase button hidden at max');
 
       await page.screenshot({
@@ -568,18 +568,18 @@ test.describe('selectPassengers boundary tests', () => {
       });
       await page.waitForTimeout(500);
 
-      const childValue = await page.getByRole('spinbutton', {
+      const childValue = page.getByRole('spinbutton', {
         name: 'Child passenger count. Up to'
-      }).inputValue();
+      });
 
       console.log(`  📊 Children: ${childValue}`);
-      expect(childValue).toBe('6');
+      await expect(childValue).toHaveValue('6');
       console.log('  ✅ Child max set to 6');
     });
 
     await test.step('Verify child increase button hidden', async () => {
       const increaseButton = page.getByRole('button', { name: 'Increase Child passenger' });
-      await expect(increaseButton).not.toBeVisible();
+      await expect(increaseButton).toBeHidden();
       console.log('  ✅ Child increase button hidden at max');
 
       await page.screenshot({

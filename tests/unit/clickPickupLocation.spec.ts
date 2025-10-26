@@ -227,19 +227,19 @@ test.describe('clickPickupLocation unit tests', () => {
   test('handle the full click flow correctly', async ({ page }) => {
     console.log('🧪 Test: complete click flow');
 
-    await test.step('Step 1: click pickup button', async () => {
+    await test.step('1: click pickup button', async () => {
       const pickupButton = page.getByRole('button', { name: 'Choose your pickup location' });
       await pickupButton.click();
       console.log('  ✅ Step 1 complete: button clicked');
       await page.waitForTimeout(500);
     });
 
-    await test.step('Step 2: wait for dropdown', async () => {
+    await test.step('2: wait for dropdown', async () => {
       await page.waitForTimeout(1000);
       console.log('  ✅ Step 2 complete: waited for dropdown');
     });
 
-    await test.step('Step 3: verify all three options', async () => {
+    await test.step('3: verify all three options', async () => {
       const aucklandOption = page.getByText('Auckland Airport470 Oruarangi');
       const christchurchOption = page.getByText('Christchurch Airport159');
       const queenstownOption = page.getByText('Queenstown50 Lucas Place,');
@@ -250,14 +250,14 @@ test.describe('clickPickupLocation unit tests', () => {
       console.log('  ✅ Step 3 complete: all three options visible');
     });
 
-    await test.step('Step 4: click Auckland option', async () => {
+    await test.step('4: click Auckland option', async () => {
       const aucklandOption = page.getByText('Auckland Airport470 Oruarangi');
       await aucklandOption.click();
       console.log('  ✅ Step 4 complete: option clicked');
       await page.waitForTimeout(500);
     });
 
-    await test.step('Step 5: verify selection result', async () => {
+    await test.step('5: verify selection result', async () => {
       // Ensure the button displays Auckland Airport
       await searchPage.assertPickupLocationContains('Auckland Airport', 'Button should display Auckland Airport');
       const buttonText = await searchPage.getPickupLocationButtonText();
