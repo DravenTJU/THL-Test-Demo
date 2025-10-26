@@ -1,482 +1,383 @@
 # THL Test Engineer Demo
 
-> 企业级Playwright自动化测试框架 - Maui Rentals搜索功能测试
+**English** | [中文](./README.zh-CN.md)
+
+> Enterprise-grade Playwright Testing Framework for Maui Rentals Search Functionality
 
 [![CI/CD](https://img.shields.io/badge/CI%2FCD-GitHub%20Actions-blue)](https://github.com)
 [![Playwright](https://img.shields.io/badge/Playwright-1.48-green)](https://playwright.dev)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.6-blue)](https://www.typescriptlang.org)
 [![Docker](https://img.shields.io/badge/Docker-Ready-blue)](https://www.docker.com)
 
-## 📋 项目概述
+## 📋 Project Overview
 
-本项目是为**Tourism Holdings Limited (THL)** Test Engineer职位准备的技术演示，展示了一个完整的企业级自动化测试框架，针对[Maui Rentals房车租赁搜索页面](https://booking.maui-rentals.com/?cc=nz&open-mobile=true)进行全面测试。
+This project is a technical demonstration for the automated testing framework targeting the [Maui Rentals motorhome booking search page](https://booking.maui-rentals.com/?cc=nz&open-mobile=true).
 
-### 🎯 技术栈覆盖
+### 🎯 Technology Stack
 
-本项目全面展示了Job Description中要求的所有技术能力：
-
-#### ✅ 必须技能
-- ✅ **Playwright** - 现代化的端到端测试框架
-- ✅ **TypeScript** - 类型安全的JavaScript超集
-- ✅ **API Testing** - 使用Playwright的API Testing功能
-- ✅ **CI/CD** - GitHub Actions自动化流水线
-
-#### ⭐ 加分技能
-- ✅ **Performance Testing** - k6负载测试 + Playwright性能监控
-- ✅ **Docker/Kubernetes** - 容器化测试环境
-- ✅ **Test Data Management** - JSON fixtures + Mock策略
-- ✅ **Cloud Experience** - GitHub Actions (可扩展到Azure/AWS)
+- ✅ **Playwright** - Modern end-to-end testing framework
+- ✅ **TypeScript** - Type-safe JavaScript superset
+- ✅ **API Testing** - Using Playwright's API Testing capabilities
+- ✅ **CI/CD** - GitHub Actions automation pipeline
+- ✅ **Docker** - Containerized testing environment
 
 ---
 
-## 🚀 快速开始
+## 🚀 Quick Start
 
-### 前置要求
+### Prerequisites
 
 - Node.js >= 18.0.0
 - npm >= 9.0.0
-- (可选) Docker & Docker Compose
-- (可选) k6 (用于负载测试)
+- (Optional) Docker & Docker Compose
 
-### 安装
+### Installation
 
 ```bash
-# 克隆项目
+# Clone the repository
 git clone <repository-url>
 cd THL-Test-Demo
 
-# 安装依赖
+# Install dependencies
 npm install
 
-# 安装Playwright浏览器
+# Install Playwright browsers
 npx playwright install
 
-# 配置环境变量（可选）
+# Configure environment variables (optional)
 cp .env.example .env
 ```
 
-### 运行测试
+### Running Tests
 
 ```bash
-# 运行所有测试
+# Run all tests
 npm test
 
-# 运行特定测试套件
-npm run test:e2e          # E2E测试
-npm run test:api          # API测试
-npm run test:performance  # 性能测试
-npm run test:mobile       # 移动端测试
-npm run test:visual       # 视觉回归测试
+# Run specific test suites
+npm run test:e2e          # E2E tests
+npm run test:api          # API tests
+npm run test:unit         # Unit tests
 
-# 指定浏览器
+# Run by browser
 npm run test:chromium
 npm run test:firefox
 npm run test:webkit
 
-# UI模式（调试）
+# UI mode (debugging)
 npm run test:ui
 
-# 查看测试报告
-npm run report            # HTML报告
-npm run report:allure     # Allure报告
+# View test reports
+npm run report            # HTML report
+npm run report:allure     # Allure report
 ```
 
-### 使用Docker运行
+### Running with Docker
 
 ```bash
-# 构建并运行测试
+# Build and run tests
 npm run docker:build
 npm run docker:test
 
-# 或使用docker-compose
-cd docker
-docker-compose up
+# Or use docker-compose directly
+docker-compose -f docker/docker-compose.yml up --build --abort-on-container-exit
+
+# View Allure reports
+docker-compose -f docker/docker-compose.yml up allure
+# Access at http://localhost:5050
 ```
 
-### k6负载测试
-
-```bash
-# 安装k6: https://k6.io/docs/get-started/installation/
-npm run k6:load
-```
+> 💡 **Tip**: See [docker/README.md](./docker/README.md) for detailed Docker usage instructions
 
 ---
 
-## 📁 项目结构
+## 📁 Project Structure
 
 ```
 THL-Test-Demo/
-├── .github/workflows/      # GitHub Actions CI/CD配置
-│   └── ci.yml             # 自动化测试流水线
+├── .github/workflows/      # GitHub Actions CI/CD configuration
+│   └── ci.yml             # Automated testing pipeline
 │
-├── tests/                 # 测试用例
-│   ├── e2e/              # 端到端测试
-│   │   ├── search.spec.ts        # 搜索功能测试 ⭐
-│   │   ├── mobile.spec.ts        # 移动端测试 📱
-│   │   └── visual.spec.ts        # 视觉回归测试 🎨
-│   ├── api/              # API测试
-│   │   └── search-api.spec.ts    # 搜索API测试 🔌
-│   └── performance/      # 性能测试
-│       └── metrics.spec.ts       # 性能指标测试 ⚡
+├── tests/                 # Test cases
+│   ├── e2e/              # End-to-end tests
+│   │   └── complete-search-flow.spec.ts  # Complete search flow tests
+│   ├── api/              # API tests
+│   │   └── availability-api.spec.ts      # Cosmos Availability API tests
+│   └── unit/             # Unit tests (SearchPage methods)
+│       ├── clickPickupLocation.spec.ts
+│       ├── selectPassengers.spec.ts
+│       ├── selectTravelDates.spec.ts
+│       └── ...(tests for each core method)
 │
 ├── pages/                 # Page Object Model
-│   ├── BasePage.ts       # 基础页面类
-│   └── SearchPage.ts     # 搜索页面对象 🔍
+│   ├── BasePage.ts       # Base page class
+│   └── SearchPage.ts     # Search page object
 │
-├── utils/                 # 工具类
-│   ├── api-client.ts     # API客户端封装
-│   ├── performance.ts    # 性能监控工具
-│   └── helpers.ts        # 通用辅助函数
+├── docker/                # Docker configuration
+│   ├── Dockerfile        # Test environment image
+│   ├── docker-compose.yml # Service orchestration
+│   ├── README.md         # Docker documentation (English)
+│   └── README.zh-CN.md   # Docker documentation (Chinese)
 │
-├── fixtures/              # 测试数据
-│   ├── search-data.json  # 搜索测试数据
-│   └── mock-responses.json # Mock API响应
-│
-├── k6/                    # k6性能测试
-│   └── load-test.js      # 负载测试脚本 📊
-│
-├── docker/                # Docker配置
-│   ├── Dockerfile        # 测试环境镜像
-│   └── docker-compose.yml # 服务编排
-│
-├── docs/                  # 项目文档
-│   ├── PROJECT_PLAN.md   # 项目计划
-│   ├── ARCHITECTURE.md   # 架构设计 (待创建)
-│   └── TEST_STRATEGY.md  # 测试策略 (待创建)
-│
-├── playwright.config.ts   # Playwright配置 ⚙️
-├── tsconfig.json         # TypeScript配置
-├── .eslintrc.json        # 代码规范
-├── .prettierrc.json      # 代码格式化
-└── package.json          # 项目依赖
+├── playwright.config.ts   # Playwright configuration
+├── tsconfig.json         # TypeScript configuration
+├── CLAUDE.md             # Claude Code development guide
+├── README.md             # This file (English)
+└── README.zh-CN.md       # This file (Chinese)
 ```
 
 ---
 
-## 🧪 测试覆盖
+## 🧪 Test Coverage
 
-### E2E测试 (15+ 用例)
+### E2E Tests
 
-#### 搜索功能测试
-- ✅ 页面加载验证
-- ✅ 搜索表单元素验证
-- ✅ 有效搜索场景（多组测试数据）
-- ✅ 无效输入验证
-- ✅ 表单验证测试
-- ✅ 同城还车场景
-- ✅ 表单清空功能
-- ✅ 页面刷新稳定性
-- ✅ URL参数处理
+#### Complete Search Flow Tests
+- ✅ Complete search flow (all fields)
+- ✅ Pickup/dropoff location selection (click and search methods)
+- ✅ Date selection (cross-month support)
+- ✅ Passenger selection (input and button methods)
+- ✅ Licence country selection
+- ✅ Promo code input
+- ✅ Search results validation
 
-#### 移动端测试
-- ✅ iPhone 13 (iOS Safari)
-- ✅ Pixel 5 (Android Chrome)
-- ✅ iPad Pro (Tablet)
-- ✅ 响应式设计测试 (5种viewport)
-- ✅ 触摸手势支持
-- ✅ 移动端性能测试
+### API Tests
 
-#### 视觉回归测试
-- ✅ 桌面端布局对比
-- ✅ 移动端布局对比
-- ✅ 响应式断点对比
-- ✅ 跨浏览器视觉一致性
-- ✅ 深色模式支持
-- ✅ 高对比度模式
+- ✅ Cosmos Availability API request/response validation
+- ✅ Data structure validation (locations, stations, vehicles)
+- ✅ Search parameter validation (dates, locations, passengers)
+- ✅ Error handling tests
+- ✅ Response time validation
+- ✅ Idempotency tests
 
-### API测试 (10+ 用例)
+### Unit Tests
 
-- ✅ 搜索API请求/响应验证
-- ✅ 数据结构验证
-- ✅ 地点API测试
-- ✅ 车辆筛选功能
-- ✅ 错误处理测试
-- ✅ 响应时间验证
-- ✅ 并发请求测试
-- ✅ API Mocking场景
-
-### 性能测试
-
-#### Playwright性能监控
-- ✅ 页面加载时间
-- ✅ Core Web Vitals (LCP, FID, CLS)
-- ✅ 资源加载分析
-- ✅ 网络性能监控
-- ✅ 交互性能测试
-
-#### k6负载测试
-- ✅ 50并发用户
-- ✅ 5分钟压力测试
-- ✅ 响应时间P95 < 3秒
-- ✅ 错误率 < 1%
+For each core SearchPage method:
+- ✅ `clickPickupLocation` - Pickup location selection
+- ✅ `searchPickupLocation` - Pickup location search
+- ✅ `clickDropoffLocation` - Dropoff location selection
+- ✅ `searchDropoffLocation` - Dropoff location search
+- ✅ `selectTravelDates` - Date selection
+- ✅ `selectPassengers` - Passenger selection
+- ✅ `selectLicenceCountry` - Licence country selection
+- ✅ `enterPromoCode` - Promo code input
 
 ---
 
-## 🏗️ 架构设计
+## 🏗️ Architecture Design
 
 ### Page Object Model (POM)
 
-采用经典的Page Object Model设计模式，实现测试代码和页面逻辑的分离：
+Implements the classic Page Object Model design pattern, separating test code from page logic:
 
 ```typescript
-// 使用示例
+// Usage example
 const searchPage = new SearchPage(page);
 await searchPage.navigateToSearchPage({ cc: 'nz' });
-await searchPage.performSearch({
+await searchPage.performFullSearch({
   pickupLocation: 'Auckland',
   dropoffLocation: 'Christchurch',
   pickupDate: '2025-12-01',
-  dropoffDate: '2025-12-08'
+  dropoffDate: '2025-12-08',
+  adults: 2,
+  children: 1,
+  driverAge: '21+',
+  licenceCountry: 'New Zealand'
 });
 ```
 
-**优势:**
-- 代码复用性高
-- 易于维护
-- 测试用例可读性强
-- 元素定位器集中管理
+**Benefits**:
+- High code reusability
+- Easy to maintain
+- Strong test case readability
+- Centralized element locator management
 
-### 工具类设计
+### Key Design Features
 
-```typescript
-// API客户端
-const apiClient = new APIClient(request);
-const results = await apiClient.searchVehicles({...});
-
-// 性能监控
-const perfMonitor = new PerformanceMonitor(page);
-const metrics = await perfMonitor.collectMetrics();
-
-// 辅助函数
-const futureDate = getFutureDate(30);
-const days = calculateDaysBetween(start, end);
-```
-
-### 测试数据管理
-
-- **JSON Fixtures**: 结构化测试数据存储
-- **Data Factory**: 动态生成测试数据
-- **Mock Responses**: API响应模拟
-- **环境变量**: 多环境配置支持
+1. **Smart waiting mechanisms**: All interaction methods include automatic waits to avoid flaky tests
+2. **Role-based selectors**: Prioritizes Playwright's recommended `getByRole` selectors
+3. **Detailed JSDoc documentation**: Each method has complete interaction flow descriptions
+4. **Multiple interaction methods**: Supports different user interaction patterns (e.g., input vs buttons)
 
 ---
 
-## ⚙️ CI/CD流程
+## ⚙️ CI/CD Pipeline
 
 ### GitHub Actions Pipeline
 
 ```yaml
-触发条件:
-  - push到main/develop分支
-  - Pull Request
-  - 定时任务（每日00:00 UTC）
-  - 手动触发
+Triggers:
+  - Push to main/develop branches
+  - Pull Requests
+  - Scheduled (daily at 00:00 UTC)
+  - Manual dispatch
 
-Pipeline阶段:
-  1. 代码检查 (Lint & Format)
-  2. E2E测试 (多浏览器并行)
-  3. API测试
-  4. 性能测试
-  5. k6负载测试 (定时/手动)
-  6. Allure报告生成
-  7. Docker构建验证
+Pipeline Stages:
+  1. Code checks (Lint & Format)
+  2. E2E tests (parallel multi-browser)
+  3. API tests
+  4. Unit tests
+  5. Allure report generation
 
-并行策略:
-  - 3个浏览器 x 3个分片 = 9个并行任务
-  - 显著缩短测试时间
+Parallel Strategy:
+  - 3 browsers x parallel execution
+  - Significantly reduces test time
 ```
 
-### 测试报告
+### Test Reports
 
-测试完成后自动生成：
+Automatically generated after test completion:
 
-1. **HTML Report** - Playwright内置报告
-2. **Allure Report** - 详细的测试执行报告
-3. **失败截图/视频** - 自动捕获失败场景
-4. **GitHub Pages** - 报告自动发布到 GitHub Pages
+1. **HTML Report** - Playwright built-in report
+2. **Allure Report** - Detailed test execution report
+3. **Failure Screenshots/Videos** - Automatically captures failed scenarios
+4. **GitHub Actions Artifacts** - Reports saved as build artifacts
 
 ---
 
-## 📊 性能指标
+## 📊 Performance Metrics
 
-### 目标阈值
+### Target Thresholds
 
-| 指标 | 目标值 | 说明 |
-|------|--------|------|
-| 页面加载时间 | < 3s | 从导航到加载完成 |
-| LCP (Largest Contentful Paint) | < 2.5s | 最大内容绘制时间 |
-| FID (First Input Delay) | < 100ms | 首次输入延迟 |
-| CLS (Cumulative Layout Shift) | < 0.1 | 累积布局偏移 |
-| API响应时间 P95 | < 3s | 95%请求响应时间 |
-| 错误率 | < 1% | API请求错误率 |
-
-### 实际性能（示例）
-
-```
-Performance Metrics Report
-==========================
-
-Page Load Metrics:
-- Load Time: 2145.32ms ✅
-- DOM Content Loaded: 1234.56ms ✅
-- First Paint: 567.89ms ✅
-- First Contentful Paint: 789.12ms ✅
-
-Core Web Vitals:
-- LCP: 2234.56ms ✅
-- FID: 45.67ms ✅
-- CLS: 0.05 ✅
-
-Resource Statistics:
-- Total Resources: 42
-- Total Size: 2345.67KB
-- Scripts: 12
-- Stylesheets: 5
-- Images: 18
-```
+| Metric | Target | Description |
+|--------|--------|-------------|
+| Page Load Time | < 3s | From navigation to load complete |
+| API Response Time | < 3s | Cosmos Availability API |
+| Test Execution Time | < 5 min | Complete test suite |
 
 ---
 
-## 🐛 调试和故障排查
+## 🐛 Debugging and Troubleshooting
 
-### 调试模式
+### Debug Modes
 
 ```bash
-# UI模式 - 可视化调试
+# UI mode - Visual debugging (recommended)
 npm run test:ui
 
-# Debug模式 - 逐步执行
+# Debug mode - Step-by-step execution
 npm run test:debug
 
-# Headed模式 - 显示浏览器
+# Headed mode - Display browser
 npm run test:headed
 ```
 
-### 常见问题
+### Common Issues
 
 <details>
-<summary><b>问题1: 元素定位失败</b></summary>
+<summary><b>Issue 1: Element locator failure</b></summary>
 
-**原因**: 页面加载慢或元素选择器不正确
+**Cause**: Slow page load or incorrect element selector
 
-**解决方案**:
+**Solution**:
 ```typescript
-// 增加等待时间
-await searchPage.waitForVisible(locator, 15000);
+// Use waitForSearchWidgetVisible to ensure page is loaded
+await searchPage.waitForSearchWidgetVisible();
 
-// 使用更稳定的选择器
-const element = page.locator('[data-testid="search-button"]');
+// Use more stable selectors
+const element = page.getByRole('button', { name: 'Search' });
 ```
 </details>
 
 <details>
-<summary><b>问题2: 测试在CI/CD中失败但本地通过</b></summary>
+<summary><b>Issue 2: Date selection failure</b></summary>
 
-**原因**: CI环境配置不同
+**Cause**: Incorrect date format or expired date
 
-**解决方案**:
-```bash
-# 模拟CI环境
-CI=true npm test
-
-# 检查环境变量
-echo $CI
-```
+**Solution**:
+- Confirm date format is `YYYY-MM-DD`
+- Confirm date is in the future
+- Supported locations: Auckland, Christchurch, Queenstown
 </details>
 
 <details>
-<summary><b>问题3: 视觉测试不稳定</b></summary>
+<summary><b>Issue 3: Docker test failure</b></summary>
 
-**原因**: 动态内容、字体渲染差异
+**Cause**: Docker configuration or resource issues
 
-**解决方案**:
-```typescript
-// 增加容差
-await expect(page).toHaveScreenshot('page.png', {
-  maxDiffPixelRatio: 0.1  // 允许10%差异
-});
-
-// 等待动画完成
-await page.waitForLoadState('networkidle');
-```
+**Solution**:
+- See [docker/README.md](./docker/README.md) troubleshooting section
+- Check Docker resource limits (memory >= 4GB)
 </details>
 
 ---
 
-## 🔒 最佳实践
+## 🔒 Best Practices
 
-### 代码质量
+### Code Quality
 
-- ✅ TypeScript严格模式
-- ✅ ESLint代码检查
-- ✅ Prettier自动格式化
-- ✅ 完整的JSDoc注释
-- ✅ Git commit规范
+- ✅ TypeScript strict mode
+- ✅ ESLint code checking
+- ✅ Prettier auto-formatting
+- ✅ Complete JSDoc comments
 
-### 测试设计
+### Test Design
 
-- ✅ 测试隔离 - 每个测试独立运行
-- ✅ 智能等待 - 避免硬编码延迟
-- ✅ 失败重试 - CI环境自动重试
-- ✅ 并行执行 - 加速测试运行
-- ✅ 数据驱动 - 使用fixtures管理测试数据
+- ✅ Test isolation - Each test runs independently
+- ✅ Smart waits - Avoid hard-coded delays
+- ✅ Failure retries - Automatic retries in CI environment
+- ✅ Parallel execution - Accelerate test runs
 
-### 安全性
+### Security
 
-- ✅ 环境变量管理
-- ✅ 敏感数据保护
-- ✅ .gitignore配置完善
-- ✅ 依赖安全扫描（可集成Dependabot）
+- ✅ Environment variable management
+- ✅ Sensitive data protection
+- ✅ Comprehensive .gitignore configuration
 
 ---
 
-## 📚 文档
+## 📚 Documentation
 
-- [项目计划](docs/PROJECT_PLAN.md) - 详细的项目规划文档
-- [Playwright官方文档](https://playwright.dev)
-- [TypeScript文档](https://www.typescriptlang.org)
-- [k6文档](https://k6.io/docs/)
+### Project Documentation
+- [CLAUDE.md](./CLAUDE.md) - Claude Code development guide
+- [Docker Configuration](./docker/README.md) - Detailed Docker usage documentation
+
+### External Resources
+- [Playwright Official Documentation](https://playwright.dev)
+- [TypeScript Documentation](https://www.typescriptlang.org)
 
 ---
 
-## 📝 许可证
+## 📝 License
 
 MIT License
 
 ---
 
-## 📈 项目亮点总结
+## 📈 Project Highlights
 
-### 🎯 全面的技术栈覆盖
+### 🎯 Comprehensive Technology Stack
 - ✅ Playwright + TypeScript
 - ✅ API Testing
 - ✅ CI/CD (GitHub Actions)
-- ✅ k6性能测试
-- ✅ Docker容器化
-- ✅ 完整的测试数据管理
+- ✅ Docker containerization
 
-### 🏆 企业级架构
-- ✅ Page Object Model设计模式
-- ✅ 模块化和可维护性
-- ✅ 完整的错误处理
-- ✅ 详细的代码注释
+### 🏆 Enterprise-Grade Architecture
+- ✅ Page Object Model design pattern
+- ✅ Modularity and maintainability
+- ✅ Complete error handling
+- ✅ Detailed code comments
 
-### ⚡ 高质量测试
-- ✅ 15+ E2E测试用例
-- ✅ 10+ API测试用例
-- ✅ 跨浏览器覆盖
-- ✅ 移动端测试
-- ✅ 视觉回归测试
-- ✅ 性能监控
+### ⚡ High-Quality Testing
+- ✅ E2E tests (complete flows)
+- ✅ API tests (Cosmos Availability)
+- ✅ Unit tests (each core method)
+- ✅ Cross-browser coverage
 
-### 🚀 自动化能力
+### 🚀 Automation Capabilities
 - ✅ GitHub Actions CI/CD
-- ✅ 并行测试执行
-- ✅ 自动化测试报告
-- ✅ Docker一键运行
+- ✅ Parallel test execution
+- ✅ Automated test reporting
+- ✅ One-click Docker execution
 
-### 📖 完整文档
-- ✅ 详细的README
-- ✅ 项目计划文档
-- ✅ 代码内注释
-- ✅ 架构设计说明
+### 📖 Complete Documentation
+- ✅ Detailed README (bilingual)
+- ✅ Docker usage documentation (bilingual)
+- ✅ Inline code comments
+
+---
+
+**Project Maintainer**: Draven
+**Last Updated**: 2025-10-27
+**Playwright Version**: 1.48.0
+**TypeScript Version**: 5.6.3
