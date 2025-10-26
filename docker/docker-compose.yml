@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  # Playwright测试服务
+  playwright-tests:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: thl-playwright-tests
+    volumes:
+      - ../:/app
+      - /app/node_modules
+      - ../playwright-report:/app/playwright-report
+      - ../test-results:/app/test-results
+      - ../allure-results:/app/allure-results
+    environment:
+      - CI=true
+      - BASE_URL=${BASE_URL:-https://booking.maui-rentals.com}
+      - HEADLESS=true
+    command: npm test
+    networks:
+      - test-network
+
+  # Allure报告服务
+  allure:
+    image: frankescobar/allure-docker-service:2.23.1
+    container_name: thl-allure-reports
+    ports:
+      - "5050:5050"
+    volumes:
+      - ../allure-results:/app/allure-results
+      - ../allure-reports:/app/allure-reports
+    environment:
+      - CHECK_RESULTS_EVERY_SECONDS=3
+      - KEEP_HISTORY=1
+    networks:
+      - test-network
+
+networks:
+  test-network:
+    driver: bridge
+
+volumes:
+  allure-results:
+  allure-reports:
