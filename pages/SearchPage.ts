@@ -11,44 +11,101 @@ import { BasePage } from './BasePage';
  * @extends BasePage
  */
 export class SearchPage extends BasePage {
-  // ============ 主要交互按钮 ============
+  // ============ 取车 ============
 
   /** 取车地点选择按钮 */
   private readonly pickupLocationButton: Locator;
 
-  /** 还车地点选择按钮 */
-  private readonly dropoffLocationButton: Locator;
-
-  /** 旅行日期选择按钮（同时处理取车和还车日期） */
-  private readonly travelDatesButton: Locator;
-
-  /** 乘客数量选择按钮 */
-  private readonly passengersButton: Locator;
-
-  /** 驾照国家选择按钮 */
-  private readonly licenceButton: Locator;
-
-  /** 优惠码按钮 */
-  private readonly promoCodeButton: Locator;
-
-  /** 搜索按钮 */
-  private readonly searchButton: Locator;
-
-  // ============ 输入框（点击按钮后出现） ============
-
   /** 取车地点输入框 */
   private readonly pickupLocationInput: Locator;
+
+  // ============ 还车 ============
+
+  /** 还车地点选择按钮 */
+  private readonly dropoffLocationButton: Locator;
 
   /** 还车地点输入框 */
   private readonly dropoffLocationInput: Locator;
 
-  // ============ 表单容器 ============
+  // ============ 地点下拉选项 ============
 
-  /** 取车地点表单容器 */
-  private readonly pickupForm: Locator;
+  /** Auckland选项 */
+  private readonly aucklandOption: Locator;
 
-  /** 还车地点表单容器 */
-  private readonly dropoffForm: Locator;
+  /** Christchurch选项 */
+  private readonly christchurchOption: Locator;
+
+  /** Queenstown选项 */
+  private readonly queenstownOption: Locator;
+
+  // ============ 日期 ============
+
+  /** 日期选择按钮 */
+  private readonly travelDatesButton: Locator;
+
+  /** 下个月按钮 */
+  private readonly nextMonthButton: Locator;
+
+  /** 具体日期按钮 */
+  private readonly dayButton: Locator;
+
+  // ============ 乘客 ============
+
+  /** 乘客数量选择按钮 */
+  private readonly passengersButton: Locator;
+
+  /** 成人乘客数量增加按钮 */
+  private readonly adultPassengersIncreaseButton: Locator;
+
+  /** 成人乘客数量减少按钮 */
+  private readonly adultPassengersDecreaseButton: Locator;
+
+  /** 儿童乘客数量增加按钮 */
+  private readonly childPassengersIncreaseButton: Locator;
+
+  /** 儿童乘客数量减少按钮 */
+  private readonly childPassengersDecreaseButton: Locator;
+
+  // ============ 年龄 ============
+
+  /** 年龄下拉菜单 */
+  private readonly driverAgeDropdown: Locator;
+
+  /** 年龄选项18-20 */
+  private readonly driverAgeOption18_20: Locator;
+
+  /** 年龄选项21+ */
+  private readonly driverAgeOption21: Locator;
+
+  // ============ 驾照 ============
+
+  /** 驾照国家选择按钮 */
+  private readonly licenceButton: Locator;
+
+  /** 驾照国家选项新西兰 */
+  private readonly licenceOptionNewZealand: Locator;
+
+  /** 驾照国家选项澳大利亚 */
+  private readonly licenceOptionAustralia: Locator;
+
+  /** 驾照国家选项法国 */
+  private readonly licenceOptionFrance: Locator;
+
+  /** 驾照国家选项英国 */
+  private readonly licenceOptionUnitedKingdom: Locator;
+
+  // ============ 优惠码 ============
+
+  /** 优惠码按钮 */
+  private readonly promoCodeButton: Locator;
+
+  /** 优惠码输入框 */
+  private readonly promoCodeInput: Locator;
+
+  // ============ 搜索 ============
+
+  /** 搜索按钮 */
+  private readonly searchButton: Locator;
 
   // ============ 结果和消息 ============
 
@@ -61,71 +118,65 @@ export class SearchPage extends BasePage {
   /** 加载指示器 */
   private readonly loadingIndicator: Locator;
 
-  // ============ 下拉选项（动态生成） ============
-
-  /** 地点下拉菜单 */
-  private readonly locationDropdown: Locator;
-
-  /** 地点选项生成器 */
-  private readonly locationOption: (locationName: string) => Locator;
-
-  // ============ 日期选择器（动态生成） ============
-
-  /** 日期选择器容器 */
-  private readonly datePicker: Locator;
-
-  /** 日期选择器下个月按钮 */
-  private readonly datePickerNextMonth: Locator;
-
-  /** 日期选择器日期按钮生成器 */
-  private readonly datePickerDay: (day: string) => Locator;
-
   constructor(page: Page) {
     super(page);
 
-    // ============ 初始化主要交互按钮（使用 ID 和 aria-label） ============
+    // ============ 初始化交互元素 ============
 
-    // 使用 ID 定位（最稳定）
-    this.pickupLocationButton = page.locator('#escapeFocus_pickup');
-    this.dropoffLocationButton = page.locator('#escapeFocus_dropoff');
-    this.searchButton = page.locator('#buttonSubmit');
+    // ============ 取车 ============
 
-    // 使用 aria-label 定位（语义化，更易维护）
-    this.travelDatesButton = page.locator('button[aria-label="Select the pick-up and drop-off dates"]');
-    this.passengersButton = page.locator('button[aria-label="Select your passenger count"]');
-    this.licenceButton = page.locator('button[aria-label="Select your drivers licence country of origin"]');
+    this.pickupLocationButton = page.getByRole('button', { name: 'Choose your pickup location' });
+    this.pickupLocationInput = page.getByRole('textbox', { name: 'Pick up from' });
 
-    // 优惠码按钮（使用文本内容定位）
-    this.promoCodeButton = page.locator('button:has-text("Promo code")').first();
+    // ============ 还车 ============
 
-    // ============ 初始化输入框（使用 ID） ============
+    this.dropoffLocationButton = page.getByRole('button', { name: 'Choose your dropoff location' });
+    this.dropoffLocationInput = page.getByRole('textbox', { name: 'Drop off to' });
 
-    this.pickupLocationInput = page.locator('#bookingWidget_location_pickup_searchInput');
-    this.dropoffLocationInput = page.locator('#bookingWidget_location_dropoff_searchInput');
+    // ============ 地点下拉选项 ============
 
-    // ============ 初始化表单容器（使用 ID） ============
+    this.aucklandOption = page.getByText('Auckland Airport470 Oruarangi');
+    this.christchurchOption = page.getByText('Christchurch Airport159');
+    this.queenstownOption = page.getByText('Queenstown50 Lucas Place,');
 
-    this.pickupForm = page.locator('#bookingWidget_location_pickup_searchForm');
-    this.dropoffForm = page.locator('#bookingWidget_location_dropoff_searchForm');
+    // ============ 日期 ============
 
-    // ============ 初始化结果和消息元素 ============
+    this.travelDatesButton = page.getByRole('button', { name: 'Select the pick-up and drop-' });
+    this.nextMonthButton = page.getByRole('button').filter({ hasText: /^$/ });
+    this.dayButton = page.getByRole('button', { name: 'Day' }); // TODO: 需要根据具体日期选择器结构调整
 
-    this.resultsContainer = page.locator('.search-results, [data-testid="search-results"], .vehicle-list').first();
-    this.errorMessage = page.locator('.error-message, .alert-danger, [role="alert"]').first();
-    this.loadingIndicator = page.locator('.loading, .spinner, [data-testid="loading"]').first();
+    // ============ 乘客 ============
 
-    // ============ 初始化下拉选项（动态元素） ============
+    this.passengersButton = page.getByRole('button', { name: 'Select your passenger count' });
+    this.adultPassengersIncreaseButton = page.getByRole('button', { name: 'Increase Adult passenger' });
+    this.adultPassengersDecreaseButton = page.getByRole('button', { name: 'Decrease Adult passenger' });
+    this.childPassengersIncreaseButton = page.getByRole('button', { name: 'Increase Child passenger' });
+    this.childPassengersDecreaseButton = page.getByRole('button', { name: 'Decrease Child passenger' });
 
-    this.locationDropdown = page.locator('.location-dropdown, [role="listbox"], .dropdown-menu').first();
-    this.locationOption = (locationName: string) =>
-      page.locator(`[role="option"]:has-text("${locationName}"), li:has-text("${locationName}")`).first();
+    // ============ 年龄 ============
 
-    // ============ 初始化日期选择器（动态元素） ============
+    this.driverAgeDropdown = page.locator('[data-test-id="ageSelect"]');
+    this.driverAgeOption18_20 = page.getByRole('button', { name: '-20' });
+    this.driverAgeOption21 = page.getByRole('button', { name: '+' });
 
-    this.datePicker = page.locator('.date-picker, .calendar, [role="dialog"]').first();
-    this.datePickerNextMonth = page.locator('.next-month, button[aria-label*="next"]').first();
-    this.datePickerDay = (day: string) =>
-      page.locator(`[data-day="${day}"], button:has-text("${day}")`).first();
+    // ============ 驾照 ============
+    this.licenceButton = page.getByRole('button', { name: 'Select your drivers licence' });
+    this.licenceOptionNewZealand = page.locator('button').filter({ hasText: 'New Zealand' });
+    this.licenceOptionAustralia = page.locator('button').filter({ hasText: 'Australia' });
+    this.licenceOptionFrance = page.locator('button').filter({ hasText: 'France' });
+    this.licenceOptionUnitedKingdom = page.locator('button').filter({ hasText: 'United Kingdom' });
+
+    // ============ 优惠码 ============
+    this.promoCodeButton = page.getByText('Promo codeSearch');
+    this.promoCodeInput = page.getByRole('textbox', { name: 'promo code optional' });
+
+    // ============ 搜索 ============
+    this.searchButton = page.getByRole('button', { name: 'Start your search' });
+
+    // ============ 结果和消息 ============
+    this.resultsContainer = page.locator('[data-testid="search-results"]');
+    this.errorMessage = page.locator('[role="alert"]');
+    this.loadingIndicator = page.locator('[data-testid="loading"]');
   }
 
   // ============================================
@@ -172,37 +223,110 @@ export class SearchPage extends BasePage {
   // ============================================
 
   /**
-   * 选择取车地点
+   * 点击选择取车地点（从下拉菜单直接选择）
    *
    * 交互流程：
    * 1. 点击取车地点按钮
-   * 2. 等待输入框出现
-   * 3. 输入地点名称
-   * 4. 等待下拉选项出现（如果有）
-   * 5. 点击匹配的选项
+   * 2. 验证3个地点下拉选项是否都出现
+   * 3. 根据输入选择对应的地点选项
    *
-   * @param location - 地点名称（如 "Auckland"）
+   * @param location - 地点名称（如 "Auckland", "Christchurch", "Queenstown"）
+   * @throws 如果3个地点选项未全部出现，或输入的地点不在可选范围内
    */
-  async selectPickupLocation(location: string): Promise<void> {
+  async clickPickupLocation(location: string): Promise<void> {
     // 点击按钮触发地点选择器
     await this.click(this.pickupLocationButton);
 
-    // 等待输入框出现
-    await this.waitForVisible(this.pickupLocationInput, 5000);
+    // 等待下拉选项出现
+    await this.page.waitForTimeout(1000);
 
-    // 输入地点名称
+    // 验证3个地点选项是否都出现
+    const aucklandVisible = await this.isVisible(this.aucklandOption);
+    const christchurchVisible = await this.isVisible(this.christchurchOption);
+    const queenstownVisible = await this.isVisible(this.queenstownOption);
+
+    if (!aucklandVisible || !christchurchVisible || !queenstownVisible) {
+      throw new Error(
+        `并非所有地点选项都出现。Auckland: ${aucklandVisible}, Christchurch: ${christchurchVisible}, Queenstown: ${queenstownVisible}`
+      );
+    }
+
+    // 根据输入选择对应的地点选项
+    let selectedOption: Locator;
+    switch (location.toLowerCase().trim()) {
+      case 'auckland':
+        selectedOption = this.aucklandOption;
+        break;
+      case 'christchurch':
+        selectedOption = this.christchurchOption;
+        break;
+      case 'queenstown':
+        selectedOption = this.queenstownOption;
+        break;
+      default:
+        throw new Error(
+          `不支持的地点: "${location}"。可选地点: Auckland, Christchurch, Queenstown`
+        );
+    }
+
+    // 点击选中的地点选项
+    await this.click(selectedOption);
+  }
+
+  /**
+   * 搜索选择取车地点（输入查询后选择）
+   *
+   * 交互流程：
+   * 1. 点击取车地点按钮
+   * 2. 点击输入框
+   * 3. 输入地点名称进行查询
+   * 4. 验证输入的地点选项是否出现
+   * 5. 点击匹配的地点选项
+   *
+   * @param location - 地点名称（如 "Auckland", "Christchurch", "Queenstown"）
+   * @throws 如果输入的地点选项未出现，或输入的地点不在可选范围内
+   */
+  async searchPickupLocation(location: string): Promise<void> {
+    // 点击按钮触发地点选择器
+    await this.click(this.pickupLocationButton);
+
+    // 点击输入框
+    await this.click(this.pickupLocationInput);
+
+    // 输入地点名称进行查询
     await this.fill(this.pickupLocationInput, location);
 
-    // 等待并点击下拉选项（如果存在）
-    const isDropdownVisible = await this.isVisible(this.locationDropdown);
-    if (isDropdownVisible) {
-      const option = this.locationOption(location);
-      await this.waitForVisible(option, 3000);
-      await this.click(option);
-    } else {
-      // 如果没有下拉菜单，按回车确认
-      await this.pickupLocationInput.press('Enter');
+    // 等待下拉选项出现
+    await this.page.waitForTimeout(1000);
+
+    // 根据输入获取对应的地点选项
+    let selectedOption: Locator;
+    switch (location.toLowerCase()) {
+      case 'auckland':
+        selectedOption = this.aucklandOption;
+        break;
+      case 'christchurch':
+        selectedOption = this.christchurchOption;
+        break;
+      case 'queenstown':
+        selectedOption = this.queenstownOption;
+        break;
+      default:
+        throw new Error(
+          `不支持的地点: "${location}"。可选地点: Auckland, Christchurch, Queenstown`
+        );
     }
+
+    // 验证输入的地点选项是否出现
+    const isLocationVisible = await this.isVisible(selectedOption);
+    if (!isLocationVisible) {
+      throw new Error(
+        `地点选项 "${location}" 未出现在下拉菜单中`
+      );
+    }
+
+    // 点击选中的地点选项
+    await this.click(selectedOption);
   }
 
   /**
@@ -453,40 +577,25 @@ export class SearchPage extends BasePage {
     return await this.isEnabled(this.searchButton);
   }
 
-  /**
-   * 获取搜索按钮的文本
-   * @returns 按钮文本
-   */
-  async getSearchButtonText(): Promise<string> {
-    return await this.getText(this.searchButton);
-  }
-
   // ============================================
   // 辅助方法
   // ============================================
 
   /**
-   * 获取取车地点按钮的显示文本
-   * @returns 按钮显示的文本
+   * 获取取车地点按钮的文本
+   * @returns 按钮文本内容
    */
-  async getPickupLocationText(): Promise<string> {
+  async getPickupLocationButtonText(): Promise<string> {
     return await this.getText(this.pickupLocationButton);
   }
 
   /**
-   * 获取还车地点按钮的显示文本
-   * @returns 按钮显示的文本
+   * 验证取车地点按钮是否包含指定文本
+   * @param text - 期望的文本
+   * @param message - 断言失败消息
    */
-  async getDropoffLocationText(): Promise<string> {
-    return await this.getText(this.dropoffLocationButton);
-  }
-
-  /**
-   * 获取旅行日期按钮的显示文本
-   * @returns 按钮显示的文本
-   */
-  async getTravelDatesText(): Promise<string> {
-    return await this.getText(this.travelDatesButton);
+  async assertPickupLocationContains(text: string, message?: string): Promise<void> {
+    await this.assertContainsText(this.pickupLocationButton, text, message);
   }
 
   /**
