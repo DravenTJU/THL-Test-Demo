@@ -2,156 +2,156 @@ import { test, expect } from '@playwright/test';
 import { SearchPage } from '../../pages/SearchPage';
 
 /**
- * clickPickupLocation 方法单元测试
+ * clickPickupLocation unit tests
  *
- * 测试目标：验证 clickPickupLocation 方法的功能
- * - 点击取车地点按钮
- * - 验证3个地点选项都出现
- * - 根据输入选择对应的地点
+ * Test objectives: verify clickPickupLocation method functionality
+ * - Click the pickup location button
+ * - Ensure the three location options appear
+ * - Select the matching location based on the input
  *
- * 运行方式：
+ * Run with:
  * npx playwright test tests/unit/clickPickupLocation.spec.ts
  * npx playwright test tests/unit/clickPickupLocation.spec.ts --ui
  * npx playwright test tests/unit/clickPickupLocation.spec.ts --headed
  * npx playwright test tests/unit/clickPickupLocation.spec.ts --debug
  */
 
-test.describe('clickPickupLocation 方法单元测试', () => {
+test.describe('clickPickupLocation unit tests', () => {
   let searchPage: SearchPage;
 
   test.beforeEach(async ({ page }) => {
     searchPage = new SearchPage(page);
 
-    // 导航到搜索页面
+    // Navigate to the search page
     await searchPage.navigateToSearchPage({ cc: 'nz', mobile: true });
 
-    // 等待页面加载
+    // Wait for the page to finish loading
     await searchPage.waitForSearchWidgetVisible();
   });
 
-  test('应该成功选择 Auckland', async ({ page }) => {
-    console.log('🧪 测试：选择 Auckland');
+  test('successfully select Auckland', async ({ page }) => {
+    console.log('🧪 Test: select Auckland');
 
-    await test.step('调用 clickPickupLocation("Auckland")', async () => {
+    await test.step('Call clickPickupLocation("Auckland")', async () => {
       await searchPage.clickPickupLocation('Auckland');
-      console.log('  ✅ 方法执行完成');
+      console.log('  ✅ Method executed successfully');
     });
 
-    await test.step('验证 Auckland 已被选中', async () => {
-      // 等待一下确保选择生效
+    await test.step('Verify Auckland is selected', async () => {
+      // Wait briefly to ensure the selection takes effect
       await page.waitForTimeout(500);
 
-      // 使用 SearchPage 方法验证按钮是否包含 "Auckland Airport"
-      await searchPage.assertPickupLocationContains('Auckland Airport', '取车地点按钮应该显示 Auckland Airport');
+      // Use SearchPage helper to ensure the button contains "Auckland Airport"
+      await searchPage.assertPickupLocationContains('Auckland Airport', 'Pickup button should display Auckland Airport');
 
-      // 获取按钮文本并输出
+      // Capture the button text for logging
       const buttonText = await searchPage.getPickupLocationButtonText();
-      console.log(`  ✅ 按钮显示文本: "${buttonText.trim()}"`);
+      console.log(`  ✅ Button text: "${buttonText.trim()}"`);
 
-      // 截图验证
+      // Screenshot for verification
       await page.screenshot({
         path: 'screenshots/unit-test-auckland-selected.png'
       });
-      console.log('  📸 截图已保存');
+      console.log('  📸 Screenshot saved');
     });
   });
 
-  test('应该成功选择 Christchurch', async ({ page }) => {
-    console.log('🧪 测试：选择 Christchurch');
+  test('successfully select Christchurch', async ({ page }) => {
+    console.log('🧪 Test: select Christchurch');
 
-    await test.step('调用 clickPickupLocation("Christchurch")', async () => {
+    await test.step('Call clickPickupLocation("Christchurch")', async () => {
       await searchPage.clickPickupLocation('Christchurch');
-      console.log('  ✅ 方法执行完成');
+      console.log('  ✅ Method executed successfully');
     });
 
-    await test.step('验证 Christchurch 已被选中', async () => {
+    await test.step('Verify Christchurch is selected', async () => {
       await page.waitForTimeout(500);
 
-      // 使用 SearchPage 方法验证按钮是否包含 "Christchurch Airport"
-      await searchPage.assertPickupLocationContains('Christchurch Airport', '取车地点按钮应该显示 Christchurch Airport');
+      // Use SearchPage helper to ensure the button contains "Christchurch Airport"
+      await searchPage.assertPickupLocationContains('Christchurch Airport', 'Pickup button should display Christchurch Airport');
 
-      // 获取按钮文本并输出
+      // Capture the button text for logging
       const buttonText = await searchPage.getPickupLocationButtonText();
-      console.log(`  ✅ 按钮显示文本: "${buttonText.trim()}"`);
+      console.log(`  ✅ Button text: "${buttonText.trim()}"`);
 
       await page.screenshot({
         path: 'screenshots/unit-test-christchurch-selected.png'
       });
-      console.log('  📸 截图已保存');
+      console.log('  📸 Screenshot saved');
     });
   });
 
-  test('应该成功选择 Queenstown', async ({ page }) => {
-    console.log('🧪 测试：选择 Queenstown');
+  test('successfully select Queenstown', async ({ page }) => {
+    console.log('🧪 Test: select Queenstown');
 
-    await test.step('调用 clickPickupLocation("Queenstown")', async () => {
+    await test.step('Call clickPickupLocation("Queenstown")', async () => {
       await searchPage.clickPickupLocation('Queenstown');
-      console.log('  ✅ 方法执行完成');
+      console.log('  ✅ Method executed successfully');
     });
 
-    await test.step('验证 Queenstown 已被选中', async () => {
+    await test.step('Verify Queenstown is selected', async () => {
       await page.waitForTimeout(500);
 
-      // 使用 SearchPage 方法验证按钮是否包含 "Queenstown"
-      await searchPage.assertPickupLocationContains('Queenstown', '取车地点按钮应该显示 Queenstown');
+      // Use SearchPage helper to ensure the button contains "Queenstown"
+      await searchPage.assertPickupLocationContains('Queenstown', 'Pickup button should display Queenstown');
 
-      // 获取按钮文本并输出
+      // Capture the button text for logging
       const buttonText = await searchPage.getPickupLocationButtonText();
-      console.log(`  ✅ 按钮显示文本: "${buttonText.trim()}"`);
+      console.log(`  ✅ Button text: "${buttonText.trim()}"`);
 
       await page.screenshot({
         path: 'screenshots/unit-test-queenstown-selected.png'
       });
-      console.log('  📸 截图已保存');
+      console.log('  📸 Screenshot saved');
     });
   });
 
-  test('应该支持不区分大小写的地点名称', async ({ page }) => {
-    console.log('🧪 测试：不区分大小写');
+  test('support case-insensitive location names', async ({ page }) => {
+    console.log('🧪 Test: case insensitivity');
 
-    await test.step('使用小写 "auckland"', async () => {
+    await test.step('Use lowercase "auckland"', async () => {
       await searchPage.clickPickupLocation('auckland');
       await page.waitForTimeout(500);
 
-      // 验证按钮显示 Auckland Airport
-      await searchPage.assertPickupLocationContains('Auckland Airport', '小写输入应该选择 Auckland Airport');
+      // Ensure the button displays Auckland Airport
+      await searchPage.assertPickupLocationContains('Auckland Airport', 'Lowercase input should select Auckland Airport');
       const buttonText = await searchPage.getPickupLocationButtonText();
-      console.log(`  ✅ 小写 "auckland" 成功，按钮显示: "${buttonText.trim()}"`);
+      console.log(`  ✅ Lowercase "auckland" succeeded, button shows: "${buttonText.trim()}"`);
     });
 
-    // 重新加载页面进行下一个测试
+    // Reload for the next scenario
     await searchPage.navigateToSearchPage({ cc: 'nz', mobile: true });
     await searchPage.waitForSearchWidgetVisible();
 
-    await test.step('使用大写 "CHRISTCHURCH"', async () => {
+    await test.step('Use uppercase "CHRISTCHURCH"', async () => {
       await searchPage.clickPickupLocation('CHRISTCHURCH');
       await page.waitForTimeout(500);
 
-      // 验证按钮显示 Christchurch Airport
-      await searchPage.assertPickupLocationContains('Christchurch Airport', '大写输入应该选择 Christchurch Airport');
+      // Ensure the button displays Christchurch Airport
+      await searchPage.assertPickupLocationContains('Christchurch Airport', 'Uppercase input should select Christchurch Airport');
       const buttonText = await searchPage.getPickupLocationButtonText();
-      console.log(`  ✅ 大写 "CHRISTCHURCH" 成功，按钮显示: "${buttonText.trim()}"`);
+      console.log(`  ✅ Uppercase "CHRISTCHURCH" succeeded, button shows: "${buttonText.trim()}"`);
     });
 
-    // 重新加载页面进行下一个测试
+    // Reload for the next scenario
     await searchPage.navigateToSearchPage({ cc: 'nz', mobile: true });
     await searchPage.waitForSearchWidgetVisible();
 
-    await test.step('使用混合大小写 "QueensTown"', async () => {
+    await test.step('Use mixed case "QueensTown"', async () => {
       await searchPage.clickPickupLocation('QueensTown');
       await page.waitForTimeout(500);
 
-      // 验证按钮显示 Queenstown
-      await searchPage.assertPickupLocationContains('Queenstown', '混合大小写输入应该选择 Queenstown');
+      // Ensure the button displays Queenstown
+      await searchPage.assertPickupLocationContains('Queenstown', 'Mixed-case input should select Queenstown');
       const buttonText = await searchPage.getPickupLocationButtonText();
-      console.log(`  ✅ 混合大小写 "QueensTown" 成功，按钮显示: "${buttonText.trim()}"`);
+      console.log(`  ✅ Mixed-case "QueensTown" succeeded, button shows: "${buttonText.trim()}"`);
     });
   });
 
-  test('应该在输入不支持的地点时抛出错误', async () => {
-    console.log('🧪 测试：不支持的地点错误处理');
+  test('throw for unsupported location input', async () => {
+    console.log('🧪 Test: unsupported location error handling');
 
-    await test.step('输入 "Wellington" 应该抛出错误', async () => {
+    await test.step('Entering "Wellington" should throw', async () => {
       let errorThrown = false;
       let errorMessage = '';
 
@@ -163,13 +163,13 @@ test.describe('clickPickupLocation 方法单元测试', () => {
       }
 
       expect(errorThrown).toBe(true);
-      expect(errorMessage).toContain('不支持的地点: "Wellington"');
-      expect(errorMessage).toContain('可选地点: Auckland, Christchurch, Queenstown');
-      console.log(`  ✅ 正确抛出错误: ${errorMessage}`);
+      expect(errorMessage).toContain('Unsupported location: "Wellington"');
+      expect(errorMessage).toContain('Available locations: Auckland, Christchurch, Queenstown');
+      console.log(`  ✅ Error thrown as expected: ${errorMessage}`);
     });
 
-    await test.step('输入空字符串应该抛出错误', async () => {
-      // 重新加载页面
+    await test.step('Entering an empty string should throw', async () => {
+      // Reload the page
       await searchPage.navigateToSearchPage({ cc: 'nz', mobile: true });
       await searchPage.waitForSearchWidgetVisible();
 
@@ -181,22 +181,22 @@ test.describe('clickPickupLocation 方法单元测试', () => {
       }
 
       expect(errorThrown).toBe(true);
-      console.log('  ✅ 空字符串正确抛出错误');
+      console.log('  ✅ Empty string triggered an error as expected');
     });
   });
 
-  test('应该验证3个地点选项都出现', async ({ page }) => {
-    console.log('🧪 测试：验证3个地点选项验证逻辑');
+  test('verify all three location options appear', async ({ page }) => {
+    console.log('🧪 Test: verify three location options');
 
-    await test.step('点击取车地点按钮后验证选项', async () => {
-      // 获取取车地点按钮
+    await test.step('Click the pickup location button and verify options', async () => {
+      // Locate the pickup button
       const pickupButton = page.getByRole('button', { name: 'Choose your pickup location' });
       await pickupButton.click();
 
-      // 等待下拉选项出现
+      // Wait for dropdown options to appear
       await page.waitForTimeout(1000);
 
-      // 验证3个选项是否都可见
+      // Confirm each option is visible
       const aucklandOption = page.getByText('Auckland Airport470 Oruarangi');
       const christchurchOption = page.getByText('Christchurch Airport159');
       const queenstownOption = page.getByText('Queenstown50 Lucas Place,');
@@ -205,41 +205,41 @@ test.describe('clickPickupLocation 方法单元测试', () => {
       const christchurchVisible = await christchurchOption.isVisible();
       const queenstownVisible = await queenstownOption.isVisible();
 
-      console.log(`  📊 Auckland 可见: ${aucklandVisible}`);
-      console.log(`  📊 Christchurch 可见: ${christchurchVisible}`);
-      console.log(`  📊 Queenstown 可见: ${queenstownVisible}`);
+      console.log(`  📊 Auckland visible: ${aucklandVisible}`);
+      console.log(`  📊 Christchurch visible: ${christchurchVisible}`);
+      console.log(`  📊 Queenstown visible: ${queenstownVisible}`);
 
-      // 截图保存验证状态
+      // Screenshot to capture the verification state
       await page.screenshot({
         path: 'screenshots/unit-test-all-options-visible.png'
       });
-      console.log('  📸 截图已保存');
+      console.log('  📸 Screenshot saved');
 
-      // 如果所有选项都可见，测试通过
+      // Log a helpful message depending on visibility
       if (aucklandVisible && christchurchVisible && queenstownVisible) {
-        console.log('  ✅ 所有3个地点选项都可见');
+        console.log('  ✅ All three location options are visible');
       } else {
-        console.log('  ⚠️ 部分地点选项不可见');
+        console.log('  ⚠️ Some location options are hidden');
       }
     });
   });
 
-  test('应该正确处理点击流程', async ({ page }) => {
-    console.log('🧪 测试：完整点击流程');
+  test('handle the full click flow correctly', async ({ page }) => {
+    console.log('🧪 Test: complete click flow');
 
-    await test.step('步骤1：点击取车地点按钮', async () => {
+    await test.step('Step 1: click pickup button', async () => {
       const pickupButton = page.getByRole('button', { name: 'Choose your pickup location' });
       await pickupButton.click();
-      console.log('  ✅ 步骤1完成：点击按钮');
+      console.log('  ✅ Step 1 complete: button clicked');
       await page.waitForTimeout(500);
     });
 
-    await test.step('步骤2：等待下拉菜单出现', async () => {
+    await test.step('Step 2: wait for dropdown', async () => {
       await page.waitForTimeout(1000);
-      console.log('  ✅ 步骤2完成：等待下拉菜单');
+      console.log('  ✅ Step 2 complete: waited for dropdown');
     });
 
-    await test.step('步骤3：验证3个地点选项', async () => {
+    await test.step('Step 3: verify all three options', async () => {
       const aucklandOption = page.getByText('Auckland Airport470 Oruarangi');
       const christchurchOption = page.getByText('Christchurch Airport159');
       const queenstownOption = page.getByText('Queenstown50 Lucas Place,');
@@ -247,52 +247,52 @@ test.describe('clickPickupLocation 方法单元测试', () => {
       await expect(aucklandOption).toBeVisible();
       await expect(christchurchOption).toBeVisible();
       await expect(queenstownOption).toBeVisible();
-      console.log('  ✅ 步骤3完成：3个选项都可见');
+      console.log('  ✅ Step 3 complete: all three options visible');
     });
 
-    await test.step('步骤4：点击 Auckland 选项', async () => {
+    await test.step('Step 4: click Auckland option', async () => {
       const aucklandOption = page.getByText('Auckland Airport470 Oruarangi');
       await aucklandOption.click();
-      console.log('  ✅ 步骤4完成：点击选择');
+      console.log('  ✅ Step 4 complete: option clicked');
       await page.waitForTimeout(500);
     });
 
-    await test.step('步骤5：验证选择结果', async () => {
-      // 验证按钮显示 Auckland Airport
-      await searchPage.assertPickupLocationContains('Auckland Airport', '按钮应该显示 Auckland Airport');
+    await test.step('Step 5: verify selection result', async () => {
+      // Ensure the button displays Auckland Airport
+      await searchPage.assertPickupLocationContains('Auckland Airport', 'Button should display Auckland Airport');
       const buttonText = await searchPage.getPickupLocationButtonText();
-      console.log(`  ✅ 按钮显示文本: "${buttonText.trim()}"`);
+      console.log(`  ✅ Button text: "${buttonText.trim()}"`);
 
       await page.screenshot({
         path: 'screenshots/unit-test-complete-flow.png'
       });
-      console.log('  📸 完整流程截图已保存');
-      console.log('  ✅ 完整流程测试通过');
+      console.log('  📸 Full flow screenshot saved');
+      console.log('  ✅ Full flow test passed');
     });
   });
 
-  test('性能测试：方法执行时间', async () => {
-    console.log('🧪 测试：方法执行性能');
+  test('measure method execution time', async () => {
+    console.log('🧪 Test: method execution performance');
 
-    await test.step('测量执行时间', async () => {
+    await test.step('Measure execution time', async () => {
       const startTime = Date.now();
       await searchPage.clickPickupLocation('Auckland');
       const endTime = Date.now();
       const executionTime = endTime - startTime;
 
-      console.log(`  ⏱️ 执行时间: ${executionTime}ms`);
+      console.log(`  ⏱️ Execution time: ${executionTime}ms`);
 
-      // 验证执行时间在合理范围内（小于5秒）
+      // Verify execution time is within a reasonable range (<5 seconds)
       expect(executionTime).toBeLessThan(5000);
-      console.log('  ✅ 执行时间在合理范围内');
+      console.log('  ✅ Execution time within expected range');
     });
   });
 });
 
 /**
- * 边界条件和异常场景测试
+ * Boundary condition and exception scenario tests
  */
-test.describe('clickPickupLocation 边界条件测试', () => {
+test.describe('clickPickupLocation boundary tests', () => {
   let searchPage: SearchPage;
 
   test.beforeEach(async ({ page }) => {
@@ -301,33 +301,33 @@ test.describe('clickPickupLocation 边界条件测试', () => {
     await searchPage.waitForSearchWidgetVisible();
   });
 
-  test('测试各种非标准输入', async () => {
-    console.log('🧪 测试：非标准输入处理');
+  test('handles various non-standard inputs', async () => {
+    console.log('🧪 Test: non-standard input handling');
 
     const invalidInputs = [
       'sydney',
       'New York',
       '123',
-      'auck',  // 部分匹配
-      '  Auckland  ',  // 带空格
+      'auck',  // partial match
+      '  Auckland  ',  // with surrounding spaces
     ];
 
     for (const input of invalidInputs) {
-      await test.step(`测试输入: "${input}"`, async () => {
+      await test.step(`Test input: "${input}"`, async () => {
         let errorThrown = false;
         try {
           await searchPage.clickPickupLocation(input);
         } catch (error) {
           errorThrown = true;
-          console.log(`    ✅ "${input}" 正确抛出错误 ${error}`);
+          console.log(`    ✅ "${input}" threw as expected: ${error}`);
         }
 
-        // 大部分应该抛出错误（除非是有效的地点）
+        // Most inputs should throw (unless they resolve to a valid location)
         if (!['Auckland', 'auckland', 'AUCKLAND'].includes(input.trim())) {
           expect(errorThrown).toBe(true);
         }
 
-        // 重新加载页面准备下一个测试
+        // Reload before the next test input
         if (invalidInputs.indexOf(input) < invalidInputs.length - 1) {
           await searchPage.navigateToSearchPage({ cc: 'nz', mobile: true });
           await searchPage.waitForSearchWidgetVisible();

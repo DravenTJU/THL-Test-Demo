@@ -2,48 +2,48 @@ import { test, expect } from '@playwright/test';
 import { SearchPage } from '../../pages/SearchPage';
 
 /**
- * selectTravelDates 方法单元测试
+ * selectTravelDates unit tests
  *
- * 测试目标：验证日期选择器功能
- * - 判断日期选择器是否打开
- * - 月份导航功能（前翻、后翻）
- * - 锁定月份容器并选择日期
- * - 跨月日期选择
- * - 自动导航到目标月份
+ * Test objectives: validate the date picker behaviour
+ * - Confirm the date picker opens correctly
+ * - Verify month navigation (forward and backward)
+ * - Lock the month container and choose specific days
+ * - Select dates across multiple months
+ * - Auto-navigate to the requested month
  *
- * 运行方式：
+ * Run with:
  * npx playwright test tests/unit/selectTravelDates.spec.ts
  * npx playwright test tests/unit/selectTravelDates.spec.ts --ui
  * npx playwright test tests/unit/selectTravelDates.spec.ts --headed
  * npx playwright test tests/unit/selectTravelDates.spec.ts --debug
  */
 
-test.describe('selectTravelDates 方法单元测试', () => {
+test.describe('selectTravelDates unit tests', () => {
   let searchPage: SearchPage;
 
   test.beforeEach(async ({ page }) => {
     searchPage = new SearchPage(page);
 
-    // 导航到搜索页面
+    // Navigate to the search page
     await searchPage.navigateToSearchPage({ cc: 'nz', mobile: true });
 
-    // 等待页面加载
+    // Wait for the widget to become visible
     await searchPage.waitForSearchWidgetVisible();
 
-    // 选择取车地点（Auckland）
+    // Select pickup Auckland
     await searchPage.clickPickupLocation('Auckland');
 
-    // 选择还车地点（Auckland）
+    // Select drop-off Auckland
     await searchPage.clickDropoffLocation('Auckland');
   });
 
-  test('应该成功选择未来的取车和还车日期', async ({ page }) => {
-    console.log('🧪 测试：选择未来日期');
+  test('select future pickup and drop-off dates', async ({ page }) => {
+    console.log('🧪 Test: select future dates');
 
-    // 获取当前日期
+    // Capture today
     const today = new Date();
 
-    // 选择当前日期+2天作为取车日期（使用Date对象自动处理月份进位）
+    // Use today +2 days as pickup date (Date handles month rollover)
     const pickupDateObj = new Date(today);
     pickupDateObj.setDate(today.getDate() + 2);
     const pickupYear = pickupDateObj.getFullYear();
@@ -51,7 +51,7 @@ test.describe('selectTravelDates 方法单元测试', () => {
     const pickupDay = String(pickupDateObj.getDate()).padStart(2, '0');
     const pickupDate = `${pickupYear}-${pickupMonth}-${pickupDay}`;
 
-    // 选择当前日期+5天作为还车日期（使用Date对象自动处理月份进位）
+    // Use today +5 days as drop-off date
     const dropoffDateObj = new Date(today);
     dropoffDateObj.setDate(today.getDate() + 5);
     const dropoffYear = dropoffDateObj.getFullYear();
@@ -59,131 +59,127 @@ test.describe('selectTravelDates 方法单元测试', () => {
     const dropoffDay = String(dropoffDateObj.getDate()).padStart(2, '0');
     const dropoffDate = `${dropoffYear}-${dropoffMonth}-${dropoffDay}`;
 
-    console.log(`  📅 今天: ${today.toISOString().split('T')[0]}`);
-    console.log(`  📅 取车日期: ${pickupDate}`);
-    console.log(`  📅 还车日期: ${dropoffDate}`);
+    console.log(`  📅 Today: ${today.toISOString().split('T')[0]}`);
+    console.log(`  📅 Pickup date: ${pickupDate}`);
+    console.log(`  📅 Drop-off date: ${dropoffDate}`);
 
-    await test.step('调用 selectTravelDates 方法', async () => {
+    await test.step('Call selectTravelDates', async () => {
       await searchPage.selectTravelDates(pickupDate, dropoffDate);
-      console.log('  ✅ 方法执行完成');
+      console.log('  ✅ Method completed');
     });
 
-    await test.step('验证日期已被选中', async () => {
+    await test.step('Verify the dates are reflected', async () => {
       await page.waitForTimeout(500);
 
-      // 验证日期按钮显示了日期信息（不再是"Select Dates"）
+      // Ensure the button now displays selected dates (not the placeholder)
       const travelDatesButton = page.getByRole('button', { name: 'Select the pick-up and drop-' });
       const buttonText = await travelDatesButton.innerText();
 
-      console.log(`  📊 日期按钮文本: "${buttonText}"`);
+      console.log(`  📊 Date button text: "${buttonText}"`);
 
-      // 日期应该包含数字（表示已选择）
+      // Expect digits in the text, meaning actual dates are shown
       expect(buttonText).toMatch(/\d+/);
-      console.log('  ✅ 日期按钮显示了选择的日期');
+      console.log('  ✅ Date button shows the chosen range');
 
-      // 截图
       await page.screenshot({
         path: 'screenshots/unit-test-dates-selected.png'
       });
-      console.log('  📸 截图已保存');
+      console.log('  📸 Screenshot saved');
     });
   });
 
-  test('应该成功选择下个月的日期', async ({ page }) => {
-    console.log('🧪 测试：选择下个月的日期');
+  test('select dates in the following month', async ({ page }) => {
+    console.log('🧪 Test: select dates in the next month');
 
-    // 获取下个月的日期
     const today = new Date();
     const nextMonth = new Date(today.getFullYear(), today.getMonth() + 1, 1);
     const year = nextMonth.getFullYear();
     const month = String(nextMonth.getMonth() + 1).padStart(2, '0');
 
-    // 选择下个月的第5天作为取车日期
+    // 5th as pickup
     const pickupDate = `${year}-${month}-05`;
 
-    // 选择下个月的第10天作为还车日期
+    // 10th as drop-off
     const dropoffDate = `${year}-${month}-10`;
 
-    console.log(`  📅 取车日期: ${pickupDate}`);
-    console.log(`  📅 还车日期: ${dropoffDate}`);
+    console.log(`  📅 Pickup date: ${pickupDate}`);
+    console.log(`  📅 Drop-off date: ${dropoffDate}`);
 
-    await test.step('调用 selectTravelDates 方法', async () => {
+    await test.step('Call selectTravelDates', async () => {
       await searchPage.selectTravelDates(pickupDate, dropoffDate);
-      console.log('  ✅ 方法执行完成');
+      console.log('  ✅ Method completed');
     });
 
-    await test.step('验证日期已被选中', async () => {
+    await test.step('Verify the button updates', async () => {
       await page.waitForTimeout(500);
 
       const travelDatesButton = page.getByRole('button', { name: 'Select the pick-up and drop-' });
       const buttonText = await travelDatesButton.innerText();
 
-      console.log(`  📊 日期按钮文本: "${buttonText}"`);
+      console.log(`  📊 Date button text: "${buttonText}"`);
       expect(buttonText).toMatch(/\d+/);
-      console.log('  ✅ 成功选择了下个月的日期');
+      console.log('  ✅ Dates from the next month were selected');
 
       await page.screenshot({
         path: 'screenshots/unit-test-next-month-dates.png'
       });
-      console.log('  📸 截图已保存');
+      console.log('  📸 Screenshot saved');
     });
   });
 
-  test('应该成功选择跨月的日期（下个月到下下个月）', async ({ page }) => {
-    console.log('🧪 测试：选择跨月日期');
+  test('select dates that span across two future months', async ({ page }) => {
+    console.log('🧪 Test: select cross-month dates');
 
     const today = new Date();
 
-    // 选择下个月的第5天作为取车日期
+    // Next month 5th as pickup
     const nextMonth1 = new Date(today.getFullYear(), today.getMonth() + 1, 5);
     const pickupYear = nextMonth1.getFullYear();
     const pickupMonth = String(nextMonth1.getMonth() + 1).padStart(2, '0');
     const pickupDate = `${pickupYear}-${pickupMonth}-05`;
 
-    // 选择下下个月的第5天作为还车日期
+    // Month after next 5th as drop-off
     const nextMonth2 = new Date(today.getFullYear(), today.getMonth() + 2, 5);
     const dropoffYear = nextMonth2.getFullYear();
     const dropoffMonth = String(nextMonth2.getMonth() + 1).padStart(2, '0');
     const dropoffDate = `${dropoffYear}-${dropoffMonth}-05`;
 
-    console.log(`  📅 取车日期: ${pickupDate}`);
-    console.log(`  📅 还车日期: ${dropoffDate}`);
+    console.log(`  📅 Pickup date: ${pickupDate}`);
+    console.log(`  📅 Drop-off date: ${dropoffDate}`);
 
-    await test.step('调用 selectTravelDates 方法', async () => {
+    await test.step('Call selectTravelDates', async () => {
       await searchPage.selectTravelDates(pickupDate, dropoffDate);
-      console.log('  ✅ 方法执行完成');
+      console.log('  ✅ Method completed');
     });
 
-    await test.step('验证跨月日期已被选中', async () => {
+    await test.step('Confirm dates span two months', async () => {
       await page.waitForTimeout(500);
-
       const travelDatesButton = page.getByRole('button', { name: 'Select the pick-up and drop-' });
       const buttonText = await travelDatesButton.innerText();
 
-      console.log(`  📊 日期按钮文本: "${buttonText}"`);
+      console.log(`  📊 Date button text: "${buttonText}"`);
       expect(buttonText).toMatch(/\d+/);
-      console.log('  ✅ 成功选择了跨月日期');
+      console.log('  ✅ Cross-month selection succeeded');
 
       await page.screenshot({
         path: 'screenshots/unit-test-cross-month-dates.png'
       });
-      console.log('  📸 截图已保存');
+      console.log('  📸 Screenshot saved');
     });
   });
 
-  test('应该验证日期选择器的打开状态', async ({ page }) => {
-    console.log('🧪 测试：日期选择器打开状态检测');
+  test('confirm the date picker opens correctly', async ({ page }) => {
+    console.log('🧪 Test: confirm date picker open state');
 
-    await test.step('点击日期按钮打开选择器', async () => {
+    await test.step('Click the date button to open the picker', async () => {
       const travelDatesButton = page.getByRole('button', { name: 'Select the pick-up and drop-' });
       await travelDatesButton.click();
-      console.log('  ✅ 已点击日期按钮');
+      console.log('  ✅ Date button clicked');
     });
 
-    await test.step('验证日期选择器已显示', async () => {
+    await test.step('Verify the picker is visible', async () => {
       await page.waitForTimeout(1000);
 
-      // 获取当前月份名称
       const now = new Date();
       const monthNames = [
         'January', 'February', 'March', 'April', 'May', 'June',
@@ -192,35 +188,33 @@ test.describe('selectTravelDates 方法单元测试', () => {
       const currentMonthName = monthNames[now.getMonth()];
       const currentYear = now.getFullYear();
 
-      console.log(`  📅 检查月份: ${currentMonthName} ${currentYear}`);
+      console.log(`  📅 Expecting month: ${currentMonthName} ${currentYear}`);
 
-      // 验证当前月份标签可见
+      // Ensure the current month label is visible
       const monthPattern = new RegExp(`${currentMonthName}\\s+${currentYear}`, 'i');
       const monthLabel = page.getByText(monthPattern);
       await expect(monthLabel.first()).toBeVisible();
 
-      console.log('  ✅ 日期选择器已显示');
+      console.log('  ✅ Date picker is open');
 
-      // 截图
       await page.screenshot({
         path: 'screenshots/unit-test-date-picker-open.png'
       });
-      console.log('  📸 截图已保存');
+      console.log('  📸 Screenshot saved');
     });
   });
 
-  test('应该验证月份导航功能', async ({ page }) => {
-    console.log('🧪 测试：月份导航功能');
+  test('verify month navigation', async ({ page }) => {
+    console.log('🧪 Test: month navigation');
 
-    await test.step('打开日期选择器', async () => {
+    await test.step('Open the date picker', async () => {
       const travelDatesButton = page.getByRole('button', { name: 'Select the pick-up and drop-' });
       await travelDatesButton.click();
       await page.waitForTimeout(1000);
-      console.log('  ✅ 日期选择器已打开');
+      console.log('  ✅ Date picker opened');
     });
 
-    await test.step('验证初始显示两个月', async () => {
-      // 应该显示当前月和下个月
+    await test.step('Confirm the initial two months are displayed', async () => {
       const now = new Date();
       const monthNames = [
         'January', 'February', 'March', 'April', 'May', 'June',
@@ -230,8 +224,8 @@ test.describe('selectTravelDates 方法单元测试', () => {
       const currentMonthName = monthNames[now.getMonth()];
       const nextMonthName = monthNames[(now.getMonth() + 1) % 12];
 
-      console.log(`  📅 当前月份: ${currentMonthName}`);
-      console.log(`  📅 下个月份: ${nextMonthName}`);
+      console.log(`  📅 Current month: ${currentMonthName}`);
+      console.log(`  📅 Next month: ${nextMonthName}`);
 
       const currentMonthLabel = page.getByText(new RegExp(`${currentMonthName}\\s+\\d{4}`, 'i'));
       const nextMonthLabel = page.getByText(new RegExp(`${nextMonthName}\\s+\\d{4}`, 'i'));
@@ -239,35 +233,33 @@ test.describe('selectTravelDates 方法单元测试', () => {
       await expect(currentMonthLabel.first()).toBeVisible();
       await expect(nextMonthLabel.first()).toBeVisible();
 
-      console.log('  ✅ 初始显示两个月');
+      console.log('  ✅ Two consecutive months are visible');
 
       await page.screenshot({
         path: 'screenshots/unit-test-two-months-displayed.png'
       });
-      console.log('  📸 截图已保存');
+      console.log('  📸 Screenshot saved');
     });
 
-    await test.step('点击下个月按钮', async () => {
-      // 点击下个月按钮
+    await test.step('Click the next month button', async () => {
       const nextButton = page.getByRole('button').filter({ hasText: /^$/ });
       await nextButton.click();
       await page.waitForTimeout(500);
 
-      console.log('  ✅ 点击了下个月按钮');
+      console.log('  ✅ Next month button clicked');
 
       await page.screenshot({
         path: 'screenshots/unit-test-after-next-button.png'
       });
-      console.log('  📸 截图已保存');
+      console.log('  📸 Screenshot saved');
     });
   });
 
-  test('应该正确处理完整的日期选择流程', async ({ page }) => {
-    console.log('🧪 测试：完整日期选择流程');
+  test('complete the full date selection flow manually', async ({ page }) => {
+    console.log('🧪 Test: manual full date selection flow');
 
     const today = new Date();
 
-    // 选择当前日期+3天和+7天（使用Date对象自动处理月份进位）
     const pickupDateObj = new Date(today);
     pickupDateObj.setDate(today.getDate() + 3);
     const pickupYear = pickupDateObj.getFullYear();
@@ -282,30 +274,28 @@ test.describe('selectTravelDates 方法单元测试', () => {
     const dropoffDay = dropoffDateObj.getDate();
     const dropoffDate = `${dropoffYear}-${dropoffMonth}-${String(dropoffDay).padStart(2, '0')}`;
 
-    console.log(`  📅 今天: ${today.toISOString().split('T')[0]}`);
-    console.log(`  📅 取车日期: ${pickupDate}`);
-    console.log(`  📅 还车日期: ${dropoffDate}`);
+    console.log(`  📅 Today: ${today.toISOString().split('T')[0]}`);
+    console.log(`  📅 Pickup date: ${pickupDate}`);
+    console.log(`  📅 Drop-off date: ${dropoffDate}`);
 
-    await test.step('步骤1：点击日期按钮', async () => {
+    await test.step('Step 1: open the date picker', async () => {
       const travelDatesButton = page.getByRole('button', { name: 'Select the pick-up and drop-' });
       await travelDatesButton.click();
-      console.log('  ✅ 步骤1完成：点击日期按钮');
+      console.log('  ✅ Step 1 complete: date button clicked');
     });
 
-    await test.step('步骤2：等待日期选择器出现', async () => {
+    await test.step('Step 2: wait for the picker to appear', async () => {
       await page.waitForTimeout(1000);
-      console.log('  ✅ 步骤2完成：日期选择器已显示');
+      console.log('  ✅ Step 2 complete: picker visible');
     });
 
-    await test.step('步骤3：选择取车日期', async () => {
-      // 获取月份名称
+    await test.step('Step 3: select the pickup date', async () => {
       const monthNames = [
         'January', 'February', 'March', 'April', 'May', 'June',
         'July', 'August', 'September', 'October', 'November', 'December'
       ];
       const monthName = monthNames[pickupDateObj.getMonth()];
 
-      // 锁定月份容器
       const monthPattern = new RegExp(`${monthName}\\s+${pickupYear}`, 'i');
       const monthContainer = page
         .locator('[class*="BookingWidget_month"]')
@@ -313,23 +303,20 @@ test.describe('selectTravelDates 方法单元测试', () => {
           has: page.locator('[class*="BookingWidget_monthLabel"]', { hasText: monthPattern })
         });
 
-      // 在该月份中点击日期
       const pickupDayButton = monthContainer.getByRole('button', { name: String(pickupDay), exact: true });
       await pickupDayButton.click();
       await page.waitForTimeout(500);
 
-      console.log(`  ✅ 步骤3完成：选择取车日期 ${monthName} ${pickupDay}`);
+      console.log(`  ✅ Step 3 complete: selected pickup ${monthName} ${pickupDay}`);
     });
 
-    await test.step('步骤4：选择还车日期', async () => {
-      // 获取月份名称
+    await test.step('Step 4: select the drop-off date', async () => {
       const monthNames = [
         'January', 'February', 'March', 'April', 'May', 'June',
         'July', 'August', 'September', 'October', 'November', 'December'
       ];
       const monthName = monthNames[dropoffDateObj.getMonth()];
 
-      // 锁定月份容器
       const monthPattern = new RegExp(`${monthName}\\s+${dropoffYear}`, 'i');
       const monthContainer = page
         .locator('[class*="BookingWidget_month"]')
@@ -337,36 +324,34 @@ test.describe('selectTravelDates 方法单元测试', () => {
           has: page.locator('[class*="BookingWidget_monthLabel"]', { hasText: monthPattern })
         });
 
-      // 在该月份中点击日期
       const dropoffDayButton = monthContainer.getByRole('button', { name: String(dropoffDay), exact: true });
       await dropoffDayButton.click();
       await page.waitForTimeout(500);
 
-      console.log(`  ✅ 步骤4完成：选择还车日期 ${monthName} ${dropoffDay}`);
+      console.log(`  ✅ Step 4 complete: selected drop-off ${monthName} ${dropoffDay}`);
     });
 
-    await test.step('步骤5：验证选择结果', async () => {
+    await test.step('Step 5: verify the final button text', async () => {
       const travelDatesButton = page.getByRole('button', { name: 'Select the pick-up and drop-' });
       const buttonText = await travelDatesButton.innerText();
 
-      console.log(`  📊 最终日期按钮文本: "${buttonText}"`);
+      console.log(`  📊 Final button text: "${buttonText}"`);
       expect(buttonText).toMatch(/\d+/);
 
       await page.screenshot({
         path: 'screenshots/unit-test-complete-date-flow.png'
       });
-      console.log('  📸 完整流程截图已保存');
-      console.log('  ✅ 完整流程测试通过');
+      console.log('  📸 Full flow screenshot saved');
+      console.log('  ✅ Manual flow passed');
     });
   });
 
-  test('应该支持多次选择不同日期', async ({ page }) => {
-    console.log('🧪 测试：多次选择不同日期');
+  test('support selecting different ranges multiple times', async ({ page }) => {
+    console.log('🧪 Test: select multiple different ranges');
 
     const today = new Date();
 
-    await test.step('第一次选择日期', async () => {
-      // 第一次选择：今天+2天到今天+4天
+    await test.step('First selection', async () => {
       const pickup1 = new Date(today);
       pickup1.setDate(today.getDate() + 2);
       const dropoff1 = new Date(today);
@@ -375,14 +360,13 @@ test.describe('selectTravelDates 方法单元测试', () => {
       const pickupDate = `${pickup1.getFullYear()}-${String(pickup1.getMonth() + 1).padStart(2, '0')}-${String(pickup1.getDate()).padStart(2, '0')}`;
       const dropoffDate = `${dropoff1.getFullYear()}-${String(dropoff1.getMonth() + 1).padStart(2, '0')}-${String(dropoff1.getDate()).padStart(2, '0')}`;
 
-      console.log(`  📅 第一次选择: ${pickupDate} 到 ${dropoffDate}`);
+      console.log(`  📅 First selection: ${pickupDate} → ${dropoffDate}`);
       await searchPage.selectTravelDates(pickupDate, dropoffDate);
       await page.waitForTimeout(500);
-      console.log('  ✅ 第一次日期选择成功');
+      console.log('  ✅ First selection complete');
     });
 
-    await test.step('第二次选择不同日期', async () => {
-      // 第二次选择：今天+6天到今天+10天
+    await test.step('Second selection', async () => {
       const pickup2 = new Date(today);
       pickup2.setDate(today.getDate() + 6);
       const dropoff2 = new Date(today);
@@ -391,25 +375,24 @@ test.describe('selectTravelDates 方法单元测试', () => {
       const pickupDate2 = `${pickup2.getFullYear()}-${String(pickup2.getMonth() + 1).padStart(2, '0')}-${String(pickup2.getDate()).padStart(2, '0')}`;
       const dropoffDate2 = `${dropoff2.getFullYear()}-${String(dropoff2.getMonth() + 1).padStart(2, '0')}-${String(dropoff2.getDate()).padStart(2, '0')}`;
 
-      console.log(`  📅 第二次选择: ${pickupDate2} 到 ${dropoffDate2}`);
+      console.log(`  📅 Second selection: ${pickupDate2} → ${dropoffDate2}`);
       await searchPage.selectTravelDates(pickupDate2, dropoffDate2);
       await page.waitForTimeout(500);
 
       const travelDatesButton = page.getByRole('button', { name: 'Select the pick-up and drop-' });
       const buttonText = await travelDatesButton.innerText();
 
-      console.log(`  📊 第二次选择后的按钮文本: "${buttonText}"`);
+      console.log(`  📊 Button text after second selection: "${buttonText}"`);
       expect(buttonText).toMatch(/\d+/);
-      console.log('  ✅ 第二次日期选择成功，覆盖了第一次的选择');
+      console.log('  ✅ Second selection replaced the first');
     });
   });
 
-  test('性能测试：日期选择方法执行时间', async () => {
-    console.log('🧪 测试：日期选择方法执行性能');
+  test('measure execution time of selectTravelDates', async () => {
+    console.log('🧪 Test: selectTravelDates performance');
 
     const today = new Date();
 
-    // 今天+3天和今天+6天（使用Date对象自动处理月份进位）
     const pickupDateObj = new Date(today);
     pickupDateObj.setDate(today.getDate() + 3);
     const pickupDate = `${pickupDateObj.getFullYear()}-${String(pickupDateObj.getMonth() + 1).padStart(2, '0')}-${String(pickupDateObj.getDate()).padStart(2, '0')}`;
@@ -418,28 +401,28 @@ test.describe('selectTravelDates 方法单元测试', () => {
     dropoffDateObj.setDate(today.getDate() + 6);
     const dropoffDate = `${dropoffDateObj.getFullYear()}-${String(dropoffDateObj.getMonth() + 1).padStart(2, '0')}-${String(dropoffDateObj.getDate()).padStart(2, '0')}`;
 
-    console.log(`  📅 今天: ${today.toISOString().split('T')[0]}`);
-    console.log(`  📅 测试日期: ${pickupDate} 到 ${dropoffDate}`);
+    console.log(`  📅 Today: ${today.toISOString().split('T')[0]}`);
+    console.log(`  📅 Performance sample dates: ${pickupDate} → ${dropoffDate}`);
 
-    await test.step('测量执行时间', async () => {
+    await test.step('Measure duration', async () => {
       const startTime = Date.now();
       await searchPage.selectTravelDates(pickupDate, dropoffDate);
       const endTime = Date.now();
       const executionTime = endTime - startTime;
 
-      console.log(`  ⏱️ 执行时间: ${executionTime}ms`);
+      console.log(`  ⏱️ Execution time: ${executionTime}ms`);
 
-      // 验证执行时间在合理范围内（小于10秒）
+      // Less than 10 seconds is considered acceptable
       expect(executionTime).toBeLessThan(10000);
-      console.log('  ✅ 执行时间在合理范围内');
+      console.log('  ✅ Execution time within acceptable range');
     });
   });
 });
 
 /**
- * 边界条件和异常场景测试
+ * selectTravelDates boundary and exception tests
  */
-test.describe('selectTravelDates 边界条件测试', () => {
+test.describe('selectTravelDates boundary tests', () => {
   let searchPage: SearchPage;
 
   test.beforeEach(async ({ page }) => {
@@ -447,17 +430,15 @@ test.describe('selectTravelDates 边界条件测试', () => {
     await searchPage.navigateToSearchPage({ cc: 'nz', mobile: true });
     await searchPage.waitForSearchWidgetVisible();
 
-    // 选择取车地点（Auckland）
+    // Pre-select pickup and drop-off
     await searchPage.clickPickupLocation('Auckland');
-
-    // 选择还车地点（Auckland）
     await searchPage.clickDropoffLocation('Auckland');
   });
 
-  test('应该处理无效的日期格式', async () => {
-    console.log('🧪 测试：无效日期格式处理');
+  test('handle invalid date formats', async () => {
+    console.log('🧪 Test: invalid date format handling');
 
-    await test.step('测试无效格式: "2025-13-01"', async () => {
+    await test.step('Invalid format "2025-13-01"', async () => {
       let errorThrown = false;
       let errorMessage = '';
 
@@ -469,86 +450,83 @@ test.describe('selectTravelDates 边界条件测试', () => {
       }
 
       expect(errorThrown).toBe(true);
-      console.log(`  ✅ 正确抛出错误: ${errorMessage}`);
+      console.log(`  ✅ Error thrown as expected: ${errorMessage}`);
     });
 
-    await test.step('测试无效格式: "2025/10/01"', async () => {
+    await test.step('Invalid format "2025/10/01"', async () => {
       let errorThrown = false;
 
       try {
         await searchPage.selectTravelDates('2025/10/01', '2025/10/05');
       } catch (error) {
         errorThrown = true;
-        console.log(`  ✅ 正确抛出错误: ${(error as Error).message}`);
+        console.log(`  ✅ Error thrown as expected: ${(error as Error).message}`);
       }
 
       expect(errorThrown).toBe(true);
     });
 
-    await test.step('测试空字符串', async () => {
+    await test.step('Empty string input', async () => {
       let errorThrown = false;
 
       try {
         await searchPage.selectTravelDates('', '2025-10-05');
       } catch (error) {
         errorThrown = true;
-        console.log(`  ✅ 空字符串正确抛出错误: ${(error as Error).message}`);
+        console.log(`  ✅ Empty string rejected: ${(error as Error).message}`);
       }
 
       expect(errorThrown).toBe(true);
     });
   });
 
-  test('应该处理过去的日期', async ({ page }) => {
-    console.log('🧪 测试：过去的日期处理');
+  test('attempt to handle past dates', async ({ page }) => {
+    console.log('🧪 Test: past date handling');
 
-    await test.step('尝试选择过去的日期', async () => {
-      // 选择去年的日期
+    await test.step('Try selecting past dates', async () => {
       const lastYear = new Date().getFullYear() - 1;
       const pickupDate = `${lastYear}-01-15`;
       const dropoffDate = `${lastYear}-01-20`;
 
-      console.log(`  📅 尝试选择日期: ${pickupDate} 到 ${dropoffDate}`);
+      console.log(`  📅 Attempting: ${pickupDate} → ${dropoffDate}`);
 
       try {
         await searchPage.selectTravelDates(pickupDate, dropoffDate);
         await page.waitForTimeout(1000);
-        console.log('  ⚠️ 方法执行完成（页面可能不允许选择过去的日期）');
+        console.log('  ⚠️ Method completed; the UI may reject these dates silently');
       } catch (error) {
-        console.log(`  ✅ 正确处理了过去的日期: ${(error as Error).message}`);
+        console.log(`  ✅ Past dates handled with error: ${(error as Error).message}`);
       }
     });
   });
 
-  test('应该处理相同的取车和还车日期', async ({ page }) => {
-    console.log('🧪 测试：相同的取车和还车日期');
+  test('attempt to handle identical pickup and drop-off dates', async ({ page }) => {
+    console.log('🧪 Test: identical pickup and drop-off dates');
 
     const today = new Date();
-
-    // 使用今天+5天（使用Date对象自动处理月份进位）
     const sameDateObj = new Date(today);
     sameDateObj.setDate(today.getDate() + 5);
     const sameDate = `${sameDateObj.getFullYear()}-${String(sameDateObj.getMonth() + 1).padStart(2, '0')}-${String(sameDateObj.getDate()).padStart(2, '0')}`;
 
-    console.log(`  📅 今天: ${today.toISOString().split('T')[0]}`);
-    console.log(`  📅 测试日期: ${sameDate}`);
+    console.log(`  📅 Today: ${today.toISOString().split('T')[0]}`);
+    console.log(`  📅 Test date: ${sameDate}`);
 
-    await test.step('尝试选择相同日期', async () => {
+    await test.step('Attempt to select the same date twice', async () => {
       try {
         await searchPage.selectTravelDates(sameDate, sameDate);
         await page.waitForTimeout(500);
-        console.log('  ✅ 方法执行完成（页面可能不允许相同日期）');
+        console.log('  ✅ Method completed (UI may prevent identical dates)');
       } catch (error) {
-        console.log(`  ⚠️ 选择相同日期可能不被允许: ${(error as Error).message}`);
+        console.log(`  ⚠️ Identical date selection may be disallowed: ${(error as Error).message}`);
       }
     });
   });
 });
 
 /**
- * 日期选择器UI交互测试
+ * Date picker UI interaction tests
  */
-test.describe('日期选择器UI交互测试', () => {
+test.describe('Date picker UI interaction tests', () => {
   let searchPage: SearchPage;
 
   test.beforeEach(async ({ page }) => {
@@ -556,24 +534,21 @@ test.describe('日期选择器UI交互测试', () => {
     await searchPage.navigateToSearchPage({ cc: 'nz', mobile: true });
     await searchPage.waitForSearchWidgetVisible();
 
-    // 选择取车地点（Auckland）
     await searchPage.clickPickupLocation('Auckland');
-
-    // 选择还车地点（Auckland）
     await searchPage.clickDropoffLocation('Auckland');
   });
 
-  test('应该验证月份容器的锁定机制', async ({ page }) => {
-    console.log('🧪 测试：月份容器锁定机制');
+  test('verify the month container locking logic', async ({ page }) => {
+    console.log('🧪 Test: month container locking');
 
-    await test.step('打开日期选择器', async () => {
+    await test.step('Open the date picker', async () => {
       const travelDatesButton = page.getByRole('button', { name: 'Select the pick-up and drop-' });
       await travelDatesButton.click();
       await page.waitForTimeout(1000);
-      console.log('  ✅ 日期选择器已打开');
+      console.log('  ✅ Date picker opened');
     });
 
-    await test.step('验证月份容器定位', async () => {
+    await test.step('Verify the month container can be targeted', async () => {
       const now = new Date();
       const monthNames = [
         'January', 'February', 'March', 'April', 'May', 'June',
@@ -582,9 +557,8 @@ test.describe('日期选择器UI交互测试', () => {
       const currentMonthName = monthNames[now.getMonth()];
       const currentYear = now.getFullYear();
 
-      console.log(`  📅 当前月份: ${currentMonthName} ${currentYear}`);
+      console.log(`  📅 Current month: ${currentMonthName} ${currentYear}`);
 
-      // 锁定月份容器
       const monthPattern = new RegExp(`${currentMonthName}\\s+${currentYear}`, 'i');
       const monthContainer = page
         .locator('[class*="BookingWidget_month"]')
@@ -593,31 +567,30 @@ test.describe('日期选择器UI交互测试', () => {
         });
 
       await expect(monthContainer.first()).toBeVisible();
-      console.log('  ✅ 月份容器定位成功');
+      console.log('  ✅ Month container located');
 
-      // 验证该容器内有日期按钮
       const dateButtons = monthContainer.getByRole('button').filter({ hasText: /^\d+$/ });
       const count = await dateButtons.count();
-      console.log(`  📊 找到 ${count} 个日期按钮`);
+      console.log(`  📊 Found ${count} date buttons`);
       expect(count).toBeGreaterThan(0);
 
       await page.screenshot({
         path: 'screenshots/unit-test-month-container.png'
       });
-      console.log('  📸 截图已保存');
+      console.log('  📸 Screenshot saved');
     });
   });
 
-  test('应该验证日期按钮的精确匹配', async ({ page }) => {
-    console.log('🧪 测试：日期按钮精确匹配');
+  test('verify date button exact matching', async ({ page }) => {
+    console.log('🧪 Test: exact date button matching');
 
-    await test.step('打开日期选择器', async () => {
+    await test.step('Open the date picker', async () => {
       const travelDatesButton = page.getByRole('button', { name: 'Select the pick-up and drop-' });
       await travelDatesButton.click();
       await page.waitForTimeout(1000);
     });
 
-    await test.step('验证日期按钮精确匹配（exact: true）', async () => {
+    await test.step('Ensure exact=true prevents partial matches', async () => {
       const now = new Date();
       const monthNames = [
         'January', 'February', 'March', 'April', 'May', 'June',
@@ -626,7 +599,6 @@ test.describe('日期选择器UI交互测试', () => {
       const currentMonthName = monthNames[now.getMonth()];
       const currentYear = now.getFullYear();
 
-      // 锁定月份容器
       const monthPattern = new RegExp(`${currentMonthName}\\s+${currentYear}`, 'i');
       const monthContainer = page
         .locator('[class*="BookingWidget_month"]')
@@ -634,24 +606,23 @@ test.describe('日期选择器UI交互测试', () => {
           has: page.locator('[class*="BookingWidget_monthLabel"]', { hasText: monthPattern })
         });
 
-      // 测试精确匹配 "1" 不会匹配到 "10", "11", "12" 等
+      // Verify "1" does not match "10", "11", ...
       const dayButton1 = monthContainer.getByRole('button', { name: '1', exact: true });
       await expect(dayButton1).toBeVisible();
-      console.log('  ✅ 日期按钮 "1" 精确匹配成功');
+      console.log('  ✅ Exact match for "1" succeeded');
 
-      // 测试精确匹配 "10"
       const dayButton10 = monthContainer.getByRole('button', { name: '10', exact: true });
       const isDay10Visible = await dayButton10.isVisible().catch(() => false);
       if (isDay10Visible) {
-        console.log('  ✅ 日期按钮 "10" 精确匹配成功');
+        console.log('  ✅ Exact match for "10" succeeded');
       } else {
-        console.log('  ℹ️ 日期按钮 "10" 在当前月不可见（可能不存在）');
+        console.log('  ℹ️ Date button "10" is not currently visible (may not exist this month)');
       }
 
       await page.screenshot({
         path: 'screenshots/unit-test-exact-match.png'
       });
-      console.log('  📸 截图已保存');
+      console.log('  📸 Screenshot saved');
     });
   });
 });

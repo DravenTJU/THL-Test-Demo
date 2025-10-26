@@ -2,40 +2,40 @@ import { test, expect } from '@playwright/test';
 import { SearchPage } from '../../pages/SearchPage';
 
 /**
- * searchDropoffLocation 方法单元测试
+ * searchDropoffLocation unit tests
  *
- * 测试目标：验证 searchDropoffLocation 方法的功能
- * - 点击还车地点按钮
- * - 点击输入框
- * - 输入地点名称进行查询
- * - 验证输入的地点选项是否出现
- * - 点击匹配的地点选项
- * - 验证必须先选择取车地点的约束
+ * Test objectives: verify searchDropoffLocation method functionality
+ * - Click the drop-off button
+ * - Focus the input field
+ * - Enter a location name to search
+ * - Confirm the expected option appears
+ * - Select the matching option
+ * - Validate that a pickup location must be chosen first
  *
- * 运行方式：
+ * Run with:
  * npx playwright test tests/unit/searchDropoffLocation.spec.ts
  * npx playwright test tests/unit/searchDropoffLocation.spec.ts --ui
  * npx playwright test tests/unit/searchDropoffLocation.spec.ts --headed
  * npx playwright test tests/unit/searchDropoffLocation.spec.ts --debug
  */
 
-test.describe('searchDropoffLocation 方法单元测试', () => {
+test.describe('searchDropoffLocation unit tests', () => {
   let searchPage: SearchPage;
 
   test.beforeEach(async ({ page }) => {
     searchPage = new SearchPage(page);
 
-    // 导航到搜索页面
+    // Navigate to the search page
     await searchPage.navigateToSearchPage({ cc: 'nz', mobile: true });
 
-    // 等待页面加载
+    // Wait for the search widget to load
     await searchPage.waitForSearchWidgetVisible();
   });
 
-  test('应该在未选择取车地点时抛出错误', async () => {
-    console.log('🧪 测试：未选择取车地点时的错误处理');
+  test('throw when pickup location is not selected', async () => {
+    console.log('🧪 Test: error handling when pickup location is missing');
 
-    await test.step('直接搜索还车地点应该抛出错误', async () => {
+    await test.step('Searching drop-off without pickup should throw', async () => {
       let errorThrown = false;
       let errorMessage = '';
 
@@ -47,169 +47,168 @@ test.describe('searchDropoffLocation 方法单元测试', () => {
       }
 
       expect(errorThrown).toBe(true);
-      expect(errorMessage).toContain('必须先选择取车地点');
+      expect(errorMessage).toContain('Pickup location must be selected first');
       expect(errorMessage).toContain('clickPickupLocation');
-      console.log(`  ✅ 正确抛出错误: ${errorMessage}`);
+      console.log(`  ✅ Error thrown as expected: ${errorMessage}`);
     });
   });
 
-  test('应该成功搜索并选择 Auckland', async ({ page }) => {
-    console.log('🧪 测试：搜索并选择 Auckland');
+  test('search and select Auckland', async ({ page }) => {
+    console.log('🧪 Test: search and select Auckland');
 
-    await test.step('先选择取车地点 Christchurch', async () => {
+    await test.step('Select Christchurch as pickup first', async () => {
       await searchPage.searchPickupLocation('Christchurch');
       await page.waitForTimeout(500);
-      console.log('  ✅ 已选择取车地点: Christchurch');
+      console.log('  ✅ Pickup location selected: Christchurch');
     });
 
-    await test.step('调用 searchDropoffLocation("Auckland")', async () => {
+    await test.step('Call searchDropoffLocation("Auckland")', async () => {
       await searchPage.searchDropoffLocation('Auckland');
-      console.log('  ✅ 方法执行完成');
+      console.log('  ✅ Method executed successfully');
     });
 
-    await test.step('验证 Auckland 已被选中', async () => {
-      // 等待一下确保选择生效
+    await test.step('Verify Auckland is selected', async () => {
       await page.waitForTimeout(500);
 
-      // 使用 SearchPage 方法验证按钮是否包含 "Auckland Airport"
-      await searchPage.assertDropoffLocationContains('Auckland Airport', '还车地点按钮应该显示 Auckland Airport');
+      // Ensure the drop-off button contains "Auckland Airport"
+      await searchPage.assertDropoffLocationContains('Auckland Airport', 'Drop-off button should display Auckland Airport');
 
-      // 获取按钮文本并输出
+      // Log the button text
       const buttonText = await searchPage.getDropoffLocationButtonText();
-      console.log(`  ✅ 按钮显示文本: "${buttonText.trim()}"`);
+      console.log(`  ✅ Button text: "${buttonText.trim()}"`);
 
-      // 截图验证
+      // Capture screenshot
       await page.screenshot({
         path: 'screenshots/unit-test-search-dropoff-auckland-selected.png'
       });
-      console.log('  📸 截图已保存');
+      console.log('  📸 Screenshot saved');
     });
   });
 
-  test('应该成功搜索并选择 Christchurch', async ({ page }) => {
-    console.log('🧪 测试：搜索并选择 Christchurch');
+  test('search and select Christchurch', async ({ page }) => {
+    console.log('🧪 Test: search and select Christchurch');
 
-    await test.step('先选择取车地点 Auckland', async () => {
+    await test.step('Select Auckland as pickup first', async () => {
       await searchPage.searchPickupLocation('Auckland');
       await page.waitForTimeout(500);
-      console.log('  ✅ 已选择取车地点: Auckland');
+      console.log('  ✅ Pickup location selected: Auckland');
     });
 
-    await test.step('调用 searchDropoffLocation("Christchurch")', async () => {
+    await test.step('Call searchDropoffLocation("Christchurch")', async () => {
       await searchPage.searchDropoffLocation('Christchurch');
-      console.log('  ✅ 方法执行完成');
+      console.log('  ✅ Method executed successfully');
     });
 
-    await test.step('验证 Christchurch 已被选中', async () => {
+    await test.step('Verify Christchurch is selected', async () => {
       await page.waitForTimeout(500);
 
-      // 使用 SearchPage 方法验证按钮是否包含 "Christchurch Airport"
-      await searchPage.assertDropoffLocationContains('Christchurch Airport', '还车地点按钮应该显示 Christchurch Airport');
+      // Ensure the drop-off button contains "Christchurch Airport"
+      await searchPage.assertDropoffLocationContains('Christchurch Airport', 'Drop-off button should display Christchurch Airport');
 
-      // 获取按钮文本并输出
+      // Log the button text
       const buttonText = await searchPage.getDropoffLocationButtonText();
-      console.log(`  ✅ 按钮显示文本: "${buttonText.trim()}"`);
+      console.log(`  ✅ Button text: "${buttonText.trim()}"`);
 
       await page.screenshot({
         path: 'screenshots/unit-test-search-dropoff-christchurch-selected.png'
       });
-      console.log('  📸 截图已保存');
+      console.log('  📸 Screenshot saved');
     });
   });
 
-  test('应该成功搜索并选择 Queenstown', async ({ page }) => {
-    console.log('🧪 测试：搜索并选择 Queenstown');
+  test('search and select Queenstown', async ({ page }) => {
+    console.log('🧪 Test: search and select Queenstown');
 
-    await test.step('先选择取车地点 Auckland', async () => {
+    await test.step('Select Auckland as pickup first', async () => {
       await searchPage.searchPickupLocation('Auckland');
       await page.waitForTimeout(500);
-      console.log('  ✅ 已选择取车地点: Auckland');
+      console.log('  ✅ Pickup location selected: Auckland');
     });
 
-    await test.step('调用 searchDropoffLocation("Queenstown")', async () => {
+    await test.step('Call searchDropoffLocation("Queenstown")', async () => {
       await searchPage.searchDropoffLocation('Queenstown');
-      console.log('  ✅ 方法执行完成');
+      console.log('  ✅ Method executed successfully');
     });
 
-    await test.step('验证 Queenstown 已被选中', async () => {
+    await test.step('Verify Queenstown is selected', async () => {
       await page.waitForTimeout(500);
 
-      // 使用 SearchPage 方法验证按钮是否包含 "Queenstown"
-      await searchPage.assertDropoffLocationContains('Queenstown', '还车地点按钮应该显示 Queenstown');
+      // Ensure the drop-off button contains "Queenstown"
+      await searchPage.assertDropoffLocationContains('Queenstown', 'Drop-off button should display Queenstown');
 
-      // 获取按钮文本并输出
+      // Log the button text
       const buttonText = await searchPage.getDropoffLocationButtonText();
-      console.log(`  ✅ 按钮显示文本: "${buttonText.trim()}"`);
+      console.log(`  ✅ Button text: "${buttonText.trim()}"`);
 
       await page.screenshot({
         path: 'screenshots/unit-test-search-dropoff-queenstown-selected.png'
       });
-      console.log('  📸 截图已保存');
+      console.log('  📸 Screenshot saved');
     });
   });
 
-  test('应该支持不区分大小写的地点名称', async ({ page }) => {
-    console.log('🧪 测试：搜索不区分大小写');
+  test('support case-insensitive search input', async ({ page }) => {
+    console.log('🧪 Test: case-insensitive search');
 
-    await test.step('使用小写 "auckland" 搜索', async () => {
-      // 先选择取车地点
+    await test.step('Search with lowercase "auckland"', async () => {
+      // Select pickup location first
       await searchPage.searchPickupLocation('Christchurch');
       await page.waitForTimeout(500);
 
       await searchPage.searchDropoffLocation('auckland');
       await page.waitForTimeout(500);
 
-      // 验证按钮显示 Auckland Airport
-      await searchPage.assertDropoffLocationContains('Auckland Airport', '小写搜索应该选择 Auckland Airport');
+      // Ensure the button displays Auckland Airport
+      await searchPage.assertDropoffLocationContains('Auckland Airport', 'Lowercase search should select Auckland Airport');
       const buttonText = await searchPage.getDropoffLocationButtonText();
-      console.log(`  ✅ 小写 "auckland" 搜索成功，按钮显示: "${buttonText.trim()}"`);
+      console.log(`  ✅ Lowercase "auckland" search succeeded, button shows: "${buttonText.trim()}"`);
     });
 
-    // 重新加载页面进行下一个测试
+    // Reload the page before the next scenario
     await searchPage.navigateToSearchPage({ cc: 'nz', mobile: true });
     await searchPage.waitForSearchWidgetVisible();
 
-    await test.step('使用大写 "CHRISTCHURCH" 搜索', async () => {
-      // 先选择取车地点
+    await test.step('Search with uppercase "CHRISTCHURCH"', async () => {
+      // Select pickup location first
       await searchPage.searchPickupLocation('Auckland');
       await page.waitForTimeout(500);
 
       await searchPage.searchDropoffLocation('CHRISTCHURCH');
       await page.waitForTimeout(500);
 
-      // 验证按钮显示 Christchurch Airport
-      await searchPage.assertDropoffLocationContains('Christchurch Airport', '大写搜索应该选择 Christchurch Airport');
+      // Ensure the button displays Christchurch Airport
+      await searchPage.assertDropoffLocationContains('Christchurch Airport', 'Uppercase search should select Christchurch Airport');
       const buttonText = await searchPage.getDropoffLocationButtonText();
-      console.log(`  ✅ 大写 "CHRISTCHURCH" 搜索成功，按钮显示: "${buttonText.trim()}"`);
+      console.log(`  ✅ Uppercase "CHRISTCHURCH" search succeeded, button shows: "${buttonText.trim()}"`);
     });
 
-    // 重新加载页面进行下一个测试
+    // Reload the page before the next scenario
     await searchPage.navigateToSearchPage({ cc: 'nz', mobile: true });
     await searchPage.waitForSearchWidgetVisible();
 
-    await test.step('使用混合大小写 "QueensTown" 搜索', async () => {
-      // 先选择取车地点
+    await test.step('Search with mixed case "QueensTown"', async () => {
+      // Select pickup location first
       await searchPage.searchPickupLocation('Auckland');
       await page.waitForTimeout(500);
 
       await searchPage.searchDropoffLocation('QueensTown');
       await page.waitForTimeout(500);
 
-      // 验证按钮显示 Queenstown
-      await searchPage.assertDropoffLocationContains('Queenstown', '混合大小写搜索应该选择 Queenstown');
+      // Ensure the button displays Queenstown
+      await searchPage.assertDropoffLocationContains('Queenstown', 'Mixed-case search should select Queenstown');
       const buttonText = await searchPage.getDropoffLocationButtonText();
-      console.log(`  ✅ 混合大小写 "QueensTown" 搜索成功，按钮显示: "${buttonText.trim()}"`);
+      console.log(`  ✅ Mixed-case "QueensTown" search succeeded, button shows: "${buttonText.trim()}"`);
     });
   });
 
-  test('应该在输入不支持的地点时抛出错误', async () => {
-    console.log('🧪 测试：搜索不支持的地点错误处理');
+  test('throw for unsupported location input', async () => {
+    console.log('🧪 Test: unsupported location search handling');
 
-    await test.step('先选择取车地点', async () => {
+    await test.step('Select pickup location first', async () => {
       await searchPage.searchPickupLocation('Auckland');
     });
 
-    await test.step('搜索 "Wellington" 应该抛出错误', async () => {
+    await test.step('Searching "Wellington" should throw', async () => {
       let errorThrown = false;
       let errorMessage = '';
 
@@ -221,13 +220,13 @@ test.describe('searchDropoffLocation 方法单元测试', () => {
       }
 
       expect(errorThrown).toBe(true);
-      expect(errorMessage).toContain('不支持的地点: "Wellington"');
-      expect(errorMessage).toContain('可选地点: Auckland, Christchurch, Queenstown');
-      console.log(`  ✅ 正确抛出错误: ${errorMessage}`);
+      expect(errorMessage).toContain('Unsupported location: "Wellington"');
+      expect(errorMessage).toContain('Available locations: Auckland, Christchurch, Queenstown');
+      console.log(`  ✅ Error thrown as expected: ${errorMessage}`);
     });
 
-    await test.step('搜索空字符串应该抛出错误', async () => {
-      // 重新加载页面
+    await test.step('Searching an empty string should throw', async () => {
+      // Reload the page
       await searchPage.navigateToSearchPage({ cc: 'nz', mobile: true });
       await searchPage.waitForSearchWidgetVisible();
       await searchPage.searchPickupLocation('Auckland');
@@ -240,135 +239,135 @@ test.describe('searchDropoffLocation 方法单元测试', () => {
       }
 
       expect(errorThrown).toBe(true);
-      console.log('  ✅ 空字符串正确抛出错误');
+      console.log('  ✅ Empty string triggered an error as expected');
     });
   });
 
-  test('应该验证输入的地点选项出现', async ({ page }) => {
-    console.log('🧪 测试：验证输入的地点选项验证逻辑（输入框自动显示）');
+  test('verify searched option appears', async ({ page }) => {
+    console.log('🧪 Test: verify searched option visibility (input auto display)');
 
-    await test.step('先选择取车地点', async () => {
+    await test.step('Select pickup location first', async () => {
       await searchPage.searchPickupLocation('Auckland');
       await page.waitForTimeout(500);
-      console.log('  ✅ 已选择取车地点: Auckland');
+      console.log('  ✅ Pickup location selected: Auckland');
     });
 
-    await test.step('验证输入框已自动显示并输入', async () => {
-      // 等待输入框出现（选择取车地点后应该自动显示）
+    await test.step('Verify input auto displays and enter text', async () => {
+      // Wait for the input to appear (should auto display after selecting pickup)
       await page.waitForTimeout(500);
 
-      // 点击输入框（应该已经可见）
+      // Focus the input (should now be visible)
       const dropoffInput = page.getByRole('textbox', { name: 'Drop off at' });
       await dropoffInput.click();
 
-      // 输入地点名称
+      // Enter the location name
       await dropoffInput.fill('Christchurch');
 
-      // 等待下拉选项出现
+      // Wait for dropdown options to populate
       await page.waitForTimeout(1000);
 
-      // 验证 Christchurch 选项可见
+      // Verify Christchurch option is visible
       const christchurchOption = page.getByText('Christchurch Airport159');
       const christchurchVisible = await christchurchOption.isVisible();
 
-      console.log(`  📊 Christchurch 选项可见: ${christchurchVisible}`);
+      console.log(`  📊 Christchurch option visible: ${christchurchVisible}`);
 
-      // 截图保存验证状态
+      // Capture screenshot
       await page.screenshot({
         path: 'screenshots/unit-test-search-dropoff-christchurch-option-visible.png'
       });
-      console.log('  📸 截图已保存');
+      console.log('  📸 Screenshot saved');
 
       if (christchurchVisible) {
-        console.log('  ✅ 输入框已自动显示，输入的地点选项已出现');
+        console.log('  ✅ Input displayed automatically and the searched option appeared');
       } else {
-        console.log('  ⚠️ 输入的地点选项未出现');
+        console.log('  ⚠️ Searched option did not appear');
       }
     });
   });
 
-  test('应该正确处理搜索流程', async ({ page }) => {
-    console.log('🧪 测试：完整搜索流程');
+  test('handle the full search flow', async ({ page }) => {
+    console.log('🧪 Test: complete search flow');
 
-    await test.step('步骤1：先选择取车地点', async () => {
+    await test.step('Step 1: select pickup location first', async () => {
       await searchPage.searchPickupLocation('Auckland');
       await page.waitForTimeout(500);
-      console.log('  ✅ 步骤1完成：已选择取车地点 Auckland');
+      console.log('  ✅ Step 1 complete: pickup Auckland selected');
     });
 
-    await test.step('步骤2：点击还车地点按钮', async () => {
+    await test.step('Step 2: click the drop-off button', async () => {
       const dropoffButton = page.getByRole('button', { name: 'Choose your drop-off location' });
       await dropoffButton.click();
-      console.log('  ✅ 步骤2完成：点击按钮');
+      console.log('  ✅ Step 2 complete: button clicked');
       await page.waitForTimeout(500);
     });
 
-    await test.step('步骤3：点击输入框', async () => {
+    await test.step('Step 3: focus the input field', async () => {
       const dropoffInput = page.getByRole('textbox', { name: 'Drop off at' });
       await dropoffInput.click();
-      console.log('  ✅ 步骤3完成：点击输入框');
+      console.log('  ✅ Step 3 complete: input focused');
     });
 
-    await test.step('步骤4：输入地点名称', async () => {
+    await test.step('Step 4: enter the location name', async () => {
       const dropoffInput = page.getByRole('textbox', { name: 'Drop off at' });
       await dropoffInput.fill('Christchurch');
-      console.log('  ✅ 步骤4完成：输入 "Christchurch"');
+      console.log('  ✅ Step 4 complete: entered "Christchurch"');
       await page.waitForTimeout(1000);
     });
 
-    await test.step('步骤5：验证地点选项出现', async () => {
+    await test.step('Step 5: verify the option appears', async () => {
       const christchurchOption = page.getByText('Christchurch Airport159');
       await expect(christchurchOption).toBeVisible();
-      console.log('  ✅ 步骤5完成：Christchurch 选项可见');
+      console.log('  ✅ Step 5 complete: Christchurch option visible');
     });
 
-    await test.step('步骤6：点击 Christchurch 选项', async () => {
+    await test.step('Step 6: click the Christchurch option', async () => {
       const christchurchOption = page.getByText('Christchurch Airport159');
       await christchurchOption.click();
-      console.log('  ✅ 步骤6完成：点击选择');
+      console.log('  ✅ Step 6 complete: option selected');
       await page.waitForTimeout(500);
     });
 
-    await test.step('步骤7：验证选择结果', async () => {
-      // 验证按钮显示 Christchurch Airport
-      await searchPage.assertDropoffLocationContains('Christchurch Airport', '按钮应该显示 Christchurch Airport');
+    await test.step('Step 7: verify the selected result', async () => {
+      // Ensure the button displays Christchurch Airport
+      await searchPage.assertDropoffLocationContains('Christchurch Airport', 'Button should display Christchurch Airport');
       const buttonText = await searchPage.getDropoffLocationButtonText();
-      console.log(`  ✅ 按钮显示文本: "${buttonText.trim()}"`);
+      console.log(`  ✅ Button text: "${buttonText.trim()}"`);
 
       await page.screenshot({
         path: 'screenshots/unit-test-search-dropoff-complete-flow.png'
       });
-      console.log('  📸 完整流程截图已保存');
-      console.log('  ✅ 完整搜索流程测试通过');
+      console.log('  📸 Full flow screenshot saved');
+      console.log('  ✅ Complete search flow passed');
     });
   });
 
-  test('性能测试：方法执行时间', async () => {
-    console.log('🧪 测试：搜索方法执行性能');
+  test('measure method execution time', async () => {
+    console.log('🧪 Test: method execution performance');
 
-    await test.step('先选择取车地点', async () => {
+    await test.step('Select pickup location first', async () => {
       await searchPage.searchPickupLocation('Auckland');
     });
 
-    await test.step('测量执行时间', async () => {
+    await test.step('Measure execution time', async () => {
       const startTime = Date.now();
       await searchPage.searchDropoffLocation('Christchurch');
       const endTime = Date.now();
       const executionTime = endTime - startTime;
 
-      console.log(`  ⏱️ 执行时间: ${executionTime}ms`);
+      console.log(`  ⏱️ Execution time: ${executionTime}ms`);
 
-      // 验证执行时间在合理范围内（小于5秒）
+      // Ensure execution time is within a reasonable range (<5 seconds)
       expect(executionTime).toBeLessThan(5000);
-      console.log('  ✅ 执行时间在合理范围内');
+      console.log('  ✅ Execution time within expected range');
     });
   });
 });
 
 /**
- * 边界条件和异常场景测试
+ * Boundary condition and exception scenario tests
  */
-test.describe('searchDropoffLocation 边界条件测试', () => {
+test.describe('searchDropoffLocation boundary tests', () => {
   let searchPage: SearchPage;
 
   test.beforeEach(async ({ page }) => {
@@ -377,40 +376,40 @@ test.describe('searchDropoffLocation 边界条件测试', () => {
     await searchPage.waitForSearchWidgetVisible();
   });
 
-  test('测试各种非标准输入', async () => {
-    console.log('🧪 测试：搜索非标准输入处理');
+  test('handles various non-standard inputs', async () => {
+    console.log('🧪 Test: non-standard search input handling');
 
-    // 先选择取车地点
+    // Select pickup location first
     await searchPage.searchPickupLocation('Auckland');
 
     const invalidInputs = [
       'sydney',
       'New York',
       '123',
-      'chris',  // 部分匹配
-      '  Christchurch  ',  // 带空格（应该成功，因为会 trim）
+      'chris',  // partial match
+      '  Christchurch  ',  // trimmed variation (should succeed)
     ];
 
     for (const input of invalidInputs) {
-      await test.step(`测试搜索: "${input}"`, async () => {
+      await test.step(`Search input: "${input}"`, async () => {
         let errorThrown = false;
         try {
           await searchPage.searchDropoffLocation(input);
         } catch (error) {
           errorThrown = true;
-          console.log(`    ✅ "${input}" 正确抛出错误: ${(error as Error).message}`);
+          console.log(`    ✅ "${input}" threw as expected: ${(error as Error).message}`);
         }
 
-        // 带空格的 Christchurch 应该成功（会被 trim）
+        // Trimmed Christchurch should succeed
         if (input.trim().toLowerCase() === 'christchurch') {
           expect(errorThrown).toBe(false);
-          console.log(`    ✅ "${input}" (trim后为 Christchurch) 成功选择`);
+          console.log(`    ✅ "${input}" (trimmed to Christchurch) succeeded`);
         } else {
-          // 其他无效输入应该抛出错误
+          // Other invalid inputs should throw
           expect(errorThrown).toBe(true);
         }
 
-        // 重新加载页面准备下一个测试
+        // Reload page before next iteration
         if (invalidInputs.indexOf(input) < invalidInputs.length - 1) {
           await searchPage.navigateToSearchPage({ cc: 'nz', mobile: true });
           await searchPage.waitForSearchWidgetVisible();
@@ -420,17 +419,16 @@ test.describe('searchDropoffLocation 边界条件测试', () => {
     }
   });
 
-  test('测试输入后地点选项未出现的场景', async ({ page }) => {
-    console.log('🧪 测试：地点选项未出现的错误处理');
+  test('handles scenarios where options do not appear', async ({ page }) => {
+    console.log('🧪 Test: missing option error handling');
 
-    await test.step('先选择取车地点', async () => {
+    await test.step('Select pickup location first', async () => {
       await searchPage.searchPickupLocation('Auckland');
     });
 
-    await test.step('模拟地点选项未出现', async () => {
-      // 这个测试验证当输入的地点选项未出现时，方法会抛出错误
-      // 由于我们使用真实的页面，这个场景可能不会发生
-      // 但我们可以测试不支持的地点，它们的选项不会出现
+    await test.step('Simulate option not appearing', async () => {
+      // This test verifies that an error is thrown when the entered option does not appear.
+      // On the real page this may not occur, so we use an unsupported location to trigger it.
 
       let errorThrown = false;
       let errorMessage = '';
@@ -443,15 +441,15 @@ test.describe('searchDropoffLocation 边界条件测试', () => {
       }
 
       expect(errorThrown).toBe(true);
-      console.log(`  ✅ 正确抛出错误: ${errorMessage}`);
+      console.log(`  ✅ Error thrown as expected: ${errorMessage}`);
     });
   });
 });
 
 /**
- * 对比测试：searchDropoffLocation vs clickDropoffLocation
+ * Comparison tests: searchDropoffLocation vs clickDropoffLocation
  */
-test.describe('searchDropoffLocation vs clickDropoffLocation 对比测试', () => {
+test.describe('searchDropoffLocation vs clickDropoffLocation comparison tests', () => {
   let searchPage: SearchPage;
 
   test.beforeEach(async ({ page }) => {
@@ -460,11 +458,11 @@ test.describe('searchDropoffLocation vs clickDropoffLocation 对比测试', () =
     await searchPage.waitForSearchWidgetVisible();
   });
 
-  test('两种方法应该产生相同的结果', async ({ page }) => {
-    console.log('🧪 测试：对比两种选择方法');
+  test('both methods should produce the same result', async ({ page }) => {
+    console.log('🧪 Test: comparing two selection methods');
 
-    await test.step('使用 searchDropoffLocation 选择 Auckland', async () => {
-      // 先选择取车地点
+    await test.step('Use searchDropoffLocation to select Auckland', async () => {
+      // Select pickup location first
       await searchPage.searchPickupLocation('Christchurch');
       await page.waitForTimeout(500);
 
@@ -472,34 +470,34 @@ test.describe('searchDropoffLocation vs clickDropoffLocation 对比测试', () =
       await page.waitForTimeout(500);
 
       const searchButtonText = await searchPage.getDropoffLocationButtonText();
-      console.log(`  📊 searchDropoffLocation 结果: "${searchButtonText.trim()}"`);
+      console.log(`  📊 searchDropoffLocation result: "${searchButtonText.trim()}"`);
 
-      // 重新加载页面
+      // Reload the page
       await searchPage.navigateToSearchPage({ cc: 'nz', mobile: true });
       await searchPage.waitForSearchWidgetVisible();
 
-      // 先选择取车地点
+      // Select pickup location again
       await searchPage.clickPickupLocation('Christchurch');
       await page.waitForTimeout(500);
 
-      // 使用 clickDropoffLocation 选择 Auckland
+      // Use clickDropoffLocation to select Auckland
       await searchPage.clickDropoffLocation('Auckland');
       await page.waitForTimeout(500);
 
       const clickButtonText = await searchPage.getDropoffLocationButtonText();
-      console.log(`  📊 clickDropoffLocation 结果: "${clickButtonText.trim()}"`);
+      console.log(`  📊 clickDropoffLocation result: "${clickButtonText.trim()}"`);
 
-      // 两种方法应该产生相同的结果
+      // Both methods should yield the same result
       expect(searchButtonText).toBe(clickButtonText);
-      console.log('  ✅ 两种方法产生相同结果');
+      console.log('  ✅ Both methods produced identical results');
     });
   });
 });
 
 /**
- * 完整流程测试：取车和还车结合
+ * End-to-end flow tests: pickup and drop-off combinations
  */
-test.describe('完整取车还车流程测试', () => {
+test.describe('Complete pickup and drop-off flow tests', () => {
   let searchPage: SearchPage;
 
   test.beforeEach(async ({ page }) => {
@@ -508,91 +506,91 @@ test.describe('完整取车还车流程测试', () => {
     await searchPage.waitForSearchWidgetVisible();
   });
 
-  test('使用 search 方法完成取车和还车选择', async ({ page }) => {
-    console.log('🧪 测试：使用 search 方法完成取车和还车');
+  test('complete pickup and drop-off with search methods', async ({ page }) => {
+    console.log('🧪 Test: complete flow using search methods');
 
-    await test.step('搜索选择取车地点 Auckland', async () => {
+    await test.step('Search and select pickup Auckland', async () => {
       await searchPage.searchPickupLocation('Auckland');
       await page.waitForTimeout(500);
-      await searchPage.assertPickupLocationContains('Auckland Airport', '取车地点应该是 Auckland Airport');
-      console.log('  ✅ 取车地点设置成功');
+      await searchPage.assertPickupLocationContains('Auckland Airport', 'Pickup should be Auckland Airport');
+      console.log('  ✅ Pickup set successfully');
     });
 
-    await test.step('搜索选择还车地点 Queenstown', async () => {
+    await test.step('Search and select drop-off Queenstown', async () => {
       await searchPage.searchDropoffLocation('Queenstown');
       await page.waitForTimeout(500);
-      await searchPage.assertDropoffLocationContains('Queenstown', '还车地点应该是 Queenstown');
-      console.log('  ✅ 还车地点设置成功');
+      await searchPage.assertDropoffLocationContains('Queenstown', 'Drop-off should be Queenstown');
+      console.log('  ✅ Drop-off set successfully');
     });
 
-    await test.step('验证最终结果', async () => {
+    await test.step('Verify final results', async () => {
       const pickupText = await searchPage.getPickupLocationButtonText();
       const dropoffText = await searchPage.getDropoffLocationButtonText();
 
-      console.log(`  📊 最终取车地点: "${pickupText.trim()}"`);
-      console.log(`  📊 最终还车地点: "${dropoffText.trim()}"`);
+      console.log(`  📊 Final pickup: "${pickupText.trim()}"`);
+      console.log(`  📊 Final drop-off: "${dropoffText.trim()}"`);
 
       await page.screenshot({
         path: 'screenshots/unit-test-complete-pickup-dropoff-search.png',
         fullPage: false
       });
-      console.log('  📸 完整流程截图已保存');
-      console.log('  ✅ 完整流程测试通过');
+      console.log('  📸 Full flow screenshot saved');
+      console.log('  ✅ Complete flow test passed');
     });
   });
 
-  test('使用 click 方法完成取车和还车选择', async ({ page }) => {
-    console.log('🧪 测试：使用 click 方法完成取车和还车');
+  test('complete pickup and drop-off with click methods', async ({ page }) => {
+    console.log('🧪 Test: complete flow using click methods');
 
-    await test.step('点击选择取车地点 Auckland', async () => {
+    await test.step('Click and select pickup Auckland', async () => {
       await searchPage.clickPickupLocation('Auckland');
       await page.waitForTimeout(500);
-      await searchPage.assertPickupLocationContains('Auckland Airport', '取车地点应该是 Auckland Airport');
-      console.log('  ✅ 取车地点设置成功');
+      await searchPage.assertPickupLocationContains('Auckland Airport', 'Pickup should be Auckland Airport');
+      console.log('  ✅ Pickup set successfully');
     });
 
-    await test.step('点击选择还车地点 Queenstown', async () => {
+    await test.step('Click and select drop-off Queenstown', async () => {
       await searchPage.clickDropoffLocation('Queenstown');
       await page.waitForTimeout(500);
-      await searchPage.assertDropoffLocationContains('Queenstown', '还车地点应该是 Queenstown');
-      console.log('  ✅ 还车地点设置成功');
+      await searchPage.assertDropoffLocationContains('Queenstown', 'Drop-off should be Queenstown');
+      console.log('  ✅ Drop-off set successfully');
     });
 
-    await test.step('验证最终结果', async () => {
+    await test.step('Verify final results', async () => {
       const pickupText = await searchPage.getPickupLocationButtonText();
       const dropoffText = await searchPage.getDropoffLocationButtonText();
 
-      console.log(`  📊 最终取车地点: "${pickupText.trim()}"`);
-      console.log(`  📊 最终还车地点: "${dropoffText.trim()}"`);
+      console.log(`  📊 Final pickup: "${pickupText.trim()}"`);
+      console.log(`  📊 Final drop-off: "${dropoffText.trim()}"`);
 
       await page.screenshot({
         path: 'screenshots/unit-test-complete-pickup-dropoff-click.png',
         fullPage: false
       });
-      console.log('  📸 完整流程截图已保存');
-      console.log('  ✅ 完整流程测试通过');
+      console.log('  📸 Full flow screenshot saved');
+      console.log('  ✅ Complete flow test passed');
     });
   });
 
-  test('混合使用 search 和 click 方法', async ({ page }) => {
-    console.log('🧪 测试：混合使用两种方法');
+  test('mix search and click methods', async ({ page }) => {
+    console.log('🧪 Test: mixed method usage');
 
-    await test.step('使用 search 选择取车地点', async () => {
+    await test.step('Use search for pickup selection', async () => {
       await searchPage.searchPickupLocation('Auckland');
       await page.waitForTimeout(500);
-      console.log('  ✅ search 方式选择取车地点');
+      console.log('  ✅ Pickup selected via search');
     });
 
-    await test.step('使用 click 选择还车地点', async () => {
+    await test.step('Use click for drop-off selection', async () => {
       await searchPage.clickDropoffLocation('Christchurch');
       await page.waitForTimeout(500);
-      console.log('  ✅ click 方式选择还车地点');
+      console.log('  ✅ Drop-off selected via click');
     });
 
-    await test.step('验证混合方法有效性', async () => {
-      await searchPage.assertPickupLocationContains('Auckland Airport', '取车地点正确');
-      await searchPage.assertDropoffLocationContains('Christchurch Airport', '还车地点正确');
-      console.log('  ✅ 混合方法测试通过');
+    await test.step('Verify mixed method result', async () => {
+      await searchPage.assertPickupLocationContains('Auckland Airport', 'Pickup location correct');
+      await searchPage.assertDropoffLocationContains('Christchurch Airport', 'Drop-off location correct');
+      console.log('  ✅ Mixed method test passed');
     });
   });
 });
