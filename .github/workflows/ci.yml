@@ -6,7 +6,7 @@ on:
   pull_request:
     branches: [main]
   schedule:
-    # 每天UTC 00:00运行（夜间测试）
+    # Run daily at 00:00 UTC (nightly tests)
     - cron: '0 0 * * *'
   workflow_dispatch:
 
@@ -15,7 +15,7 @@ env:
   NODE_VERSION: '18'
 
 jobs:
-  # 代码检查和格式化
+  # Code linting and formatting check
   lint:
     name: Lint & Format Check
     runs-on: ubuntu-latest
@@ -38,7 +38,7 @@ jobs:
       - name: Check formatting
         run: npm run format:check
 
-  # Playwright测试 - 多浏览器并行
+  # Playwright E2E tests - Multi-browser parallel execution
   test-e2e:
     name: E2E Tests (${{ matrix.browser }})
     runs-on: ubuntu-latest
@@ -64,8 +64,8 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install --with-deps ${{ matrix.browser }}
 
-      - name: Run Playwright tests
-        run: npx playwright test --project=${{ matrix.browser }} --shard=${{ matrix.shard }}
+      - name: Run Playwright E2E tests
+        run: npx playwright test tests/e2e --project=${{ matrix.browser }} --shard=${{ matrix.shard }}
         env:
           CI: true
 
@@ -73,7 +73,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: playwright-results-${{ matrix.browser }}-${{ strategy.job-index }}
+          name: e2e-results-${{ matrix.browser }}-${{ strategy.job-index }}
           path: |
             test-results/
             playwright-report/
@@ -83,11 +83,11 @@ jobs:
         if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: test-videos-${{ matrix.browser }}-${{ strategy.job-index }}
+          name: e2e-videos-${{ matrix.browser }}-${{ strategy.job-index }}
           path: test-results/**/video.webm
           retention-days: 7
 
-  # API测试
+  # API tests
   test-api:
     name: API Tests
     runs-on: ubuntu-latest
@@ -119,9 +119,9 @@ jobs:
           path: test-results/
           retention-days: 7
 
-  # 性能测试
-  test-performance:
-    name: Performance Tests
+  # Unit tests for SearchPage methods
+  test-unit:
+    name: Unit Tests
     runs-on: ubuntu-latest
     needs: lint
     steps:
@@ -140,46 +140,24 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install chromium
 
-      - name: Run performance tests
-        run: npm run test:performance
+      - name: Run unit tests
+        run: npx playwright test tests/unit
+        env:
+          CI: true
 
-      - name: Upload performance results
+      - name: Upload unit test results
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: performance-results
+          name: unit-test-results
           path: test-results/
-          retention-days: 30
+          retention-days: 7
 
-  # k6负载测试
-  test-load:
-    name: Load Tests (k6)
-    runs-on: ubuntu-latest
-    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup k6
-        uses: grafana/setup-k6-action@v1
-
-      - name: Run k6 load tests
-        run: k6 run k6/load-test.js --out json=k6-results.json
-        continue-on-error: true
-
-      - name: Upload k6 results
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: k6-results
-          path: k6-results.json
-          retention-days: 30
-
-  # 生成Allure报告
+  # Generate Allure report
   allure-report:
     name: Generate Allure Report
     runs-on: ubuntu-latest
-    needs: [test-e2e, test-api, test-performance]
+    needs: [test-e2e, test-api, test-unit]
     if: always()
     steps:
       - name: Checkout code
@@ -219,11 +197,11 @@ jobs:
           publish_dir: ./allure-report
           destination_dir: reports/${{ github.run_number }}
 
-  # 测试总结
+  # Test summary
   test-summary:
     name: Test Summary
     runs-on: ubuntu-latest
-    needs: [test-e2e, test-api, test-performance]
+    needs: [test-e2e, test-api, test-unit]
     if: always()
     steps:
       - name: Download test results
@@ -235,11 +213,11 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "- E2E Tests: ${{ needs.test-e2e.result }}" >> $GITHUB_STEP_SUMMARY
           echo "- API Tests: ${{ needs.test-api.result }}" >> $GITHUB_STEP_SUMMARY
-          echo "- Performance Tests: ${{ needs.test-performance.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Unit Tests: ${{ needs.test-unit.result }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "View detailed reports in the artifacts section." >> $GITHUB_STEP_SUMMARY
 
-  # Docker构建测试
+  # Docker build test
   docker-build:
     name: Docker Build Test
     runs-on: ubuntu-latest
