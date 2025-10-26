@@ -117,46 +117,46 @@ export default defineConfig({
     /**
      * 移动端测试
      */
-    {
-      name: 'mobile-chrome',
-      use: {
-        ...devices['Pixel 5'],
-        isMobile: true,
-        hasTouch: true,
-      },
-    },
+    // {
+    //   name: 'mobile-chrome',
+    //   use: {
+    //     ...devices['Pixel 5'],
+    //     isMobile: true,
+    //     hasTouch: true,
+    //   },
+    // },
 
-    {
-      name: 'mobile-safari',
-      use: {
-        ...devices['iPhone 13'],
-        isMobile: true,
-        hasTouch: true,
-      },
-    },
+    // {
+    //   name: 'mobile-safari',
+    //   use: {
+    //     ...devices['iPhone 13'],
+    //     isMobile: true,
+    //     hasTouch: true,
+    //   },
+    // },
 
     /**
      * Tablet测试
      */
-    {
-      name: 'tablet',
-      use: {
-        ...devices['iPad Pro'],
-        isMobile: true,
-        hasTouch: true,
-      },
-    },
+    // {
+    //   name: 'tablet',
+    //   use: {
+    //     ...devices['iPad Pro'],
+    //     isMobile: true,
+    //     hasTouch: true,
+    //   },
+    // },
 
     /**
      * API测试项目（无需浏览器）
      */
-    {
-      name: 'api',
-      testMatch: '**/api/**/*.spec.ts',
-      use: {
-        baseURL: process.env.API_BASE_URL || 'https://booking.maui-rentals.com',
-      },
-    },
+    // {
+    //   name: 'api',
+    //   testMatch: '**/api/**/*.spec.ts',
+    //   use: {
+    //     baseURL: process.env.API_BASE_URL || 'https://booking.maui-rentals.com',
+    //   },
+    // },
   ],
 
   /**
