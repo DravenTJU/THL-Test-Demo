@@ -1,7 +1,7 @@
 # THL Test Demo - Dockerfile
 # Docker image for running Playwright tests
 
-FROM mcr.microsoft.com/playwright:v1.48.0-jammy
+FROM mcr.microsoft.com/playwright:v1.56.1-jammy
 
 # Set working directory
 WORKDIR /app

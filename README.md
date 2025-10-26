@@ -5,7 +5,7 @@
 > Enterprise-grade Playwright Testing Framework for Maui Rentals Search Functionality
 
 [![CI/CD](https://img.shields.io/badge/CI%2FCD-GitHub%20Actions-blue)](https://github.com)
-[![Playwright](https://img.shields.io/badge/Playwright-1.48-green)](https://playwright.dev)
+[![Playwright](https://img.shields.io/badge/Playwright-1.56-green)](https://playwright.dev)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.6-blue)](https://www.typescriptlang.org)
 [![Docker](https://img.shields.io/badge/Docker-Ready-blue)](https://www.docker.com)
 
@@ -379,5 +379,5 @@ MIT License
 
 **Project Maintainer**: Draven
 **Last Updated**: 2025-10-27
-**Playwright Version**: 1.48.0
+**Playwright Version**: 1.56.1
 **TypeScript Version**: 5.6.3

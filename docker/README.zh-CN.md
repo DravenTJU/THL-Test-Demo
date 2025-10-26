@@ -10,7 +10,7 @@
 
 Docker 配置提供：
 - **一致的测试环境** - 跨不同机器和 CI/CD 平台
-- **Playwright 1.48.0** - 预装浏览器（Chrome、Firefox、Safari）
+- **Playwright 1.56.1** - 预装浏览器（Chrome、Firefox、Safari）
 - **Allure 报告服务** - 可视化查看测试结果
 - **自动报告同步** - 容器与宿主机之间自动同步测试报告
 
@@ -66,7 +66,7 @@ docker/
 
 ### Dockerfile
 
-**基础镜像**: `mcr.microsoft.com/playwright:v1.48.0-jammy`
+**基础镜像**: `mcr.microsoft.com/playwright:v1.56.1-jammy`
 - Microsoft 官方 Playwright 镜像
 - 基于 Ubuntu 22.04 (Jammy)
 - 预装 Chrome、Firefox 和 WebKit 浏览器
@@ -282,12 +282,12 @@ sudo chown -R $USER:$USER playwright-report test-results allure-results
 
 1. 更新 `package.json`:
    ```json
-   "@playwright/test": "^1.49.0"
+   "@playwright/test": "1.56.1"
    ```
 
 2. 更新 `Dockerfile`:
    ```dockerfile
-   FROM mcr.microsoft.com/playwright:v1.49.0-jammy
+   FROM mcr.microsoft.com/playwright:v1.56.1-jammy
    ```
 
 3. 重新构建镜像:
@@ -331,5 +331,5 @@ sudo chown -R $USER:$USER playwright-report test-results allure-results
 ---
 
 **最后更新**: 2025-10-27
-**Playwright 版本**: 1.48.0
+**Playwright 版本**: 1.56.1
 **Docker Compose 版本**: 3.8

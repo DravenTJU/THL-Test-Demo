@@ -5,7 +5,7 @@
 > 企业级 Playwright 自动化测试框架 - Maui Rentals 搜索功能测试
 
 [![CI/CD](https://img.shields.io/badge/CI%2FCD-GitHub%20Actions-blue)](https://github.com)
-[![Playwright](https://img.shields.io/badge/Playwright-1.48-green)](https://playwright.dev)
+[![Playwright](https://img.shields.io/badge/Playwright-1.56-green)](https://playwright.dev)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.6-blue)](https://www.typescriptlang.org)
 [![Docker](https://img.shields.io/badge/Docker-Ready-blue)](https://www.docker.com)
 
@@ -379,5 +379,5 @@ MIT License
 
 **项目维护者**: Draven
 **最后更新**: 2025-10-27
-**Playwright 版本**: 1.48.0
+**Playwright 版本**: 1.56.1
 **TypeScript 版本**: 5.6.3

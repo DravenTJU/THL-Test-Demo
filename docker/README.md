@@ -10,7 +10,7 @@ This directory contains Docker configuration files for running Playwright tests 
 
 The Docker setup provides:
 - **Consistent test environment** across different machines and CI/CD platforms
-- **Playwright 1.48.0** with pre-installed browsers (Chrome, Firefox, Safari)
+- **Playwright 1.56.1** with pre-installed browsers (Chrome, Firefox, Safari)
 - **Allure reporting service** for viewing test results
 - **Automatic test report synchronization** between container and host
 
@@ -66,7 +66,7 @@ docker/
 
 ### Dockerfile
 
-**Base Image**: `mcr.microsoft.com/playwright:v1.48.0-jammy`
+**Base Image**: `mcr.microsoft.com/playwright:v1.56.1-jammy`
 - Official Microsoft Playwright image
 - Ubuntu 22.04 (Jammy) based
 - Pre-installed Chrome, Firefox, and WebKit browsers
@@ -282,12 +282,12 @@ sudo chown -R $USER:$USER playwright-report test-results allure-results
 
 1. Update `package.json`:
    ```json
-   "@playwright/test": "^1.49.0"
+   "@playwright/test": "1.56.1"
    ```
 
 2. Update `Dockerfile`:
    ```dockerfile
-   FROM mcr.microsoft.com/playwright:v1.49.0-jammy
+   FROM mcr.microsoft.com/playwright:v1.56.1-jammy
    ```
 
 3. Rebuild image:
@@ -331,5 +331,5 @@ When modifying Docker configuration:
 ---
 
 **Last Updated**: 2025-10-27
-**Playwright Version**: 1.48.0
+**Playwright Version**: 1.56.1
 **Docker Compose Version**: 3.8
