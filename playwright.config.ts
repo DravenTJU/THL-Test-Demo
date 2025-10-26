@@ -2,49 +2,49 @@ import { defineConfig, devices } from '@playwright/test';
 import * as dotenv from 'dotenv';
 
 /**
- * 加载环境变量
- * 优先级：.env.local > .env
+ * Load environment variables.
+ * Priority: .env.local > .env
  */
 dotenv.config();
 
 /**
- * Playwright配置文件
+ * Playwright configuration file
  *
- * 企业级测试框架配置，支持：
- * - 多浏览器测试（Chrome, Firefox, Safari）
- * - 移动端测试（iOS Safari, Android Chrome）
- * - 并行测试执行
- * - 失败重试机制
- * - 视觉回归测试
- * - API测试
+ * Enterprise-ready testing setup supporting:
+ * - Cross-browser testing (Chrome, Firefox, Safari)
+ * - Mobile testing (iOS Safari, Android Chrome)
+ * - Parallel execution
+ * - Retry handling
+ * - Visual regression testing
+ * - API testing
  *
  * @see https://playwright.dev/docs/test-configuration
  */
 export default defineConfig({
-  // 测试目录
+  // Test directory
   testDir: './tests',
 
-  // 测试文件匹配模式
+  // Test file matching pattern
   testMatch: '**/*.spec.ts',
 
-  // 超时配置
-  timeout: 30 * 1000, // 单个测试30秒
+  // Timeout configuration
+  timeout: 30 * 1000, // 30s per test
   expect: {
-    timeout: 10 * 1000, // 断言超时10秒
+    timeout: 10 * 1000, // 10s for assertions
   },
 
-  // 失败重试配置
-  fullyParallel: true, // 完全并行执行
-  forbidOnly: !!process.env.CI, // CI环境禁止test.only
-  retries: process.env.CI ? 2 : 0, // CI环境失败重试2次
-  workers: process.env.CI ? 2 : undefined, // CI环境2个worker，本地自动检测
+  // Retry configuration
+  fullyParallel: true,
+  forbidOnly: !!process.env.CI,
+  retries: process.env.CI ? 2 : 0,
+  workers: process.env.CI ? 2 : undefined,
 
-  // 测试报告配置
+  // Reporters
   reporter: [
     ['html', { outputFolder: 'playwright-report', open: 'never' }],
     ['json', { outputFile: 'test-results/results.json' }],
     ['junit', { outputFile: 'test-results/junit.xml' }],
-    ['list'], // 控制台输出
+    ['list'],
     ['allure-playwright', {
       outputFolder: 'allure-results',
       detail: true,
@@ -52,34 +52,23 @@ export default defineConfig({
     }],
   ],
 
-  // 全局配置
+  // Global configuration
   use: {
-    // 基础URL配置
     baseURL: process.env.BASE_URL || 'https://booking.maui-rentals.com',
-
-    // 浏览器上下文配置
     trace: process.env.CI ? 'retain-on-failure' : 'on-first-retry',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
-
-    // 导航超时
     navigationTimeout: 30 * 1000,
     actionTimeout: 10 * 1000,
-
-    // 视觉测试配置
     viewport: { width: 1280, height: 720 },
-
-    // 忽略HTTPS错误
     ignoreHTTPSErrors: true,
-
-    // 用户代理
     userAgent: 'THL-Test-Automation/1.0',
   },
 
-  // 测试项目配置
+  // Project-specific configuration
   projects: [
     /**
-     * Desktop浏览器测试
+     * Desktop browsers
      */
     {
       name: 'chromium',
@@ -94,7 +83,6 @@ export default defineConfig({
         },
       },
     },
-
     {
       name: 'firefox',
       use: {
@@ -106,7 +94,6 @@ export default defineConfig({
         },
       },
     },
-
     {
       name: 'webkit',
       use: {
@@ -115,7 +102,7 @@ export default defineConfig({
     },
 
     /**
-     * 移动端测试
+     * Mobile browsers
      */
     // {
     //   name: 'mobile-chrome',
@@ -136,7 +123,7 @@ export default defineConfig({
     // },
 
     /**
-     * Tablet测试
+     * Tablet
      */
     // {
     //   name: 'tablet',
@@ -148,7 +135,7 @@ export default defineConfig({
     // },
 
     /**
-     * API测试项目（无需浏览器）
+     * API-only tests
      */
     // {
     //   name: 'api',
@@ -160,13 +147,13 @@ export default defineConfig({
   ],
 
   /**
-   * 全局设置和清理
+   * Global setup and teardown
    */
   // globalSetup: require.resolve('./global-setup'),
   // globalTeardown: require.resolve('./global-teardown'),
 
   /**
-   * 开发服务器配置（如果需要本地服务器）
+   * Local dev server
    */
   // webServer: {
   //   command: 'npm run start',

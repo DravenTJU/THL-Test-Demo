@@ -1,24 +1,24 @@
-# 依赖
+# Dependencies
 node_modules/
 
-# 构建输出
+# Build outputs
 dist/
 build/
 
-# 测试结果
+# Test results
 test-results/
 playwright-report/
 allure-results/
 allure-report/
 
-# 日志
+# Logs
 logs/
 *.log
 
-# 临时文件
+# Temporary files
 *.tmp
 .DS_Store
 
-# 其他
+# Other
 coverage/
 .next/
