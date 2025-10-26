@@ -1119,28 +1119,7 @@ export class SearchPage extends BasePage {
   }
 
   /**
-   * 执行完整搜索流程（基础版本）
-   *
-   * @param searchData - 搜索数据
-   * @param searchData.pickupLocation - 取车地点
-   * @param searchData.dropoffLocation - 还车地点
-   * @param searchData.pickupDate - 取车日期（YYYY-MM-DD）
-   * @param searchData.dropoffDate - 还车日期（YYYY-MM-DD）
-   */
-  async performSearch(searchData: {
-    pickupLocation: string;
-    dropoffLocation: string;
-    pickupDate: string;
-    dropoffDate: string;
-  }): Promise<void> {
-    await this.clickPickupLocation(searchData.pickupLocation);
-    await this.clickDropoffLocation(searchData.dropoffLocation);
-    await this.selectTravelDates(searchData.pickupDate, searchData.dropoffDate);
-    await this.clickSearch();
-  }
-
-  /**
-   * 执行完整搜索流程（增强版本）
+   * 执行完整搜索流程
    *
    * @param searchData - 完整搜索数据
    */
