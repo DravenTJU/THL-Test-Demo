@@ -11,84 +11,132 @@ import { BasePage } from './BasePage';
  * @extends BasePage
  */
 export class SearchPage extends BasePage {
-  // 页面元素定位器
-  private readonly pickupLocationInput: Locator;
-  private readonly dropoffLocationInput: Locator;
-  private readonly pickupDateInput: Locator;
-  private readonly dropoffDateInput: Locator;
+  // ============ 主要交互按钮 ============
+
+  /** 取车地点选择按钮 */
+  private readonly pickupLocationButton: Locator;
+
+  /** 还车地点选择按钮 */
+  private readonly dropoffLocationButton: Locator;
+
+  /** 旅行日期选择按钮（同时处理取车和还车日期） */
+  private readonly travelDatesButton: Locator;
+
+  /** 乘客数量选择按钮 */
+  private readonly passengersButton: Locator;
+
+  /** 驾照国家选择按钮 */
+  private readonly licenceButton: Locator;
+
+  /** 优惠码按钮 */
+  private readonly promoCodeButton: Locator;
+
+  /** 搜索按钮 */
   private readonly searchButton: Locator;
-  private readonly searchForm: Locator;
+
+  // ============ 输入框（点击按钮后出现） ============
+
+  /** 取车地点输入框 */
+  private readonly pickupLocationInput: Locator;
+
+  /** 还车地点输入框 */
+  private readonly dropoffLocationInput: Locator;
+
+  // ============ 表单容器 ============
+
+  /** 取车地点表单容器 */
+  private readonly pickupForm: Locator;
+
+  /** 还车地点表单容器 */
+  private readonly dropoffForm: Locator;
+
+  // ============ 结果和消息 ============
+
+  /** 结果容器 */
   private readonly resultsContainer: Locator;
+
+  /** 错误消息 */
   private readonly errorMessage: Locator;
+
+  /** 加载指示器 */
   private readonly loadingIndicator: Locator;
 
-  // 地点下拉选项
+  // ============ 下拉选项（动态生成） ============
+
+  /** 地点下拉菜单 */
   private readonly locationDropdown: Locator;
+
+  /** 地点选项生成器 */
   private readonly locationOption: (locationName: string) => Locator;
 
-  // 日期选择器
-  private readonly datePicker: Locator;
-  private readonly datePickerNextMonth: Locator;
-  private readonly datePickerDay: (day: string) => Locator;
+  // ============ 日期选择器（动态生成） ============
 
-  // 车辆筛选器
-  private readonly vehicleTypeFilter: Locator;
-  private readonly passengersFilter: Locator;
+  /** 日期选择器容器 */
+  private readonly datePicker: Locator;
+
+  /** 日期选择器下个月按钮 */
+  private readonly datePickerNextMonth: Locator;
+
+  /** 日期选择器日期按钮生成器 */
+  private readonly datePickerDay: (day: string) => Locator;
 
   constructor(page: Page) {
     super(page);
 
-    // 初始化元素定位器
-    // 注意：这些选择器需要根据实际网站DOM结构调整
-    this.searchForm = page.locator('form[data-testid="search-form"], form.search-form, .booking-form');
+    // ============ 初始化主要交互按钮（使用 ID 和 aria-label） ============
 
-    // 地点输入框（可能是input或select）
-    this.pickupLocationInput = page.locator(
-      'input[name="pickupLocation"], select[name="pickupLocation"], [data-testid="pickup-location"]'
-    ).first();
+    // 使用 ID 定位（最稳定）
+    this.pickupLocationButton = page.locator('#escapeFocus_pickup');
+    this.dropoffLocationButton = page.locator('#escapeFocus_dropoff');
+    this.searchButton = page.locator('#buttonSubmit');
 
-    this.dropoffLocationInput = page.locator(
-      'input[name="dropoffLocation"], select[name="dropoffLocation"], [data-testid="dropoff-location"]'
-    ).first();
+    // 使用 aria-label 定位（语义化，更易维护）
+    this.travelDatesButton = page.locator('button[aria-label="Select the pick-up and drop-off dates"]');
+    this.passengersButton = page.locator('button[aria-label="Select your passenger count"]');
+    this.licenceButton = page.locator('button[aria-label="Select your drivers licence country of origin"]');
 
-    // 日期输入框
-    this.pickupDateInput = page.locator(
-      'input[name="pickupDate"], input[type="date"][placeholder*="Pick"], [data-testid="pickup-date"]'
-    ).first();
+    // 优惠码按钮（使用文本内容定位）
+    this.promoCodeButton = page.locator('button:has-text("Promo code")').first();
 
-    this.dropoffDateInput = page.locator(
-      'input[name="dropoffDate"], input[type="date"][placeholder*="Drop"], [data-testid="dropoff-date"]'
-    ).first();
+    // ============ 初始化输入框（使用 ID） ============
 
-    // 搜索按钮
-    this.searchButton = page.locator(
-      'button[type="submit"]:has-text("Search"), button:has-text("Find"), [data-testid="search-button"]'
-    ).first();
+    this.pickupLocationInput = page.locator('#bookingWidget_location_pickup_searchInput');
+    this.dropoffLocationInput = page.locator('#bookingWidget_location_dropoff_searchInput');
 
-    // 结果和消息
-    this.resultsContainer = page.locator('.search-results, [data-testid="search-results"], .vehicle-list');
-    this.errorMessage = page.locator('.error-message, .alert-danger, [role="alert"]');
-    this.loadingIndicator = page.locator('.loading, .spinner, [data-testid="loading"]');
+    // ============ 初始化表单容器（使用 ID） ============
 
-    // 地点下拉菜单
-    this.locationDropdown = page.locator('.location-dropdown, [role="listbox"], .dropdown-menu');
+    this.pickupForm = page.locator('#bookingWidget_location_pickup_searchForm');
+    this.dropoffForm = page.locator('#bookingWidget_location_dropoff_searchForm');
+
+    // ============ 初始化结果和消息元素 ============
+
+    this.resultsContainer = page.locator('.search-results, [data-testid="search-results"], .vehicle-list').first();
+    this.errorMessage = page.locator('.error-message, .alert-danger, [role="alert"]').first();
+    this.loadingIndicator = page.locator('.loading, .spinner, [data-testid="loading"]').first();
+
+    // ============ 初始化下拉选项（动态元素） ============
+
+    this.locationDropdown = page.locator('.location-dropdown, [role="listbox"], .dropdown-menu').first();
     this.locationOption = (locationName: string) =>
       page.locator(`[role="option"]:has-text("${locationName}"), li:has-text("${locationName}")`).first();
 
-    // 日期选择器
-    this.datePicker = page.locator('.date-picker, .calendar, [role="dialog"]');
-    this.datePickerNextMonth = page.locator('.next-month, button[aria-label*="next"]');
+    // ============ 初始化日期选择器（动态元素） ============
+
+    this.datePicker = page.locator('.date-picker, .calendar, [role="dialog"]').first();
+    this.datePickerNextMonth = page.locator('.next-month, button[aria-label*="next"]').first();
     this.datePickerDay = (day: string) =>
       page.locator(`[data-day="${day}"], button:has-text("${day}")`).first();
-
-    // 筛选器
-    this.vehicleTypeFilter = page.locator('select[name="vehicleType"], [data-testid="vehicle-type"]');
-    this.passengersFilter = page.locator('select[name="passengers"], [data-testid="passengers"]');
   }
+
+  // ============================================
+  // 页面导航方法
+  // ============================================
 
   /**
    * 导航到搜索页面
-   * @param options - URL参数（如cc=nz, open-mobile=true）
+   * @param options - URL参数配置
+   * @param options.cc - 国家代码（如 'nz' 表示新西兰）
+   * @param options.mobile - 是否打开移动端视图
    */
   async navigateToSearchPage(options?: { cc?: string; mobile?: boolean }): Promise<void> {
     let path = '/';
@@ -107,84 +155,116 @@ export class SearchPage extends BasePage {
 
     await this.navigate(path);
     await this.waitForPageLoad();
-    await this.waitForSearchFormVisible();
+    await this.waitForSearchWidgetVisible();
   }
 
   /**
-   * 等待搜索表单可见
+   * 等待搜索组件可见
+   * 验证关键按钮是否已加载
    */
-  async waitForSearchFormVisible(): Promise<void> {
-    await this.waitForVisible(this.searchForm, 15000);
+  async waitForSearchWidgetVisible(): Promise<void> {
+    await this.waitForVisible(this.pickupLocationButton, 15000);
+    await this.waitForVisible(this.searchButton, 15000);
   }
+
+  // ============================================
+  // 地点选择方法
+  // ============================================
 
   /**
    * 选择取车地点
-   * @param location - 地点名称（如"Auckland"）
+   *
+   * 交互流程：
+   * 1. 点击取车地点按钮
+   * 2. 等待输入框出现
+   * 3. 输入地点名称
+   * 4. 等待下拉选项出现（如果有）
+   * 5. 点击匹配的选项
+   *
+   * @param location - 地点名称（如 "Auckland"）
    */
   async selectPickupLocation(location: string): Promise<void> {
-    await this.click(this.pickupLocationInput);
+    // 点击按钮触发地点选择器
+    await this.click(this.pickupLocationButton);
 
-    // 如果是下拉菜单，等待并点击选项
+    // 等待输入框出现
+    await this.waitForVisible(this.pickupLocationInput, 5000);
+
+    // 输入地点名称
+    await this.fill(this.pickupLocationInput, location);
+
+    // 等待并点击下拉选项（如果存在）
     const isDropdownVisible = await this.isVisible(this.locationDropdown);
     if (isDropdownVisible) {
       const option = this.locationOption(location);
+      await this.waitForVisible(option, 3000);
       await this.click(option);
     } else {
-      // 如果是输入框，直接填写
-      await this.fill(this.pickupLocationInput, location);
+      // 如果没有下拉菜单，按回车确认
+      await this.pickupLocationInput.press('Enter');
     }
   }
 
   /**
    * 选择还车地点
-   * @param location - 地点名称（如"Christchurch"）
+   *
+   * 交互流程同 selectPickupLocation
+   *
+   * @param location - 地点名称（如 "Christchurch"）
    */
   async selectDropoffLocation(location: string): Promise<void> {
-    await this.click(this.dropoffLocationInput);
+    // 点击按钮触发地点选择器
+    await this.click(this.dropoffLocationButton);
 
+    // 等待输入框出现
+    await this.waitForVisible(this.dropoffLocationInput, 5000);
+
+    // 输入地点名称
+    await this.fill(this.dropoffLocationInput, location);
+
+    // 等待并点击下拉选项（如果存在）
     const isDropdownVisible = await this.isVisible(this.locationDropdown);
     if (isDropdownVisible) {
       const option = this.locationOption(location);
+      await this.waitForVisible(option, 3000);
       await this.click(option);
     } else {
-      await this.fill(this.dropoffLocationInput, location);
+      // 如果没有下拉菜单，按回车确认
+      await this.dropoffLocationInput.press('Enter');
     }
   }
 
-  /**
-   * 选择取车日期
-   * @param date - 日期字符串（格式：YYYY-MM-DD）
-   */
-  async selectPickupDate(date: string): Promise<void> {
-    await this.click(this.pickupDateInput);
-
-    // 尝试直接填写日期
-    const inputType = await this.getAttribute(this.pickupDateInput, 'type');
-    if (inputType === 'date') {
-      await this.fill(this.pickupDateInput, date);
-    } else {
-      // 如果是日期选择器，需要点击日期
-      await this.selectDateFromPicker(date);
-    }
-  }
+  // ============================================
+  // 日期选择方法
+  // ============================================
 
   /**
-   * 选择还车日期
-   * @param date - 日期字符串（格式：YYYY-MM-DD）
+   * 选择旅行日期（取车和还车日期）
+   *
+   * 注意：实际页面使用单个按钮同时选择取车和还车日期
+   *
+   * @param pickupDate - 取车日期（格式：YYYY-MM-DD）
+   * @param dropoffDate - 还车日期（格式：YYYY-MM-DD）
    */
-  async selectDropoffDate(date: string): Promise<void> {
-    await this.click(this.dropoffDateInput);
+  async selectTravelDates(pickupDate: string, dropoffDate: string): Promise<void> {
+    // 点击日期按钮
+    await this.click(this.travelDatesButton);
 
-    const inputType = await this.getAttribute(this.dropoffDateInput, 'type');
-    if (inputType === 'date') {
-      await this.fill(this.dropoffDateInput, date);
-    } else {
-      await this.selectDateFromPicker(date);
-    }
+    // 等待日期选择器出现
+    await this.waitForVisible(this.datePicker, 5000);
+
+    // 选择取车日期
+    await this.selectDateFromPicker(pickupDate);
+
+    // 选择还车日期
+    await this.selectDateFromPicker(dropoffDate);
   }
 
   /**
    * 从日期选择器中选择日期
+   *
+   * 注意：此方法是简化实现，实际使用时可能需要处理月份切换
+   *
    * @param date - 日期字符串（格式：YYYY-MM-DD）
    * @private
    */
@@ -192,16 +272,67 @@ export class SearchPage extends BasePage {
     const [year, month, day] = date.split('-');
     const dayNumber = parseInt(day, 10).toString(); // 移除前导零
 
-    // 等待日期选择器出现
+    // 等待日期选择器可见
     const isPickerVisible = await this.isVisible(this.datePicker);
-    if (isPickerVisible) {
-      // 这里简化处理，实际需要根据具体日期选择器实现月份切换
-      const dayElement = this.datePickerDay(dayNumber);
-      await this.click(dayElement);
-    } else {
-      console.warn('Date picker not found, date may not be selected correctly');
+    if (!isPickerVisible) {
+      console.warn('Date picker not visible, date may not be selected correctly');
+      return;
     }
+
+    // 点击对应的日期
+    // 注意：这里简化了实现，实际可能需要处理月份切换逻辑
+    const dayElement = this.datePickerDay(dayNumber);
+    await this.waitForVisible(dayElement, 3000);
+    await this.click(dayElement);
   }
+
+  // ============================================
+  // 其他选择方法
+  // ============================================
+
+  /**
+   * 选择乘客数量
+   * @param passengers - 乘客数量
+   */
+  async selectPassengers(passengers: number): Promise<void> {
+    await this.click(this.passengersButton);
+
+    // 等待下拉菜单出现并选择选项
+    // 注意：实际实现需要根据具体的下拉菜单结构调整
+    const passengerOption = this.page.locator(`[role="option"]:has-text("${passengers}")`).first();
+    await this.waitForVisible(passengerOption, 3000);
+    await this.click(passengerOption);
+  }
+
+  /**
+   * 选择驾照签发国家
+   * @param country - 国家名称（如 "New Zealand"）
+   */
+  async selectLicenceCountry(country: string): Promise<void> {
+    await this.click(this.licenceButton);
+
+    // 等待下拉菜单出现并选择选项
+    const countryOption = this.page.locator(`[role="option"]:has-text("${country}")`).first();
+    await this.waitForVisible(countryOption, 3000);
+    await this.click(countryOption);
+  }
+
+  /**
+   * 输入优惠码
+   * @param promoCode - 优惠码
+   */
+  async enterPromoCode(promoCode: string): Promise<void> {
+    await this.click(this.promoCodeButton);
+
+    // 等待输入框出现
+    const promoInput = this.page.locator('input[placeholder*="code" i], input[name*="promo" i]').first();
+    await this.waitForVisible(promoInput, 3000);
+    await this.fill(promoInput, promoCode);
+  }
+
+  // ============================================
+  // 搜索操作方法
+  // ============================================
 
   /**
    * 点击搜索按钮
@@ -211,8 +342,13 @@ export class SearchPage extends BasePage {
   }
 
   /**
-   * 执行完整搜索流程
+   * 执行完整搜索流程（基础版本）
+   *
    * @param searchData - 搜索数据
+   * @param searchData.pickupLocation - 取车地点
+   * @param searchData.dropoffLocation - 还车地点
+   * @param searchData.pickupDate - 取车日期（YYYY-MM-DD）
+   * @param searchData.dropoffDate - 还车日期（YYYY-MM-DD）
    */
   async performSearch(searchData: {
     pickupLocation: string;
@@ -222,17 +358,54 @@ export class SearchPage extends BasePage {
   }): Promise<void> {
     await this.selectPickupLocation(searchData.pickupLocation);
     await this.selectDropoffLocation(searchData.dropoffLocation);
-    await this.selectPickupDate(searchData.pickupDate);
-    await this.selectDropoffDate(searchData.dropoffDate);
+    await this.selectTravelDates(searchData.pickupDate, searchData.dropoffDate);
     await this.clickSearch();
   }
+
+  /**
+   * 执行完整搜索流程（增强版本）
+   *
+   * @param searchData - 完整搜索数据
+   */
+  async performFullSearch(searchData: {
+    pickupLocation: string;
+    dropoffLocation: string;
+    pickupDate: string;
+    dropoffDate: string;
+    passengers?: number;
+    licenceCountry?: string;
+    promoCode?: string;
+  }): Promise<void> {
+    // 必填字段
+    await this.selectPickupLocation(searchData.pickupLocation);
+    await this.selectDropoffLocation(searchData.dropoffLocation);
+    await this.selectTravelDates(searchData.pickupDate, searchData.dropoffDate);
+
+    // 可选字段
+    if (searchData.passengers) {
+      await this.selectPassengers(searchData.passengers);
+    }
+    if (searchData.licenceCountry) {
+      await this.selectLicenceCountry(searchData.licenceCountry);
+    }
+    if (searchData.promoCode) {
+      await this.enterPromoCode(searchData.promoCode);
+    }
+
+    // 执行搜索
+    await this.clickSearch();
+  }
+
+  // ============================================
+  // 结果验证方法
+  // ============================================
 
   /**
    * 等待搜索结果加载
    * @param timeout - 超时时间（毫秒）
    */
   async waitForSearchResults(timeout: number = 15000): Promise<void> {
-    // 先等待加载指示器消失
+    // 先等待加载指示器消失（如果存在）
     const isLoadingVisible = await this.isVisible(this.loadingIndicator);
     if (isLoadingVisible) {
       await this.waitForHidden(this.loadingIndicator, timeout);
@@ -258,14 +431,17 @@ export class SearchPage extends BasePage {
     return await this.getText(this.errorMessage);
   }
 
+  // ============================================
+  // 表单验证方法
+  // ============================================
+
   /**
-   * 验证搜索表单所有元素存在
+   * 验证搜索表单所有关键元素是否存在
    */
   async validateSearchFormElements(): Promise<void> {
-    await this.assertVisible(this.pickupLocationInput, 'Pickup location input should be visible');
-    await this.assertVisible(this.dropoffLocationInput, 'Dropoff location input should be visible');
-    await this.assertVisible(this.pickupDateInput, 'Pickup date input should be visible');
-    await this.assertVisible(this.dropoffDateInput, 'Dropoff date input should be visible');
+    await this.assertVisible(this.pickupLocationButton, 'Pickup location button should be visible');
+    await this.assertVisible(this.dropoffLocationButton, 'Dropoff location button should be visible');
+    await this.assertVisible(this.travelDatesButton, 'Travel dates button should be visible');
     await this.assertVisible(this.searchButton, 'Search button should be visible');
   }
 
@@ -278,52 +454,46 @@ export class SearchPage extends BasePage {
   }
 
   /**
-   * 清空搜索表单
+   * 获取搜索按钮的文本
+   * @returns 按钮文本
    */
-  async clearSearchForm(): Promise<void> {
-    await this.fill(this.pickupLocationInput, '', { clear: true });
-    await this.fill(this.dropoffLocationInput, '', { clear: true });
-    await this.fill(this.pickupDateInput, '', { clear: true });
-    await this.fill(this.dropoffDateInput, '', { clear: true });
+  async getSearchButtonText(): Promise<string> {
+    return await this.getText(this.searchButton);
+  }
+
+  // ============================================
+  // 辅助方法
+  // ============================================
+
+  /**
+   * 获取取车地点按钮的显示文本
+   * @returns 按钮显示的文本
+   */
+  async getPickupLocationText(): Promise<string> {
+    return await this.getText(this.pickupLocationButton);
   }
 
   /**
-   * 选择车辆类型
-   * @param vehicleType - 车辆类型（如"2 Berth"）
+   * 获取还车地点按钮的显示文本
+   * @returns 按钮显示的文本
    */
-  async selectVehicleType(vehicleType: string): Promise<void> {
-    const isVisible = await this.isVisible(this.vehicleTypeFilter);
-    if (isVisible) {
-      await this.page.selectOption(this.vehicleTypeFilter, vehicleType);
-    }
+  async getDropoffLocationText(): Promise<string> {
+    return await this.getText(this.dropoffLocationButton);
   }
 
   /**
-   * 选择乘客数量
-   * @param passengers - 乘客数量
+   * 获取旅行日期按钮的显示文本
+   * @returns 按钮显示的文本
    */
-  async selectPassengers(passengers: number): Promise<void> {
-    const isVisible = await this.isVisible(this.passengersFilter);
-    if (isVisible) {
-      await this.page.selectOption(this.passengersFilter, passengers.toString());
-    }
+  async getTravelDatesText(): Promise<string> {
+    return await this.getText(this.travelDatesButton);
   }
 
   /**
-   * 获取搜索表单的当前值
-   * @returns 表单数据
+   * 截取搜索表单的截图
+   * @param filename - 文件名（不含扩展名）
    */
-  async getSearchFormValues(): Promise<{
-    pickupLocation: string;
-    dropoffLocation: string;
-    pickupDate: string;
-    dropoffDate: string;
-  }> {
-    return {
-      pickupLocation: (await this.pickupLocationInput.inputValue()) || '',
-      dropoffLocation: (await this.dropoffLocationInput.inputValue()) || '',
-      pickupDate: (await this.pickupDateInput.inputValue()) || '',
-      dropoffDate: (await this.dropoffDateInput.inputValue()) || '',
-    };
+  async takeSearchFormScreenshot(filename: string): Promise<void> {
+    await this.takeScreenshot(`${filename}-search-form`);
   }
 }
