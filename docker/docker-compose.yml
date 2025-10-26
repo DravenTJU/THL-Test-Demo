@@ -1,7 +1,7 @@
 version: '3.8'
 
 services:
-  # Playwright测试服务
+  # Playwright Test service
   playwright-tests:
     build:
       context: ..
@@ -21,7 +21,7 @@ services:
     networks:
       - test-network
 
-  # Allure报告服务
+  # Allure report service
   allure:
     image: frankescobar/allure-docker-service:2.23.1
     container_name: thl-allure-reports
