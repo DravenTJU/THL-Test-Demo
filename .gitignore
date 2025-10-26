@@ -19,6 +19,7 @@ playwright-report/
 allure-results/
 allure-report/
 playwright/.cache/
+.playwright-mcp/
 
 # Screenshots and videos
 screenshots/
