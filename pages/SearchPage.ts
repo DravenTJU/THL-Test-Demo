@@ -142,6 +142,9 @@ export class SearchPage extends BasePage {
   /** 乘客未选择提示 */
   private readonly passengersNotice: Locator;
 
+  /** 乘客数量超过最大值提示 */
+  private readonly passengersMaxNotice: Locator;
+
   /** 年龄未选择提示 */
   private readonly driverAgeNotice: Locator;
 
@@ -215,6 +218,7 @@ export class SearchPage extends BasePage {
     this.dropoffLocationNotice = page.getByText('Please select your Drop off');
     this.travelDatesNotice = page.getByText('PICK-UP DATE');
     this.passengersNotice = page.getByText('Increase Adult passengers');
+    this.passengersMaxNotice = page.getByText('Max total passengers is');
     this.driverAgeNotice = page.getByText('Please select the Main Driver');
     this.licenceNotice = page.getByText('Please select Drivers licence');
   }
@@ -1005,28 +1009,102 @@ export class SearchPage extends BasePage {
 
   /**
    * 选择驾照签发国家
-   * @param country - 国家名称（如 "New Zealand"）
+   *
+   * 交互流程：
+   * 1. 点击驾照国家选择按钮
+   * 2. 等待下拉菜单出现
+   * 3. 根据输入的国家名称选择对应的选项
+   * 4. 验证选项是否可见
+   * 5. 点击选中的国家选项
+   *
+   * @param country - 国家名称（如 "New Zealand", "Australia", "France", "United Kingdom"）
+   * @throws 如果下拉菜单未能成功打开或选项不可见
    */
   async selectLicenceCountry(country: string): Promise<void> {
+    // 点击按钮打开驾照国家选择下拉菜单
     await this.click(this.licenceButton);
 
-    // 等待下拉菜单出现并选择选项
-    const countryOption = this.page.locator(`[role="option"]:has-text("${country}")`).first();
-    await this.waitForVisible(countryOption, 3000);
-    await this.click(countryOption);
+    // 等待下拉菜单出现
+    await this.page.waitForTimeout(1000);
+
+    // 根据国家名称获取对应的选项
+    let selectedOption: Locator;
+    const normalizedCountry = country.toLowerCase().trim();
+
+    switch (normalizedCountry) {
+      case 'new zealand':
+      case 'newzealand':
+      case 'nz':
+        selectedOption = this.licenceOptionNewZealand;
+        break;
+      case 'australia':
+      case 'au':
+        selectedOption = this.licenceOptionAustralia;
+        break;
+      case 'france':
+      case 'fr':
+        selectedOption = this.licenceOptionFrance;
+        break;
+      case 'united kingdom':
+      case 'unitedkingdom':
+      case 'uk':
+        selectedOption = this.licenceOptionUnitedKingdom;
+        break;
+      default:
+        // 对于其他国家，使用通用 locator
+        selectedOption = this.page.locator('button').filter({ hasText: country });
+        break;
+    }
+
+    // 验证选项是否可见
+    const isOptionVisible = await this.isVisible(selectedOption);
+    if (!isOptionVisible) {
+      throw new Error(
+        `驾照国家选项 "${country}" 未出现在下拉菜单中。可选国家: New Zealand, Australia, France, United Kingdom`
+      );
+    }
+
+    // 点击选中的国家选项
+    await this.click(selectedOption);
+
+    // 等待选择生效
+    await this.page.waitForTimeout(500);
   }
 
   /**
    * 输入优惠码
-   * @param promoCode - 优惠码
+   *
+   * 交互流程：
+   * 1. 点击优惠码按钮
+   * 2. 等待优惠码输入框出现
+   * 3. 验证输入框是否可见
+   * 4. 在输入框中填充优惠码
+   * 5. 等待输入生效
+   *
+   * @param promoCode - 优惠码字符串
+   * @throws 如果优惠码输入框未能成功显示
    */
   async enterPromoCode(promoCode: string): Promise<void> {
+    // 点击按钮打开优惠码输入区域
     await this.click(this.promoCodeButton);
 
     // 等待输入框出现
-    const promoInput = this.page.locator('input[placeholder*="code" i], input[name*="promo" i]').first();
-    await this.waitForVisible(promoInput, 3000);
-    await this.fill(promoInput, promoCode);
+    await this.page.waitForTimeout(1000);
+
+    // 验证优惠码输入框是否可见
+    const isInputVisible = await this.isVisible(this.promoCodeInput);
+    if (!isInputVisible) {
+      throw new Error('优惠码输入框未能成功显示');
+    }
+
+    // 点击输入框
+    await this.click(this.promoCodeInput);
+
+    // 填充优惠码
+    await this.fill(this.promoCodeInput, promoCode);
+
+    // 等待输入生效
+    await this.page.waitForTimeout(500);
   }
 
   // ============================================
