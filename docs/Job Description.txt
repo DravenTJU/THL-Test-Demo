@@ -1,0 +1,46 @@
+Test Engineer
+
+Job Description
+Posted Friday, 3 October 2025 at 4:36 pm | Expires Monday, 3 November 2025 at 1:59 am
+For over 30 years, Tourism Holdings Limited (thl) has been creating unforgettable travel experiences while delivering sustainable value. Headquartered in Aotearoa New Zealand, we’re the world’s largest campervan operator with operations across NZ, Australia, the US, and the UK.
+
+We’re passionate about travel, committed to the planet, and proud to support our customers and crew. Our iconic brands—like Maui, Britz, Apollo, Road Bear, and Just Go—are trusted by adventure-seekers worldwide. Beyond campervans, we also offer legendary tourism experiences like Kiwi Experience and the Waitomo Glowworm Caves.
+
+At thl, we don’t just help people travel—we help them connect, explore, and create lifelong memories.
+
+About the Role:
+
+Are you passionate about building reliable, high-performing software? Do you thrive in collaborative environments where quality and continuous improvement are at the heart of everything we do? We’re looking for a Test Engineer to join our dynamic, cross-functional development team.
+
+This is your opportunity to make a real impact—designing and implementing robust test automation, shaping engineering excellence, and helping deliver exceptional digital experiences.
+
+What You Will Do:
+
+As a Test Engineer, you'll drive quality across our products by building smart automation, solving complex testing challenges and collaborating with a passionate team to deliver reliable, high-performing software.  
+
+What You Bring:
+
+Experience with Playwright or Cypress.
+JavaScript and/or Python skills.
+API testing know-how (Postman, REST Assured).
+CI/CD integration experience.
+Detail-driven and team-focused mindset.
+Bonus Skills:
+
+Performance testing (JMeter, k6)
+Cloud experience (Azure, AWS)
+Docker/Kubernetes familiarity
+Test data management and mocking strategies
+What’s in it for You?
+
+At thl, travel isn’t just what we do—it’s part of who we are. Whether it’s handing you the keys to one of our iconic RVs for your own road trip or kitting you out with gear to go caving and abseiling at The Legendary Black Water Rafting in Waitomo, working here means you get to experience the magic for yourself.
+
+Working with us means unlocking a world of possibilities. You might need to rewrite your bucket list—because the adventures start the moment you join. Our diverse, welcoming crew will make you feel at home from day one.
+
+Why thl?
+
+We’re proud to be an inclusive employer that celebrates diversity in all its forms. Whether you’re a seasoned manager or someone ready to take the next big step, we welcome applications from people of all backgrounds, identities, and experiences. We believe great leadership comes in many styles—and we’re excited to see yours.
+
+Apply Now!
+
+Ready to turn your passion for travel into a career full of adventure? Apply now and let’s hit the road.  Apply now and let’s take this journey together.
