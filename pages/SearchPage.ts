@@ -60,6 +60,12 @@ export class SearchPage extends BasePage {
   /** 乘客数量选择按钮 */
   private readonly passengersButton: Locator;
 
+  /** 成人乘客数量输入框 */
+  private readonly adultPassengersInput: Locator;
+
+  /** 儿童乘客数量输入框 */
+  private readonly childPassengersInput: Locator;
+
   /** 成人乘客数量增加按钮 */
   private readonly adultPassengersIncreaseButton: Locator;
 
@@ -174,6 +180,8 @@ export class SearchPage extends BasePage {
     // ============ 乘客 ============
 
     this.passengersButton = page.getByRole('button', { name: 'Select your passenger count' });
+    this.adultPassengersInput = page.getByRole('spinbutton', { name: 'Adult passenger count. Over' });
+    this.childPassengersInput = page.getByRole('spinbutton', { name: 'Child passenger count. Up to' });
     this.adultPassengersIncreaseButton = page.getByRole('button', { name: 'Increase Adult passenger' });
     this.adultPassengersDecreaseButton = page.getByRole('button', { name: 'Decrease Adult passenger' });
     this.childPassengersIncreaseButton = page.getByRole('button', { name: 'Increase Child passenger' });
@@ -776,17 +784,223 @@ export class SearchPage extends BasePage {
   // ============================================
 
   /**
-   * 选择乘客数量
-   * @param passengers - 乘客数量
+   * 通过输入框设置成人乘客数量
+   *
+   * 直接在 spinbutton 输入框中填充数量
+   *
+   * @param count - 目标成人乘客数量（必须 >= 0）
+   * @throws 如果目标数量小于0
+   * @private
    */
-  async selectPassengers(passengers: number): Promise<void> {
+  private async setAdultPassengersByInput(count: number): Promise<void> {
+    if (count < 0) {
+      throw new Error(`成人乘客数量不能为负数: ${count}`);
+    }
+
+    // 点击成人乘客输入框
+    await this.click(this.adultPassengersInput);
+
+    // 直接填充数量
+    await this.fill(this.adultPassengersInput, count.toString());
+
+    // 等待输入生效
+    await this.page.waitForTimeout(300);
+  }
+
+  /**
+   * 通过增减按钮设置成人乘客数量
+   *
+   * 通过点击增加或减少按钮来调整成人乘客数量
+   *
+   * @param count - 目标成人乘客数量（必须 >= 0）
+   * @throws 如果目标数量小于0
+   * @private
+   */
+  private async setAdultPassengersByButtons(count: number): Promise<void> {
+    if (count < 0) {
+      throw new Error(`成人乘客数量不能为负数: ${count}`);
+    }
+
+    // 获取当前成人乘客数量
+    const currentCountText = await this.adultPassengersInput.inputValue().catch(() => '0');
+    const currentCount = parseInt(currentCountText, 10) || 0;
+
+    const diff = count - currentCount;
+
+    if (diff > 0) {
+      // 需要增加
+      for (let i = 0; i < diff; i++) {
+        await this.click(this.adultPassengersIncreaseButton);
+        await this.page.waitForTimeout(300);
+      }
+    } else if (diff < 0) {
+      // 需要减少
+      for (let i = 0; i < Math.abs(diff); i++) {
+        await this.click(this.adultPassengersDecreaseButton);
+        await this.page.waitForTimeout(300);
+      }
+    }
+    // diff === 0 时无需操作
+  }
+
+  /**
+   * 通过输入框设置儿童乘客数量
+   *
+   * 直接在 spinbutton 输入框中填充数量
+   *
+   * @param count - 目标儿童乘客数量（必须 >= 0）
+   * @throws 如果目标数量小于0
+   * @private
+   */
+  private async setChildPassengersByInput(count: number): Promise<void> {
+    if (count < 0) {
+      throw new Error(`儿童乘客数量不能为负数: ${count}`);
+    }
+
+    // 点击儿童乘客输入框
+    await this.click(this.childPassengersInput);
+
+    // 直接填充数量
+    await this.fill(this.childPassengersInput, count.toString());
+
+    // 等待输入生效
+    await this.page.waitForTimeout(300);
+  }
+
+  /**
+   * 通过增减按钮设置儿童乘客数量
+   *
+   * 通过点击增加或减少按钮来调整儿童乘客数量
+   *
+   * @param count - 目标儿童乘客数量（必须 >= 0）
+   * @throws 如果目标数量小于0
+   * @private
+   */
+  private async setChildPassengersByButtons(count: number): Promise<void> {
+    if (count < 0) {
+      throw new Error(`儿童乘客数量不能为负数: ${count}`);
+    }
+
+    // 获取当前儿童乘客数量
+    const currentCountText = await this.childPassengersInput.inputValue().catch(() => '0');
+    const currentCount = parseInt(currentCountText, 10) || 0;
+
+    const diff = count - currentCount;
+
+    if (diff > 0) {
+      // 需要增加
+      for (let i = 0; i < diff; i++) {
+        await this.click(this.childPassengersIncreaseButton);
+        await this.page.waitForTimeout(300);
+      }
+    } else if (diff < 0) {
+      // 需要减少
+      for (let i = 0; i < Math.abs(diff); i++) {
+        await this.click(this.childPassengersDecreaseButton);
+        await this.page.waitForTimeout(300);
+      }
+    }
+    // diff === 0 时无需操作
+  }
+
+  /**
+   * 选择主驾驶员年龄
+   *
+   * @param age - 年龄范围（'18-20' 或 '21+'）
+   * @throws 如果年龄范围不在可选范围内
+   * @private
+   */
+  private async selectDriverAge(age: '18-20' | '21+'): Promise<void> {
+    // 点击年龄下拉菜单
+    await this.click(this.driverAgeDropdown);
+
+    // 等待下拉选项出现
+    await this.page.waitForTimeout(500);
+
+    // 根据年龄范围选择对应选项
+    let selectedOption: Locator;
+    switch (age) {
+      case '18-20':
+        selectedOption = this.driverAgeOption18_20;
+        break;
+      case '21+':
+        selectedOption = this.driverAgeOption21;
+        break;
+      default:
+        throw new Error(
+          `不支持的年龄范围: "${age}"。可选范围: 18-20, 21+`
+        );
+    }
+
+    // 验证选项是否可见
+    const isOptionVisible = await this.isVisible(selectedOption);
+    if (!isOptionVisible) {
+      throw new Error(`年龄选项 "${age}" 未出现在下拉菜单中`);
+    }
+
+    // 点击选中的年龄选项
+    await this.click(selectedOption);
+  }
+
+  /**
+   * 选择乘客数量和主驾驶员年龄
+   *
+   * 交互流程：
+   * 1. 点击乘客数量选择按钮
+   * 2. 调整成人乘客数量（可通过输入框或增减按钮）
+   * 3. 调整儿童乘客数量（可通过输入框或增减按钮）
+   * 4. 选择主驾驶员年龄（从下拉菜单）
+   *
+   * @param options - 乘客配置选项
+   * @param options.adults - 成人乘客数量（默认: 1）
+   * @param options.children - 儿童乘客数量（默认: 0）
+   * @param options.driverAge - 主驾驶员年龄范围（'18-20' 或 '21+'，默认: '21+'）
+   * @param options.method - 设置方式（'input': 直接输入框填充, 'buttons': 增减按钮，默认: 'input'）
+   */
+  async selectPassengers(options: {
+    adults?: number;
+    children?: number;
+    driverAge?: '18-20' | '21+';
+    method?: 'input' | 'buttons';
+  }): Promise<void> {
+    const {
+      adults = 1,
+      children = 0,
+      driverAge = '21+',
+      method = 'input'
+    } = options;
+
+    // 点击乘客按钮打开乘客选择面板
     await this.click(this.passengersButton);
 
-    // 等待下拉菜单出现并选择选项
-    // 注意：实际实现需要根据具体的下拉菜单结构调整
-    const passengerOption = this.page.locator(`[role="option"]:has-text("${passengers}")`).first();
-    await this.waitForVisible(passengerOption, 3000);
-    await this.click(passengerOption);
+    // 等待乘客选择面板出现
+    await this.page.waitForTimeout(1000);
+
+    // 验证成人乘客输入框是否可见（确认面板已打开）
+    const isAdultInputVisible = await this.isVisible(this.adultPassengersInput);
+    if (!isAdultInputVisible) {
+      throw new Error('乘客选择面板未能成功打开');
+    }
+
+    // 根据选择的方式设置成人乘客数量
+    if (method === 'input') {
+      await this.setAdultPassengersByInput(adults);
+    } else {
+      await this.setAdultPassengersByButtons(adults);
+    }
+
+    // 根据选择的方式设置儿童乘客数量
+    if (method === 'input') {
+      await this.setChildPassengersByInput(children);
+    } else {
+      await this.setChildPassengersByButtons(children);
+    }
+
+    // 选择主驾驶员年龄
+    await this.selectDriverAge(driverAge);
+
+    // 等待设置生效
+    await this.page.waitForTimeout(500);
   }
 
   /**
@@ -857,7 +1071,10 @@ export class SearchPage extends BasePage {
     dropoffLocation: string;
     pickupDate: string;
     dropoffDate: string;
-    passengers?: number;
+    adults?: number;
+    children?: number;
+    driverAge?: '18-20' | '21+';
+    passengerMethod?: 'input' | 'buttons';
     licenceCountry?: string;
     promoCode?: string;
   }): Promise<void> {
@@ -866,9 +1083,14 @@ export class SearchPage extends BasePage {
     await this.clickDropoffLocation(searchData.dropoffLocation);
     await this.selectTravelDates(searchData.pickupDate, searchData.dropoffDate);
 
-    // 可选字段
-    if (searchData.passengers) {
-      await this.selectPassengers(searchData.passengers);
+    // 可选字段 - 乘客信息
+    if (searchData.adults !== undefined || searchData.children !== undefined || searchData.driverAge !== undefined) {
+      await this.selectPassengers({
+        adults: searchData.adults,
+        children: searchData.children,
+        driverAge: searchData.driverAge,
+        method: searchData.passengerMethod
+      });
     }
     if (searchData.licenceCountry) {
       await this.selectLicenceCountry(searchData.licenceCountry);
