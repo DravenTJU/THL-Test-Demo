@@ -13,6 +13,8 @@
 
 This project is a technical demonstration for the automated testing framework targeting the [Maui Rentals motorhome booking search page](https://booking.maui-rentals.com/?cc=nz&open-mobile=true).
 
+![Image](https://github.com/user-attachments/assets/cf39f9b2-6e51-48df-87b5-089f1c70c5ec)
+
 ### 🎯 Technology Stack
 
 - ✅ **Playwright** - Modern end-to-end testing framework

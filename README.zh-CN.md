@@ -13,6 +13,8 @@
 
 本项目是一个自动化测试框架，针对 [Maui Rentals 房车租赁搜索页面](https://booking.maui-rentals.com/?cc=nz&open-mobile=true) 进行全面测试。
 
+![Image](https://github.com/user-attachments/assets/cf39f9b2-6e51-48df-87b5-089f1c70c5ec)
+
 ### 🎯 技术栈覆盖
 
 - ✅ **Playwright** - 现代化的端到端测试框架
