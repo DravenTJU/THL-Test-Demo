@@ -1,4 +1,4 @@
-# THL Test Engineer Demo
+# Playwright Test Automation Framework
 
 **English** | [中文](./README.zh-CN.md)
 
@@ -38,7 +38,7 @@ This project is a technical demonstration for the automated testing framework ta
 ```bash
 # Clone the repository
 git clone <repository-url>
-cd THL-Test-Demo
+cd Playwright-Test-Demo
 
 # Install dependencies
 npm install
@@ -96,7 +96,7 @@ docker-compose -f docker/docker-compose.yml up allure
 ## 📁 Project Structure
 
 ```
-THL-Test-Demo/
+Playwright-Test-Demo/
 ├── .github/workflows/      # GitHub Actions CI/CD configuration
 │   └── ci.yml             # Automated testing pipeline
 │

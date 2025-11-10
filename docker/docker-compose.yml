@@ -4,7 +4,7 @@ services:
     build:
       context: ..
       dockerfile: docker/Dockerfile
-    container_name: thl-playwright-tests
+    container_name: playwright-tests
     volumes:
       - ../:/app
       - /app/node_modules
@@ -22,7 +22,7 @@ services:
   # Allure report service
   allure:
     image: frankescobar/allure-docker-service:2.23.1
-    container_name: thl-allure-reports
+    container_name: allure-reports
     ports:
       - "5050:5050"
     volumes:

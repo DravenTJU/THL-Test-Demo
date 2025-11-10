@@ -62,7 +62,7 @@ export default defineConfig({
     actionTimeout: 10 * 1000,
     viewport: { width: 1280, height: 720 },
     ignoreHTTPSErrors: true,
-    userAgent: 'THL-Test-Automation/1.0',
+    userAgent: 'Playwright-Test-Automation/1.0',
   },
 
   // Project-specific configuration

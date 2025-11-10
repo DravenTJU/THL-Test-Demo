@@ -1,4 +1,4 @@
-# THL Test Demo - Dockerfile
+# Dockerfile
 # Docker image for running Playwright tests
 
 FROM mcr.microsoft.com/playwright:v1.56.1-jammy
@@ -30,6 +30,6 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
     CMD node --version || exit 1
 
 # Metadata
-LABEL maintainer="THL Test Engineer Candidate"
+LABEL maintainer="Draven"
 LABEL description="Playwright test environment for Maui Rentals"
 LABEL version="1.0.0"

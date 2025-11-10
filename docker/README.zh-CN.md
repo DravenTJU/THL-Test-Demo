@@ -1,4 +1,4 @@
-# THL Test Demo Docker 配置
+# Docker 配置
 
 **中文** | [English](./README.md)
 

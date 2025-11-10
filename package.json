@@ -1,7 +1,7 @@
 {
-  "name": "thl-test-demo",
+  "name": "playwright-test-demo",
   "version": "1.0.0",
-  "description": "THL Test Engineer Demo - Comprehensive Playwright Testing Framework for Maui Rentals Search",
+  "description": "Comprehensive Playwright Testing Framework for Maui Rentals Search",
   "main": "index.js",
   "scripts": {
     "test": "playwright test",
@@ -32,7 +32,7 @@
     "ci-cd",
     "docker"
   ],
-  "author": "THL Test Engineer Candidate",
+  "author": "Draven",
   "license": "MIT",
   "devDependencies": {
     "@axe-core/playwright": "^4.10.0",

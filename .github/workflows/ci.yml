@@ -226,9 +226,9 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Build Docker image
-        run: docker build -f docker/Dockerfile -t thl-test-demo:${{ github.sha }} .
+        run: docker build -f docker/Dockerfile -t playwright-test-demo:${{ github.sha }} .
 
       - name: Test Docker image
         run: |
-          docker run --rm thl-test-demo:${{ github.sha }} node --version
-          docker run --rm thl-test-demo:${{ github.sha }} npm --version
+          docker run --rm playwright-test-demo:${{ github.sha }} node --version
+          docker run --rm playwright-test-demo:${{ github.sha }} npm --version

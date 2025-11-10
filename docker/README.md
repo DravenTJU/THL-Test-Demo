@@ -1,4 +1,4 @@
-# Docker Configuration for THL Test Demo
+# Docker Configuration
 
 [中文文档](./README.zh-CN.md) | **English**
 
